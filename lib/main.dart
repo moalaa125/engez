@@ -12,6 +12,7 @@ class EngezApp extends StatelessWidget {
   const EngezApp({super.key});
 
   @override
+  @override
   Widget build(BuildContext context) {
     return ScreenUtilInit(
       designSize: const Size(412, 915), 
@@ -22,16 +23,23 @@ class EngezApp extends StatelessWidget {
           title: 'Engez - إنجز',
           debugShowCheckedModeBanner: false,
           theme: AppTheme.lightTheme,
-          // Enforce RTL for Egyptian Arabic
           localizationsDelegates: const [
             GlobalMaterialLocalizations.delegate,
             GlobalWidgetsLocalizations.delegate,
             GlobalCupertinoLocalizations.delegate,
           ],
           supportedLocales: const [
-            Locale('ar', 'EG'), // Arabic, Egypt
+            Locale('ar', 'EG'), 
           ],
           locale: const Locale('ar', 'EG'),
+          
+          builder: (context, widget) {
+            return Directionality(
+              textDirection: TextDirection.ltr,
+              child: widget!,
+            );
+          },
+          
           home: const LoginScreen(),
         );
       },

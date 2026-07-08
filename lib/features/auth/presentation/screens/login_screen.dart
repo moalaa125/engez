@@ -43,25 +43,30 @@ class _LoginScreenContentState extends State<_LoginScreenContent> {
     return Row(
       children: [
         Expanded(
-          flex: 1,
+          flex: 0,
           child: Container(
-            padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 16.h),
+            padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 14.h),
             decoration: BoxDecoration(
               border: Border.all(color: Colors.black),
               borderRadius: BorderRadius.circular(6.r),
             ),
-            child: Text(
-              generateCountryFlag() + ' +20',
-              style: TextStyle(fontSize: 18.sp, letterSpacing: 2.0),
+            child: Center(
+              child: Text(
+                generateCountryFlag() + ' +20',
+                style: TextStyle(fontSize: 18.sp, letterSpacing: 2.0),
+              ),
             ),
           ),
         ),
-        SizedBox(width: 16.w),
+        SizedBox(width: 10.w),
         Expanded(
-          flex: 3,
+          flex: 2,
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 0),
             child: TextFormField(
+              onTapOutside: (event) =>
+                  FocusManager.instance.primaryFocus?.unfocus(),
+
               validator: (value) {
                 if (value!.isEmpty) {
                   return 'من فضلك دخل رقم موبايلك';
@@ -99,9 +104,11 @@ class _LoginScreenContentState extends State<_LoginScreenContent> {
                     width: 2.w,
                   ),
                 ),
-                hint: Text(
-                  'اكتب رقم موبايلك',
-                  style: TextStyle(color: Colors.black, fontSize: 18.sp),
+                hint: Center(
+                  child: Text(
+                    'اكتب رقم موبايلك',
+                    style: TextStyle(color: Colors.black, fontSize: 18.sp),
+                  ),
                 ),
               ),
             ),
@@ -205,7 +212,7 @@ class _LoginScreenContentState extends State<_LoginScreenContent> {
                 SizedBox(height: 35.h),
                 _buildButton(),
                 SizedBox(height: 20.h),
-                _buildEndMessage(), 
+                _buildEndMessage(),
               ],
             ),
           ),
