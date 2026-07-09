@@ -22,24 +22,7 @@ class EngezApp extends StatelessWidget {
         return MaterialApp(
           title: 'Engez - إنجز',
           debugShowCheckedModeBanner: false,
-          theme: AppTheme.lightTheme,
-          localizationsDelegates: const [
-            GlobalMaterialLocalizations.delegate,
-            GlobalWidgetsLocalizations.delegate,
-            GlobalCupertinoLocalizations.delegate,
-          ],
-          supportedLocales: const [
-            Locale('ar', 'EG'), 
-          ],
-          locale: const Locale('ar', 'EG'),
-          
-          builder: (context, widget) {
-            return Directionality(
-              textDirection: TextDirection.ltr,
-              child: widget!,
-            );
-          },
-          
+          theme: AppTheme.lightTheme,    
           home: const LoginScreen(),
         );
       },
