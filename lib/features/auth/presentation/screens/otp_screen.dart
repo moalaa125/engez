@@ -6,7 +6,8 @@ import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class OtpScreen extends StatefulWidget {
-  const OtpScreen({super.key});
+  final String verificationId;
+  const OtpScreen({super.key , required this.verificationId});
 
   @override
   State<OtpScreen> createState() => _MyWidgetState();

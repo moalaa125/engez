@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "717537004014",
+    "project_id": "engez-1725b",
+    "storage_bucket": "engez-1725b.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:717537004014:android:6d97903aa42e1a68ede6ff",
+        "android_client_info": {
+          "package_name": "com.example.engez"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "717537004014-3kjkngj35bjfq5f1qbo5j1h1799hhkt3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.engez",
+            "certificate_hash": "5912e13989e77775a911867e0ab54c096c6f3c4f"
+          }
+        },
+        {
+          "client_id": "717537004014-4vd8eot5ch7v8bq84s43bngcsvj9gfta.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDOirUpHu3Vku7E4ljWfzsYHtFMV5ptZhQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "717537004014-4vd8eot5ch7v8bq84s43bngcsvj9gfta.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "717537004014-itfhl631g67h98dl2r2b45qrjvmaohgv.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.engez"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

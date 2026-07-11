@@ -11,12 +11,21 @@ class AuthInitial extends AuthState {}
 
 class AuthLoading extends AuthState {}
 
+class OtpSentSuccess extends AuthState {
+  final String verificationId;
+
+  const OtpSentSuccess({required this.verificationId});
+
+  @override
+  List<Object> get props => [verificationId]; // Equatable
+}
+
 class AuthSuccess extends AuthState {}
 
-class AuthFailure extends AuthState {
+class AuthError extends AuthState {
   final String errorMessage;
 
-  const AuthFailure({required this.errorMessage});
+  const AuthError({required this.errorMessage});
 
   @override
   List<Object> get props => [errorMessage];

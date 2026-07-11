@@ -1,4 +1,5 @@
 import 'package:engez/constants/my_colors.dart';
+import 'package:engez/features/auth/manager/auth_state.dart';
 import 'package:engez/features/auth/presentation/screens/otp_screen.dart';
 import 'package:engez/widgets/custom_button.dart';
 import 'package:engez/widgets/custom_image.dart';
@@ -27,106 +28,61 @@ class _LoginScreenContent extends StatefulWidget {
 }
 
 class _LoginScreenContentState extends State<_LoginScreenContent> {
-  final _usernameController = TextEditingController();
-  final _passwordController = TextEditingController();
+  // 1. تعريف الكنترولر والـ Form Key بشكل صحيح
+  final _phoneController = TextEditingController();
 
   @override
   void dispose() {
-    _usernameController.dispose();
-    _passwordController.dispose();
+    // 2. تنظيف الكنترولر الصح
+    _phoneController.dispose();
     super.dispose();
   }
 
-  String phoneNumber = '';
-
-  Widget _buildPhoneNumberField() {
-    return Row(
-      children: [
-        Expanded(
-          flex: 0,
-          child: Container(
-            padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 14.h),
-            decoration: BoxDecoration(
-              border: Border.all(color: Colors.black),
-              borderRadius: BorderRadius.circular(6.r),
-            ),
-            child: Center(
-              child: Text(
-                generateCountryFlag() + ' +20',
-                style: TextStyle(fontSize: 18.sp, letterSpacing: 2.0),
-              ),
-            ),
-          ),
-        ),
-        SizedBox(width: 10.w),
-        Expanded(
-          flex: 2,
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 0),
-            child: TextFormField(
-              onTapOutside: (event) =>
-                  FocusManager.instance.primaryFocus?.unfocus(),
-
-              validator: (value) {
-                if (value!.isEmpty) {
-                  return 'من فضلك دخل رقم موبايلك';
-                } else if (value.length < 11) {
-                  return 'دخل رقم موبايل صحيح';
-                } else {
-                  return null;
-                }
-              },
-              onSaved: (value) {
-                phoneNumber = value!;
-              },
-              keyboardType: TextInputType.phone,
-              cursorColor: Colors.green,
-              textDirection: TextDirection.ltr,
-              style: TextStyle(fontSize: 18.sp, letterSpacing: 2.0),
-              decoration: InputDecoration(
-                fillColor: Colors.white,
-                filled: true,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(6.r),
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8.r),
-                  borderSide: BorderSide(color: Colors.grey.shade500),
-                ),
-                errorBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8.r),
-                  borderSide: const BorderSide(color: Colors.redAccent),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8.r),
-                  borderSide: BorderSide(
-                    color: const Color.fromARGB(255, 40, 75, 41),
-                    width: 2.w,
-                  ),
-                ),
-                hint: Center(
-                  child: Text(
-                    'اكتب رقم موبايلك',
-                    style: TextStyle(color: Colors.black, fontSize: 18.sp),
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
+ 
 
   Widget _buildButton() {
-    return CustomButton(
-      text: 'ابعت اكود',
-      function: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => OtpScreen()),
-        );
-      },
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 11.w),
+      child: BlocConsumer<AuthCubit, AuthState>(
+        listener: (context, state) {
+          if (state is AuthSuccess) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('تم تسجيل الدخول بنجاح'),
+                backgroundColor: Color(0xFF003527),
+              ),
+            );
+
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (_) => const OtpScreen(verificationId: ''),
+              ),
+            );
+          } else if (state is AuthError) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(state.errorMessage),
+                backgroundColor: Colors.redAccent,
+              ),
+            );
+          }
+        },
+        builder: (context, state) {
+          if (state is AuthLoading) {
+            return const Center(
+              child: CircularProgressIndicator(color: Color(0xFF003527)),
+            );
+          }
+
+          return CustomButton(
+            text: 'تسجيل الدخول باستخدام Google',
+            function: () {
+              context.read<AuthCubit>().signInWithGoogle();
+            },
+          );
+        },
+      ),
     );
   }
 
@@ -141,7 +97,7 @@ class _LoginScreenContentState extends State<_LoginScreenContent> {
   }
 
   Widget _buildEndMessage() {
-    return Text(
+    return const Text(
       'بالمتابعه انت توافق علي\n شروط الاستخدام والخصوصيه',
       textAlign: TextAlign.center,
     );
@@ -183,7 +139,7 @@ class _LoginScreenContentState extends State<_LoginScreenContent> {
         ),
         SizedBox(height: 60.h),
         Text(
-          'دخل رقم تليفونك عشان نكمل',
+          'سجل دخول عشان نكمل',
           style: TextStyle(
             color: const Color(0xFF404944),
             fontSize: 20.sp,
@@ -205,10 +161,6 @@ class _LoginScreenContentState extends State<_LoginScreenContent> {
                 _introImage(),
                 _introTexts(),
                 SizedBox(height: 30.h),
-                Padding(
-                  padding: EdgeInsets.only(right: 11.w, left: 11.w),
-                  child: _buildPhoneNumberField(),
-                ),
                 SizedBox(height: 35.h),
                 _buildButton(),
                 SizedBox(height: 20.h),
