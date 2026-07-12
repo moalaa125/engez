@@ -1,6 +1,6 @@
 import 'package:engez/constants/my_colors.dart';
 import 'package:engez/features/auth/manager/auth_state.dart';
-import 'package:engez/features/auth/presentation/screens/otp_screen.dart';
+import 'package:engez/features/auth/presentation/screens/home_screen.dart';
 import 'package:engez/widgets/custom_button.dart';
 import 'package:engez/widgets/custom_image.dart';
 import 'package:flutter/material.dart';
@@ -28,61 +28,55 @@ class _LoginScreenContent extends StatefulWidget {
 }
 
 class _LoginScreenContentState extends State<_LoginScreenContent> {
-  // 1. تعريف الكنترولر والـ Form Key بشكل صحيح
-  final _phoneController = TextEditingController();
 
   @override
   void dispose() {
-    // 2. تنظيف الكنترولر الصح
-    _phoneController.dispose();
     super.dispose();
   }
 
  
 
   Widget _buildButton() {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 11.w),
-      child: BlocConsumer<AuthCubit, AuthState>(
-        listener: (context, state) {
-          if (state is AuthSuccess) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('تم تسجيل الدخول بنجاح'),
-                backgroundColor: Color(0xFF003527),
-              ),
-            );
-
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                builder: (_) => const OtpScreen(verificationId: ''),
-              ),
-            );
-          } else if (state is AuthError) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(state.errorMessage),
-                backgroundColor: Colors.redAccent,
-              ),
-            );
-          }
-        },
-        builder: (context, state) {
-          if (state is AuthLoading) {
-            return const Center(
-              child: CircularProgressIndicator(color: Color(0xFF003527)),
-            );
-          }
-
-          return CustomButton(
-            text: 'تسجيل الدخول باستخدام Google',
-            function: () {
-              context.read<AuthCubit>().signInWithGoogle();
-            },
+    return BlocConsumer<AuthCubit, AuthState>(
+      listener: (context, state) {
+        if (state is AuthSuccess) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('تم تسجيل الدخول بنجاح'),
+              backgroundColor: Color(0xFF003527),
+            ),
           );
-        },
-      ),
+    
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (_) => const HomeScreen(),
+            ),
+          );
+        } else if (state is AuthError) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(state.errorMessage),
+              backgroundColor: Colors.redAccent,
+            ),
+          );
+        }
+      },
+      builder: (context, state) {
+        if (state is AuthLoading) {
+          return const Center(
+            child: CircularProgressIndicator(color: Color(0xFF003527)),
+          );
+        }
+    
+        return CustomButton(
+          iconPath: 'assets/images/google.png',
+          text: 'تسجيل الدخول باستخدام Google',
+          function: () {
+            context.read<AuthCubit>().signInWithGoogle();
+          },
+        );
+      },
     );
   }
 
