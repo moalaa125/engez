@@ -71,15 +71,10 @@ class _LoginScreenContentState extends State<_LoginScreenContent> {
               decoration: BoxDecoration(
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withValues(
-                      alpha: .2,
-                    ), 
-                    blurRadius: 10, 
-                    spreadRadius: .5, 
-                    offset: const Offset(
-                      2,
-                      5,
-                    ),
+                    color: Colors.black.withValues(alpha: .2),
+                    blurRadius: 10,
+                    spreadRadius: .5,
+                    offset: const Offset(2, 5),
                   ),
                 ],
                 color: MyColors.myWhite.withValues(alpha: 1),
@@ -103,7 +98,6 @@ class _LoginScreenContentState extends State<_LoginScreenContent> {
                     iconPath: 'assets/images/apple.png',
                     text: 'تسجيل الدخول باستخدام apple',
                     function: () {
-                      // context.read<AuthCubit>().signInWithGoogle();
                       // TODO lasa h3mlha
                     },
                   ),
@@ -133,13 +127,6 @@ class _LoginScreenContentState extends State<_LoginScreenContent> {
     );
   }
 
-  // Widget _introImage() {
-  //   return Hero(
-  //     tag: 'animationForIntroImage',
-  //     child: CustomImage(image: 'assets/images/joinUs.png', height: 330.h),
-  //   );
-  // }
-
   Widget _introTexts() {
     return Column(
       children: [
@@ -153,7 +140,7 @@ class _LoginScreenContentState extends State<_LoginScreenContent> {
                 color: MyColors.myOrange,
                 fontSize: 40.sp,
                 fontWeight: FontWeight.bold,
-                fontFamily: 'aref',
+                fontFamily: 'cairo',
               ),
             ),
           ),
