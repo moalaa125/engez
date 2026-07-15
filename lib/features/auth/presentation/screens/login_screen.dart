@@ -99,7 +99,7 @@ class _LoginScreenContentState extends State<_LoginScreenContent> {
                     text: 'تسجيل الدخول باستخدام apple',
                     function: () {
                       // TODO lasa h3mlha
-                      Navigator.push(
+                      Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(builder: (context) => HomeScreen()),
                       );
