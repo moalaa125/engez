@@ -10,66 +10,100 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _MyWidgetState();
 }
 
-class _MyWidgetState extends State<HomeScreen> {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(1),
-          child: Container(
-            color: Colors.black.withValues(alpha: .1),
-            height: 1,
-          ),
-        ),
-        backgroundColor: MyColors.myWhite,
-        title: Padding(
-          padding: const EdgeInsets.only(bottom: 10),
-          child: Row(
-            children: [
-              Icon(Icons.location_on_outlined, color: MyColors.myOrange),
-              const SizedBox(width: 4),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: const [
-                  Text(
-                    'موقعك هو',
-                    style: TextStyle(fontFamily: 'cairo', fontSize: 15),
-                  ),
-                  Text(
-                    'مساكن البترول',
-                    style: TextStyle(fontFamily: 'cairo', fontSize: 18),
-                  ),
-                ],
-              ),
-              SizedBox(width: 100.w),
+PreferredSizeWidget _buildAppBar() {
+  return AppBar(
+    bottom: PreferredSize(
+      preferredSize: const Size.fromHeight(1),
+      child: Container(color: Colors.black.withValues(alpha: .1), height: 1),
+    ),
+    backgroundColor: MyColors.myWhite,
+    title: Padding(
+      padding: const EdgeInsets.only(bottom: 10),
+      child: Row(
+        children: [
+          Icon(Icons.location_on_outlined, color: MyColors.myOrange),
+          const SizedBox(width: 4),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: const [
               Text(
-                'إنجز',
-                style: TextStyle(
-                  color: MyColors.myOrange,
-                  fontSize: 40.sp,
-                  fontWeight: FontWeight.bold,
-                  fontFamily: 'cairo',
-                ),
+                'موقعك هو',
+                style: TextStyle(fontFamily: 'cairo', fontSize: 15),
+              ),
+              Text(
+                'مساكن البترول',
+                style: TextStyle(fontFamily: 'cairo', fontSize: 18),
               ),
             ],
           ),
-        ),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 10),
-            child: CircleAvatar(
-              radius: 22,
-              backgroundImage: AssetImage('assets/images/enterPhoneNumber.png'),
+          SizedBox(width: 100.w),
+          Text(
+            'إنجز',
+            style: TextStyle(
+              color: MyColors.myOrange,
+              fontSize: 40.sp,
+              fontWeight: FontWeight.bold,
+              fontFamily: 'cairo',
             ),
           ),
         ],
       ),
+    ),
+    actions: [
+      Padding(
+        padding: const EdgeInsets.only(right: 10),
+        child: CircleAvatar(
+          radius: 22,
+          backgroundImage: AssetImage('assets/images/enterPhoneNumber.png'),
+        ),
+      ),
+    ],
+  );
+}
+
+Widget _buidTextField() {
+  return TextField(
+    textAlign: TextAlign.right,
+    decoration: InputDecoration(
+      hintText: 'بتدور علي ايه ؟',
+      hintStyle: TextStyle(
+        color: Colors.grey.shade500,
+        fontFamily: 'cairo',
+        fontSize: 15,
+      ),
+      suffixIcon: Icon(Icons.search, color: MyColors.myOrange),
+      filled: true,
+      fillColor: const Color(0xFFF3F4F5),
+      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(20),
+        borderSide: BorderSide(color: Colors.black.withValues(alpha: 0.15)),
+      ),
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(20),
+        borderSide: BorderSide(color: Colors.black.withValues(alpha: 0.15)),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(20),
+        borderSide: BorderSide(color: Colors.black.withValues(alpha: 0.15)),
+      ),
+    ),
+  );
+}
+
+class _MyWidgetState extends State<HomeScreen> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: MyColors.myWhite,
+      appBar: _buildAppBar(),
       body: SingleChildScrollView(
-        child: SafeArea(child: Column(children: [
-                       ],
-          )),
+        child: Column(
+          children: [
+            Padding(padding: const EdgeInsets.all(16), child: _buidTextField()),
+          ],
+        ),
       ),
     );
   }
