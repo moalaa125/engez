@@ -1,7 +1,6 @@
 import 'package:engez/constants/my_colors.dart';
 import 'package:engez/widgets/custom_image.dart';
 import 'package:flutter/material.dart';
-// import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -19,9 +18,6 @@ Widget _introImage() {
   );
 }
 
-
-
-
 class _MyWidgetState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
@@ -37,10 +33,10 @@ class _MyWidgetState extends State<HomeScreen> {
                   child: Text(
                     'إنجز',
                     style: TextStyle(
-                      color: MyColors.myLighterGreen,
+                      color: MyColors.myOrange,
                       fontSize: 40.sp,
                       fontWeight: FontWeight.bold,
-                      fontFamily: 'aref',
+                      fontFamily: 'cairo',
                     ),
                   ),
                 ),

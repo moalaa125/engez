@@ -8,34 +8,45 @@ class CustomButton extends StatelessWidget {
     required this.text,
     required this.function,
     required this.iconPath,
+    required this.buttonColor,
+    required this.textColor,
   });
 
   final String text;
   final void Function()? function;
   final String iconPath;
+  final Color buttonColor;
+  final Color textColor;
 
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: GestureDetector(
-        onTap: function,
-        child: Container(
-          height: 60.h,
-          width: 380.w,
-          decoration: BoxDecoration(
-            color: MyColors.myGreen,
-            borderRadius: BorderRadius.circular(6.r),
-          ),
-          child: Center(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Image.asset(iconPath, height: 28.h),
-                Text(
-                  text,
-                  style: TextStyle(color: Colors.white, fontSize: 20.sp),
-                ),
-              ],
+      child: Padding(
+        padding: const EdgeInsets.only(right: 20 , left: 20),
+        child: GestureDetector(
+          onTap: function,
+          child: Container(
+            height: 60.h,
+            width: 380.w,
+            decoration: BoxDecoration(
+              color: buttonColor,
+              borderRadius: BorderRadius.circular(20.r),
+              border: Border.all(
+                width: 1,
+                color: Colors.black,
+              )
+            ),
+            child: Center(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Text(
+                    text,
+                    style: TextStyle(color: textColor, fontSize: 20.sp),
+                  ),
+                  Image.asset(iconPath, height: 28.h),
+                ],
+              ),
             ),
           ),
         ),
