@@ -1,4 +1,5 @@
 import 'package:engez/constants/my_colors.dart';
+import 'package:engez/widgets/custom_icon_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -62,6 +63,35 @@ PreferredSizeWidget _buildAppBar() {
   );
 }
 
+Widget _buildListOfIcons() {
+  return Padding(
+    padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 12),
+    child: SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Row(
+        children: [
+          CustomIconButton(iconData: Icons.coffee_outlined),
+          SizedBox(width: 20),
+          CustomIconButton(iconData: Icons.breakfast_dining),
+          SizedBox(width: 20),
+      
+          CustomIconButton(iconData: Icons.icecream_outlined),
+          SizedBox(width: 20),
+      
+          CustomIconButton(iconData: Icons.local_pizza_outlined),
+          SizedBox(width: 20),
+      
+          CustomIconButton(iconData: Icons.food_bank_outlined),
+          SizedBox(width: 20),
+      
+          CustomIconButton(iconData: Icons.apple),
+          SizedBox(width: 20),
+        ],
+      ),
+    ),
+  );
+}
+
 Widget _buidTextField() {
   return TextField(
     textAlign: TextAlign.right,
@@ -102,6 +132,7 @@ class _MyWidgetState extends State<HomeScreen> {
         child: Column(
           children: [
             Padding(padding: const EdgeInsets.all(16), child: _buidTextField()),
+            _buildListOfIcons(),
           ],
         ),
       ),
