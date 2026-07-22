@@ -74,18 +74,114 @@ Widget _buildListOfIcons() {
           SizedBox(width: 20),
           CustomIconButton(iconData: Icons.breakfast_dining),
           SizedBox(width: 20),
-      
+
           CustomIconButton(iconData: Icons.icecream_outlined),
           SizedBox(width: 20),
-      
+
           CustomIconButton(iconData: Icons.local_pizza_outlined),
           SizedBox(width: 20),
-      
+
           CustomIconButton(iconData: Icons.food_bank_outlined),
           SizedBox(width: 20),
-      
+
           CustomIconButton(iconData: Icons.apple),
           SizedBox(width: 20),
+        ],
+      ),
+    ),
+  );
+}
+
+Widget _buildOfferSection() {
+  return Padding(
+    padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 12),
+    child: SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Row(
+        children: [
+          Container(
+            height: 180,
+            width: 330,
+            decoration: BoxDecoration(
+              color: MyColors.myOrange,
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 12),
+              child: Row(
+                children: [
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'ENGEZ OFFERS',
+                        style: TextStyle(color: Color(0xFF572000)),
+                      ),
+                      Text(
+                        '20% off',
+                        style: TextStyle(
+                          fontSize: 40,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFF572000),
+                        ),
+                      ),
+                      Text(
+                        'on your first morning coffe.',
+                        style: TextStyle(color: Color(0xFF572000)),
+                      ),
+                    ],
+                  ), //
+                  SizedBox(width: 20),
+                  Icon(
+                    Icons.coffee_outlined,
+                    size: 100,
+                    color: Color(0xFFDC5C00),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          SizedBox(width: 20),
+          Container(
+            height: 180,
+            width: 300,
+            decoration: BoxDecoration(
+              color: Color(0xFFE7E8E9),
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 12),
+              child: Row(
+                children: [
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Quick Grab',
+                        style: TextStyle(color: Color(0xFF572000)),
+                      ),
+                      Text(
+                        'Free Pastry',
+                        style: TextStyle(
+                          fontSize: 40,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFF572000),
+                        ),
+                      ),
+                      Text(
+                        'With any large iced coffee.',
+                        style: TextStyle(color: Color(0xFF572000)),
+                      ),
+                    ],
+                  ), //
+                  SizedBox(width: 10),
+                  Icon(Icons.star_rounded, size: 60, color: Color(0xFFD8D7D6)),
+                ],
+              ),
+            ),
+          ),
         ],
       ),
     ),
@@ -133,6 +229,7 @@ class _MyWidgetState extends State<HomeScreen> {
           children: [
             Padding(padding: const EdgeInsets.all(16), child: _buidTextField()),
             _buildListOfIcons(),
+            _buildOfferSection(),
           ],
         ),
       ),
