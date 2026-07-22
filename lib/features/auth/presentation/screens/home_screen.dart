@@ -1,5 +1,6 @@
 import 'package:engez/constants/my_colors.dart';
 import 'package:engez/widgets/custom_icon_button.dart';
+import 'package:engez/widgets/place_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -167,7 +168,7 @@ Widget _buildOfferSection() {
                         style: TextStyle(
                           fontSize: 40,
                           fontWeight: FontWeight.bold,
-                          color: Color(0xFF572000),
+                          color: Colors.black,
                         ),
                       ),
                       Text(
@@ -184,6 +185,55 @@ Widget _buildOfferSection() {
           ),
         ],
       ),
+    ),
+  );
+}
+
+Widget _buildNearbyPlaces() {
+  return Padding(
+    padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 12),
+    child: Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            const Text(
+              'Nearby Places',
+              style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+            ),
+            TextButton(
+              onPressed: () {}, // TODO: see all logic
+              child: const Text(
+                'See All',
+                style: TextStyle(color: Color(0xFF572000)),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 10),
+
+        PlaceCard(
+          imagePath: 'assets/images/cafe1.jpg',
+          title: 'The Daily Roast',
+          rating: '4.9',
+          reviewsCount: '210',
+          category: 'Coffee',
+          distanceTime: '3 min',
+          onFavoriteTap: () {
+          },
+        ),
+        SizedBox(height: 20,),
+        PlaceCard(
+          imagePath: 'assets/images/cafe1.jpg',
+          title: 'The Daily Roast',
+          rating: '4.9',
+          reviewsCount: '210',
+          category: 'Coffee',
+          distanceTime: '3 min',
+          onFavoriteTap: () {
+          },
+        ),
+      ],
     ),
   );
 }
@@ -230,6 +280,7 @@ class _MyWidgetState extends State<HomeScreen> {
             Padding(padding: const EdgeInsets.all(16), child: _buidTextField()),
             _buildListOfIcons(),
             _buildOfferSection(),
+            _buildNearbyPlaces(),
           ],
         ),
       ),
