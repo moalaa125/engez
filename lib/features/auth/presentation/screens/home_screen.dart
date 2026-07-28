@@ -32,34 +32,34 @@ class _MyWidgetState extends State<HomeScreen> {
 
   PreferredSizeWidget _buildAppBar() {
     return AppBar(
-       scrolledUnderElevation: 0,
+      scrolledUnderElevation: 0,
       bottom: PreferredSize(
-        preferredSize: const Size.fromHeight(1),
-        child: Container(color: Colors.black.withValues(alpha: .1), height: 1),
+        preferredSize: Size.fromHeight(1.h),
+        child: Container(color: Colors.black.withValues(alpha: .1), height: 1.h),
       ),
       backgroundColor: MyColors.myWhite,
       title: Padding(
-        padding: const EdgeInsets.only(bottom: 10),
+        padding: EdgeInsets.only(bottom: 10.h),
         child: Row(
           children: [
-            Icon(Icons.location_on_outlined, color: MyColors.myOrange),
-            const SizedBox(width: 4),
+            Icon(Icons.location_on_outlined, color: MyColors.myOrange, size: 24.r),
+            SizedBox(width: 4.w),
             BlocBuilder<LocationCubit, LocationState>(
               builder: (context, state) {
                 return Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    const Text(
+                    Text(
                       'موقعك هو',
-                      style: TextStyle(fontFamily: 'cairo', fontSize: 15),
+                      style: TextStyle(fontFamily: 'cairo', fontSize: 15.sp),
                     ),
                     _buildLocationText(state),
                   ],
                 );
               },
             ),
-            SizedBox(width: 100.w),
+            SizedBox(width: 90.w),
             Text(
               'إنجز',
               style: TextStyle(
@@ -74,10 +74,10 @@ class _MyWidgetState extends State<HomeScreen> {
       ),
       actions: [
         Padding(
-          padding: const EdgeInsets.only(right: 10),
+          padding: EdgeInsets.only(right: 10.w),
           child: CircleAvatar(
-            radius: 22,
-            backgroundImage: AssetImage('assets/images/enterPhoneNumber.png'),
+            radius: 22.r,
+            backgroundImage: const AssetImage('assets/images/enterPhoneNumber.png'),
           ),
         ),
       ],
@@ -86,26 +86,26 @@ class _MyWidgetState extends State<HomeScreen> {
 
   Widget _buildLocationText(LocationState state) {
     if (state is LocationLoading || state is LocationInitial) {
-      return const SizedBox(
-        height: 16,
-        width: 16,
-        child: CircularProgressIndicator(strokeWidth: 2),
+      return SizedBox(
+        height: 16.h,
+        width: 16.w,
+        child: const CircularProgressIndicator(strokeWidth: 2),
       );
     }
 
     if (state is LocationLoaded) {
       return Text(
         state.address,
-        style: const TextStyle(fontFamily: 'cairo', fontSize: 18),
+        style: TextStyle(fontFamily: 'cairo', fontSize: 18.sp),
       );
     }
 
     if (state is LocationError) {
       return GestureDetector(
         onTap: () => _locationCubit.fetchCurrentLocation(),
-        child: const Text(
+        child: Text(
           'اضغط لإعادة المحاولة',
-          style: TextStyle(fontFamily: 'cairo', fontSize: 13, color: Colors.red),
+          style: TextStyle(fontFamily: 'cairo', fontSize: 13.sp, color: Colors.red),
         ),
       );
     }
@@ -117,25 +117,21 @@ class _MyWidgetState extends State<HomeScreen> {
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Padding(
-    padding: const EdgeInsets.symmetric(horizontal: 15 , vertical: 12),
+        padding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 12.h),
         child: Row(
           children: [
-            CustomIconButton(iconData: Icons.coffee_outlined),
-            SizedBox(width: 20),
-            CustomIconButton(iconData: Icons.breakfast_dining),
-            SizedBox(width: 20),
-            
-            CustomIconButton(iconData: Icons.icecream_outlined),
-            SizedBox(width: 20),
-            
-            CustomIconButton(iconData: Icons.local_pizza_outlined),
-            SizedBox(width: 20),
-            
-            CustomIconButton(iconData: Icons.food_bank_outlined),
-            SizedBox(width: 20),
-            
-            CustomIconButton(iconData: Icons.apple),
-            SizedBox(width: 20),
+            const CustomIconButton(iconData: Icons.coffee_outlined),
+            SizedBox(width: 20.w),
+            const CustomIconButton(iconData: Icons.breakfast_dining),
+            SizedBox(width: 20.w),
+            const CustomIconButton(iconData: Icons.icecream_outlined),
+            SizedBox(width: 20.w),
+            const CustomIconButton(iconData: Icons.local_pizza_outlined),
+            SizedBox(width: 20.w),
+            const CustomIconButton(iconData: Icons.food_bank_outlined),
+            SizedBox(width: 20.w),
+            const CustomIconButton(iconData: Icons.apple),
+            SizedBox(width: 20.w),
           ],
         ),
       ),
@@ -146,18 +142,18 @@ class _MyWidgetState extends State<HomeScreen> {
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Padding(
-    padding: const EdgeInsets.symmetric(horizontal: 15 , vertical: 12),
+        padding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 12.h),
         child: Row(
           children: [
             Container(
-              height: 180,
-              width: 330,
+              height: 180.h,
+              width: 330.w,
               decoration: BoxDecoration(
                 color: MyColors.myOrange,
-                borderRadius: BorderRadius.circular(20),
+                borderRadius: BorderRadius.circular(20.r),
               ),
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 12),
+                padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 12.h),
                 child: Row(
                   children: [
                     Column(
@@ -166,42 +162,42 @@ class _MyWidgetState extends State<HomeScreen> {
                       children: [
                         Text(
                           'ENGEZ OFFERS',
-                          style: TextStyle(color: Color(0xFF572000)),
+                          style: TextStyle(color: const Color(0xFF572000), fontSize: 14.sp),
                         ),
                         Text(
                           '20% off',
                           style: TextStyle(
-                            fontSize: 40,
+                            fontSize: 40.sp,
                             fontWeight: FontWeight.bold,
-                            color: Color(0xFF572000),
+                            color: const Color(0xFF572000),
                           ),
                         ),
                         Text(
                           'on your first morning coffe.',
-                          style: TextStyle(color: Color(0xFF572000)),
+                          style: TextStyle(color: const Color(0xFF572000), fontSize: 14.sp),
                         ),
                       ],
-                    ), //
-                    SizedBox(width: 20),
+                    ),
+                    SizedBox(width: 20.w),
                     Icon(
                       Icons.coffee_outlined,
-                      size: 100,
-                      color: Color(0xFFDC5C00),
+                      size: 100.r,
+                      color: const Color(0xFFDC5C00),
                     ),
                   ],
                 ),
               ),
             ),
-            SizedBox(width: 20),
+            SizedBox(width: 20.w),
             Container(
-              height: 180,
-              width: 300,
+              height: 180.h,
+              width: 300.w,
               decoration: BoxDecoration(
-                color: Color(0xFFE7E8E9),
-                borderRadius: BorderRadius.circular(20),
+                color: const Color(0xFFE7E8E9),
+                borderRadius: BorderRadius.circular(20.r),
               ),
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 12),
+                padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 12.h),
                 child: Row(
                   children: [
                     Column(
@@ -210,24 +206,24 @@ class _MyWidgetState extends State<HomeScreen> {
                       children: [
                         Text(
                           'Quick Grab',
-                          style: TextStyle(color: Color(0xFF572000)),
+                          style: TextStyle(color: const Color(0xFF572000), fontSize: 14.sp),
                         ),
                         Text(
                           'Free Pastry',
                           style: TextStyle(
-                            fontSize: 40,
+                            fontSize: 40.sp,
                             fontWeight: FontWeight.bold,
                             color: Colors.black,
                           ),
                         ),
                         Text(
                           'With any large iced coffee.',
-                          style: TextStyle(color: Color(0xFF572000)),
+                          style: TextStyle(color: const Color(0xFF572000), fontSize: 14.sp),
                         ),
                       ],
-                    ), //
-                    SizedBox(width: 10),
-                    Icon(Icons.star_rounded, size: 60, color: Color(0xFFD8D7D6)),
+                    ),
+                    SizedBox(width: 10.w),
+                    Icon(Icons.star_rounded, size: 60.r, color: const Color(0xFFD8D7D6)),
                   ],
                 ),
               ),
@@ -240,27 +236,26 @@ class _MyWidgetState extends State<HomeScreen> {
 
   Widget _buildNearbyPlaces() {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 12),
+      padding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 12.h),
       child: Column(
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
+              Text(
                 'Nearby Places',
-                style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: 30.sp, fontWeight: FontWeight.bold),
               ),
               TextButton(
                 onPressed: () {}, // TODO: see all logic
-                child: const Text(
+                child: Text(
                   'See All',
-                  style: TextStyle(color: Color(0xFF572000)),
+                  style: TextStyle(color: const Color(0xFF572000), fontSize: 14.sp),
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 10),
-
+          SizedBox(height: 10.h),
           PlaceCard(
             imagePath: 'assets/images/cafe1.jpg',
             title: 'The Daily Roast',
@@ -270,7 +265,7 @@ class _MyWidgetState extends State<HomeScreen> {
             distanceTime: '3 min',
             onFavoriteTap: () {},
           ),
-          SizedBox(height: 20),
+          SizedBox(height: 20.h),
           PlaceCard(
             imagePath: 'assets/images/cafe1.jpg',
             title: 'The Daily Roast',
@@ -285,36 +280,36 @@ class _MyWidgetState extends State<HomeScreen> {
     );
   }
 
- Widget _buidTextField() {
-  return TextField(
-    textAlign: TextAlign.right,
-    cursorColor: MyColors.myOrange,
-    decoration: InputDecoration(
-      hintText: 'بتدور علي ايه ؟',
-      hintStyle: TextStyle(
-        color: Colors.grey.shade500,
-        fontFamily: 'cairo',
-        fontSize: 15,
+  Widget _buidTextField() {
+    return TextField(
+      textAlign: TextAlign.right,
+      cursorColor: MyColors.myOrange,
+      decoration: InputDecoration(
+        hintText: 'بتدور علي ايه ؟',
+        hintStyle: TextStyle(
+          color: Colors.grey.shade500,
+          fontFamily: 'cairo',
+          fontSize: 15.sp,
+        ),
+        suffixIcon: Icon(Icons.search, color: MyColors.myOrange, size: 24.r),
+        filled: true,
+        fillColor: MyColors.myBackground,
+        contentPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(20.r),
+          borderSide: BorderSide(color: MyColors.myOrange.withValues(alpha: 0.15)),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(20.r),
+          borderSide: BorderSide(color: MyColors.myOrange.withValues(alpha: 0.15)),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(20.r),
+          borderSide: BorderSide(color: MyColors.myOrange, width: 1.5.w),
+        ),
       ),
-      suffixIcon: Icon(Icons.search, color: MyColors.myOrange),
-      filled: true,
-      fillColor: MyColors.myBackground,
-      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(20),
-        borderSide: BorderSide(color: MyColors.myOrange.withValues(alpha: 0.15)),
-      ),
-      enabledBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(20),
-        borderSide: BorderSide(color: MyColors.myOrange.withValues(alpha: 0.15)),
-      ),
-      focusedBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(20),
-        borderSide: BorderSide(color: MyColors.myOrange, width: 1.5),
-      ),
-    ),
-  );
-}
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -326,7 +321,7 @@ class _MyWidgetState extends State<HomeScreen> {
         body: SingleChildScrollView(
           child: Column(
             children: [
-              Padding(padding: const EdgeInsets.all(16), child: _buidTextField()),
+              Padding(padding: EdgeInsets.all(16.w), child: _buidTextField()),
               _buildListOfIcons(),
               _buildOfferSection(),
               _buildNearbyPlaces(),
