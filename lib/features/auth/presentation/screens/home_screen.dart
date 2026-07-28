@@ -328,67 +328,70 @@ Widget _buildBottomNavBar() {
     child: SafeArea(
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 4.h),
-        child: GNav(
-          rippleColor: MyColors.myOrange.withValues(alpha: 0.1),
-          hoverColor: MyColors.myOrange.withValues(alpha: 0.05),
-          gap: 6.w,
-          activeColor: MyColors.myOrange,
-          iconSize: 22.sp,
-          duration: const Duration(milliseconds: 350),
-          curve: Curves.easeOutExpo,
-          color: Colors.grey[500],
-          tabBackgroundColor: MyColors.myOrange.withValues(alpha: 0.1),
-          backgroundColor: MyColors.myWhite,
-          padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 6.h),
-          tabBorderRadius: 16,
-          tabs: [
-            GButton(
-              icon: Icons.home_outlined,
-              text: 'الرئيسية',
-              textStyle: TextStyle(
-                fontFamily: 'cairo',
-                fontSize: 13.sp,
-                color: MyColors.myOrange,
-                fontWeight: FontWeight.w600,
+        child: Padding(
+          padding: const EdgeInsets.only(top: 5),
+          child: GNav(
+            rippleColor: MyColors.myOrange.withValues(alpha: 0.1),
+            hoverColor: MyColors.myOrange.withValues(alpha: 0.05),
+            gap: 6.w,
+            activeColor: MyColors.myOrange,
+            iconSize: 25.sp,
+            duration: const Duration(milliseconds: 350),
+            curve: Curves.easeOutExpo,
+            color: Colors.grey[500],
+            tabBackgroundColor: MyColors.myOrange.withValues(alpha: 0.1),
+            backgroundColor: MyColors.myWhite,
+            padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 6.h),
+            tabBorderRadius: 16,
+            tabs: [
+              GButton(
+                icon: Icons.home_outlined,
+                text: 'الرئيسية',
+                textStyle: TextStyle(
+                  fontFamily: 'cairo',
+                  fontSize: 13.sp,
+                  color: MyColors.myOrange,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
-            ),
-            GButton(
-              icon: Icons.search,
-              text: 'بحث',
-              textStyle: TextStyle(
-                fontFamily: 'cairo',
-                fontSize: 13.sp,
-                color: MyColors.myOrange,
-                fontWeight: FontWeight.w600,
+              GButton(
+                icon: Icons.search,
+                text: 'بحث',
+                textStyle: TextStyle(
+                  fontFamily: 'cairo',
+                  fontSize: 13.sp,
+                  color: MyColors.myOrange,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
-            ),
-            GButton(
-              icon: Icons.help_outline,
-              text: 'طلباتي',
-              textStyle: TextStyle(
-                fontFamily: 'cairo',
-                fontSize: 13.sp,
-                color: MyColors.myOrange,
-                fontWeight: FontWeight.w600,
+              GButton(
+                icon: Icons.help_outline,
+                text: 'طلباتي',
+                textStyle: TextStyle(
+                  fontFamily: 'cairo',
+                  fontSize: 13.sp,
+                  color: MyColors.myOrange,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
-            ),
-            GButton(
-              icon: Icons.person_outline,
-              text: 'حسابي',
-              textStyle: TextStyle(
-                fontFamily: 'cairo',
-                fontSize: 13.sp,
-                color: MyColors.myOrange,
-                fontWeight: FontWeight.w600,
+              GButton(
+                icon: Icons.person_outline,
+                text: 'حسابي',
+                textStyle: TextStyle(
+                  fontFamily: 'cairo',
+                  fontSize: 13.sp,
+                  color: MyColors.myOrange,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
-            ),
-          ],
-          selectedIndex: _currentIndex,
-          onTabChange: (index) {
-            setState(() {
-              _currentIndex = index;
-            });
-          },
+            ],
+            selectedIndex: _currentIndex,
+            onTabChange: (index) {
+              setState(() {
+                _currentIndex = index;
+              });
+            },
+          ),
         ),
       ),
     ),
