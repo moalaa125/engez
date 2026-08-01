@@ -35,7 +35,6 @@ class PlaceCard extends StatelessWidget {
                 fit: BoxFit.cover,
               ),
             ),
-
             Positioned(
               top: 12,
               right: 12,
@@ -53,9 +52,8 @@ class PlaceCard extends StatelessWidget {
                 ),
               ),
             ),
-
             Positioned(
-              bottom: 12,
+              bottom: 10,
               left: 12,
               right: 12,
               child: Container(

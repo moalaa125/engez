@@ -18,7 +18,7 @@ class CustomOfferSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 12.h),
+      padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 12.h),
       child: Container(
         height: 180.h,
         width: 330.w,

@@ -202,22 +202,22 @@ class _MyWidgetState extends State<HomeScreen> {
           ),
           SizedBox(height: 10.h),
           PlaceCard(
-            imagePath: 'assets/images/cafe1.jpg',
-            title: 'The Daily Roast',
+            imagePath: 'assets/images/bob.jpeg',
+            title: 'بوب وتش',
             rating: '4.9',
             reviewsCount: '210',
             category: 'Coffee',
-            distanceTime: '3 min',
+            distanceTime: '15 min',
             onFavoriteTap: () {},
           ),
           SizedBox(height: 20.h),
           PlaceCard(
-            imagePath: 'assets/images/cafe1.jpg',
-            title: 'The Daily Roast',
+            imagePath: 'assets/images/kbabbasha.png',
+            title: 'كباب باشا',
             rating: '4.9',
             reviewsCount: '210',
             category: 'Coffee',
-            distanceTime: '3 min',
+            distanceTime: '30 min',
             onFavoriteTap: () {},
           ),
         ],
@@ -233,7 +233,7 @@ class _MyWidgetState extends State<HomeScreen> {
   }
 
   Widget _buildBottomNavBar() {
-    return  NavBar();
+    return NavBar();
   }
 
   @override
