@@ -3,6 +3,7 @@ import 'package:engez/features/location/manger/location_cubit.dart';
 import 'package:engez/features/location/manger/location_state.dart';
 import 'package:engez/widgets/custom_icon_button.dart';
 import 'package:engez/widgets/custom_offer_section.dart';
+import 'package:engez/widgets/custom_text_field.dart';
 import 'package:engez/widgets/nav_bar.dart';
 import 'package:engez/widgets/place_card.dart';
 import 'package:flutter/material.dart';
@@ -225,37 +226,9 @@ class _MyWidgetState extends State<HomeScreen> {
   }
 
   Widget _buidTextField() {
-    return TextField(
-      textAlign: TextAlign.right,
-      cursorColor: MyColors.myOrange,
-      decoration: InputDecoration(
-        hintText: 'بتدور علي ايه ؟',
-        hintStyle: TextStyle(
-          color: Colors.grey.shade500,
-          fontFamily: 'cairo',
-          fontSize: 15.sp,
-        ),
-        suffixIcon: Icon(Icons.search, color: MyColors.myOrange, size: 24.r),
-        filled: true,
-        fillColor: MyColors.myBackground,
-        contentPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(20.r),
-          borderSide: BorderSide(
-            color: MyColors.myOrange.withValues(alpha: 0.15),
-          ),
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(20.r),
-          borderSide: BorderSide(
-            color: MyColors.myOrange.withValues(alpha: 0.15),
-          ),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(20.r),
-          borderSide: BorderSide(color: MyColors.myOrange, width: 1.5.w),
-        ),
-      ),
+    return CustomTextField(
+      hintText: 'بتدور علي ايه ؟',
+      suffixIcon: Icons.search,
     );
   }
 
