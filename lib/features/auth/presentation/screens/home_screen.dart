@@ -2,6 +2,7 @@ import 'package:engez/constants/my_colors.dart';
 import 'package:engez/features/location/manger/location_cubit.dart';
 import 'package:engez/features/location/manger/location_state.dart';
 import 'package:engez/widgets/custom_icon_button.dart';
+import 'package:engez/widgets/custom_offer_section.dart';
 import 'package:engez/widgets/place_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -37,14 +38,21 @@ class _MyWidgetState extends State<HomeScreen> {
       scrolledUnderElevation: 0,
       bottom: PreferredSize(
         preferredSize: Size.fromHeight(1.h),
-        child: Container(color: Colors.black.withValues(alpha: .1), height: 1.h),
+        child: Container(
+          color: Colors.black.withValues(alpha: .1),
+          height: 1.h,
+        ),
       ),
       backgroundColor: MyColors.myWhite,
       title: Padding(
         padding: EdgeInsets.only(bottom: 10.h),
         child: Row(
           children: [
-            Icon(Icons.location_on_outlined, color: MyColors.myOrange, size: 24.r),
+            Icon(
+              Icons.location_on_outlined,
+              color: MyColors.myOrange,
+              size: 24.r,
+            ),
             SizedBox(width: 4.w),
             BlocBuilder<LocationCubit, LocationState>(
               builder: (context, state) {
@@ -79,7 +87,9 @@ class _MyWidgetState extends State<HomeScreen> {
           padding: EdgeInsets.only(right: 10.w),
           child: CircleAvatar(
             radius: 22.r,
-            backgroundImage: const AssetImage('assets/images/enterPhoneNumber.png'),
+            backgroundImage: const AssetImage(
+              'assets/images/enterPhoneNumber.png',
+            ),
           ),
         ),
       ],
@@ -107,7 +117,11 @@ class _MyWidgetState extends State<HomeScreen> {
         onTap: () => _locationCubit.fetchCurrentLocation(),
         child: Text(
           'اضغط لإعادة المحاولة',
-          style: TextStyle(fontFamily: 'cairo', fontSize: 13.sp, color: Colors.red),
+          style: TextStyle(
+            fontFamily: 'cairo',
+            fontSize: 13.sp,
+            color: Colors.red,
+          ),
         ),
       );
     }
@@ -143,95 +157,21 @@ class _MyWidgetState extends State<HomeScreen> {
   Widget _buildOfferSection() {
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
-      child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 12.h),
-        child: Row(
-          children: [
-            Container(
-              height: 180.h,
-              width: 330.w,
-              decoration: BoxDecoration(
-                color: MyColors.myOrange,
-                borderRadius: BorderRadius.circular(20.r),
-              ),
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 12.h),
-                child: Row(
-                  children: [
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'ENGEZ OFFERS',
-                          style: TextStyle(color: const Color(0xFF572000), fontSize: 14.sp),
-                        ),
-                        Text(
-                          '20% off',
-                          style: TextStyle(
-                            fontSize: 40.sp,
-                            fontWeight: FontWeight.bold,
-                            color: const Color(0xFF572000),
-                          ),
-                        ),
-                        Text(
-                          'on your first morning coffe.',
-                          style: TextStyle(color: const Color(0xFF572000), fontSize: 14.sp),
-                        ),
-                      ],
-                    ),
-                    SizedBox(width: 20.w),
-                    Icon(
-                      Icons.coffee_outlined,
-                      size: 100.r,
-                      color: const Color(0xFFDC5C00),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            SizedBox(width: 20.w),
-            Container(
-              height: 180.h,
-              width: 300.w,
-              decoration: BoxDecoration(
-                color: const Color(0xFFE7E8E9),
-                borderRadius: BorderRadius.circular(20.r),
-              ),
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 12.h),
-                child: Row(
-                  children: [
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Quick Grab',
-                          style: TextStyle(color: const Color(0xFF572000), fontSize: 14.sp),
-                        ),
-                        Text(
-                          'Free Pastry',
-                          style: TextStyle(
-                            fontSize: 40.sp,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black,
-                          ),
-                        ),
-                        Text(
-                          'With any large iced coffee.',
-                          style: TextStyle(color: const Color(0xFF572000), fontSize: 14.sp),
-                        ),
-                      ],
-                    ),
-                    SizedBox(width: 10.w),
-                    Icon(Icons.star_rounded, size: 60.r, color: const Color(0xFFD8D7D6)),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
+      child: Row(
+        children: [
+          CustomOfferSection(
+            colorOfTheCard: MyColors.myOrange,
+            howMuchOffer: '10',
+            tittleOfTheOffer: 'on your first morning coffe.',
+            icon: Icons.coffee,
+          ),
+          CustomOfferSection(
+            howMuchOffer: '10',
+            tittleOfTheOffer: 'on your first morning coffe.',
+            icon: Icons.coffee,
+            colorOfTheCard: MyColors.mygrey,
+          ),
+        ],
       ),
     );
   }
@@ -252,7 +192,10 @@ class _MyWidgetState extends State<HomeScreen> {
                 onPressed: () {}, // TODO: see all logic
                 child: Text(
                   'See All',
-                  style: TextStyle(color: const Color(0xFF572000), fontSize: 14.sp),
+                  style: TextStyle(
+                    color: const Color(0xFF572000),
+                    fontSize: 14.sp,
+                  ),
                 ),
               ),
             ],
@@ -299,11 +242,15 @@ class _MyWidgetState extends State<HomeScreen> {
         contentPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(20.r),
-          borderSide: BorderSide(color: MyColors.myOrange.withValues(alpha: 0.15)),
+          borderSide: BorderSide(
+            color: MyColors.myOrange.withValues(alpha: 0.15),
+          ),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(20.r),
-          borderSide: BorderSide(color: MyColors.myOrange.withValues(alpha: 0.15)),
+          borderSide: BorderSide(
+            color: MyColors.myOrange.withValues(alpha: 0.15),
+          ),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(20.r),
@@ -313,90 +260,90 @@ class _MyWidgetState extends State<HomeScreen> {
     );
   }
 
-Widget _buildBottomNavBar() {
-  return Container(
-    decoration: BoxDecoration(
-      color: MyColors.myWhite,
-      boxShadow: [
-        BoxShadow(
-          color: Colors.black.withValues(alpha: 0.06),
-          blurRadius: 12,
-          offset: const Offset(0, -2),
-        ),
-      ],
-    ),
-    child: SafeArea(
-      child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 4.h),
+  Widget _buildBottomNavBar() {
+    return Container(
+      decoration: BoxDecoration(
+        color: MyColors.myWhite,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.06),
+            blurRadius: 12,
+            offset: const Offset(0, -2),
+          ),
+        ],
+      ),
+      child: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.only(top: 5),
-          child: GNav(
-            rippleColor: MyColors.myOrange.withValues(alpha: 0.1),
-            hoverColor: MyColors.myOrange.withValues(alpha: 0.05),
-            gap: 6.w,
-            activeColor: MyColors.myOrange,
-            iconSize: 25.sp,
-            duration: const Duration(milliseconds: 350),
-            curve: Curves.easeOutExpo,
-            color: Colors.grey[500],
-            tabBackgroundColor: MyColors.myOrange.withValues(alpha: 0.1),
-            backgroundColor: MyColors.myWhite,
-            padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 6.h),
-            tabBorderRadius: 16,
-            tabs: [
-              GButton(
-                icon: Icons.home_outlined,
-                text: 'الرئيسية',
-                textStyle: TextStyle(
-                  fontFamily: 'cairo',
-                  fontSize: 13.sp,
-                  color: MyColors.myOrange,
-                  fontWeight: FontWeight.w600,
+          padding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 4.h),
+          child: Padding(
+            padding: const EdgeInsets.only(top: 5),
+            child: GNav(
+              rippleColor: MyColors.myOrange.withValues(alpha: 0.1),
+              hoverColor: MyColors.myOrange.withValues(alpha: 0.05),
+              gap: 6.w,
+              activeColor: MyColors.myOrange,
+              iconSize: 25.sp,
+              duration: const Duration(milliseconds: 350),
+              curve: Curves.easeOutExpo,
+              color: Colors.grey[500],
+              tabBackgroundColor: MyColors.myOrange.withValues(alpha: 0.1),
+              backgroundColor: MyColors.myWhite,
+              padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 6.h),
+              tabBorderRadius: 16,
+              tabs: [
+                GButton(
+                  icon: Icons.home_outlined,
+                  text: 'الرئيسية',
+                  textStyle: TextStyle(
+                    fontFamily: 'cairo',
+                    fontSize: 13.sp,
+                    color: MyColors.myOrange,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
-              ),
-              GButton(
-                icon: Icons.search,
-                text: 'بحث',
-                textStyle: TextStyle(
-                  fontFamily: 'cairo',
-                  fontSize: 13.sp,
-                  color: MyColors.myOrange,
-                  fontWeight: FontWeight.w600,
+                GButton(
+                  icon: Icons.search,
+                  text: 'بحث',
+                  textStyle: TextStyle(
+                    fontFamily: 'cairo',
+                    fontSize: 13.sp,
+                    color: MyColors.myOrange,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
-              ),
-              GButton(
-                icon: Icons.help_outline,
-                text: 'طلباتي',
-                textStyle: TextStyle(
-                  fontFamily: 'cairo',
-                  fontSize: 13.sp,
-                  color: MyColors.myOrange,
-                  fontWeight: FontWeight.w600,
+                GButton(
+                  icon: Icons.help_outline,
+                  text: 'طلباتي',
+                  textStyle: TextStyle(
+                    fontFamily: 'cairo',
+                    fontSize: 13.sp,
+                    color: MyColors.myOrange,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
-              ),
-              GButton(
-                icon: Icons.person_outline,
-                text: 'حسابي',
-                textStyle: TextStyle(
-                  fontFamily: 'cairo',
-                  fontSize: 13.sp,
-                  color: MyColors.myOrange,
-                  fontWeight: FontWeight.w600,
+                GButton(
+                  icon: Icons.person_outline,
+                  text: 'حسابي',
+                  textStyle: TextStyle(
+                    fontFamily: 'cairo',
+                    fontSize: 13.sp,
+                    color: MyColors.myOrange,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
-              ),
-            ],
-            selectedIndex: _currentIndex,
-            onTabChange: (index) {
-              setState(() {
-                _currentIndex = index;
-              });
-            },
+              ],
+              selectedIndex: _currentIndex,
+              onTabChange: (index) {
+                setState(() {
+                  _currentIndex = index;
+                });
+              },
+            ),
           ),
         ),
       ),
-    ),
-  );
-}
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
