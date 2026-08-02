@@ -1,3 +1,4 @@
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:engez/constants/my_colors.dart';
 import 'package:engez/features/location/manger/location_cubit.dart';
 import 'package:engez/features/location/manger/location_state.dart';
@@ -69,7 +70,7 @@ class _MyWidgetState extends State<HomeScreen> {
                 );
               },
             ),
-            SizedBox(width: 90.w),
+            Spacer(),
             Text(
               'إنجز',
               style: TextStyle(
@@ -133,7 +134,8 @@ class _MyWidgetState extends State<HomeScreen> {
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 12.h),
+        // توحيد المسافة الأفقية لتكون 16
+        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h), 
         child: Row(
           children: [
             const CustomIconButton(iconData: Icons.coffee_outlined),
@@ -155,30 +157,44 @@ class _MyWidgetState extends State<HomeScreen> {
   }
 
   Widget _buildOfferSection() {
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: Row(
-        children: [
-          CustomOfferSection(
-            colorOfTheCard: MyColors.myOrange,
-            howMuchOffer: '10',
-            tittleOfTheOffer: 'on your first morning coffe.',
-            icon: Icons.coffee,
-          ),
-          CustomOfferSection(
-            howMuchOffer: '10',
-            tittleOfTheOffer: 'on your first morning coffe.',
-            icon: Icons.coffee,
-            colorOfTheCard: MyColors.mygrey,
-          ),
-        ],
+    return CarouselSlider(
+      options: CarouselOptions(
+        height: 180.h,
+        viewportFraction: 0.9,
+        enableInfiniteScroll: false,
+        autoPlay: true,
+        autoPlayInterval: const Duration(seconds: 3),
+        autoPlayAnimationDuration: const Duration(milliseconds: 800),
+        autoPlayCurve: Curves.fastOutSlowIn,
+        enlargeCenterPage: false,
+        padEnds: false,
       ),
+      items: const [
+        CustomOfferSection(
+          howMuchOffer: '10',
+          tittleOfTheOffer: 'on your first morning coffee.',
+          icon: Icons.coffee,
+          colorOfTheCard: Color(0xFFFF7A00),
+        ),
+        CustomOfferSection(
+          howMuchOffer: '20',
+          tittleOfTheOffer: 'on your lunch meal today.',
+          icon: Icons.fastfood,
+          colorOfTheCard: Colors.grey,
+        ),
+        CustomOfferSection(
+          howMuchOffer: '15',
+          tittleOfTheOffer: 'on fresh baked pastries.',
+          icon: Icons.bakery_dining,
+          colorOfTheCard: Color(0xFFFFB74D),
+        ),
+      ],
     );
   }
 
   Widget _buildNearbyPlaces() {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 12.h),
+      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
       child: Column(
         children: [
           Row(
@@ -202,22 +218,22 @@ class _MyWidgetState extends State<HomeScreen> {
           ),
           SizedBox(height: 10.h),
           PlaceCard(
-            imagePath: 'assets/images/bob.jpeg',
-            title: 'بوب وتش',
-            rating: '4.9',
-            reviewsCount: '210',
-            category: 'Coffee',
-            distanceTime: '15 min',
-            onFavoriteTap: () {},
-          ),
-          SizedBox(height: 20.h),
-          PlaceCard(
             imagePath: 'assets/images/kbabbasha.png',
             title: 'كباب باشا',
             rating: '4.9',
             reviewsCount: '210',
             category: 'Coffee',
             distanceTime: '30 min',
+            onFavoriteTap: () {},
+          ),
+          SizedBox(height: 20.h),
+          PlaceCard(
+            imagePath: 'assets/images/bob.jpeg',
+            title: 'بوب وتش',
+            rating: '4.9',
+            reviewsCount: '210',
+            category: 'Coffee',
+            distanceTime: '15 min',
             onFavoriteTap: () {},
           ),
         ],
