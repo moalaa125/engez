@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:carousel_slider/carousel_slider.dart';
 
 class CustomOfferSection extends StatelessWidget {
   const CustomOfferSection({
@@ -21,7 +20,7 @@ class CustomOfferSection extends StatelessWidget {
     return Container(
       height: 180.h,
       width: 350.w,
-      margin: EdgeInsets.only(left: 10.w,),
+      margin: EdgeInsets.only(left: 10.w),
       decoration: BoxDecoration(
         color: colorOfTheCard,
         borderRadius: BorderRadius.circular(20.r),

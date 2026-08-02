@@ -1,5 +1,6 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:engez/constants/my_colors.dart';
+import 'package:engez/features/auth/presentation/screens/kbab.dart';
 import 'package:engez/features/location/manger/location_cubit.dart';
 import 'package:engez/features/location/manger/location_state.dart';
 import 'package:engez/widgets/custom_icon_button.dart';
@@ -134,11 +135,10 @@ class _MyWidgetState extends State<HomeScreen> {
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Padding(
-        // توحيد المسافة الأفقية لتكون 16
-        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h), 
+        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
         child: Row(
           children: [
-            const CustomIconButton(iconData: Icons.coffee_outlined),
+            CustomIconButton(iconData: Icons.coffee_outlined),
             SizedBox(width: 20.w),
             const CustomIconButton(iconData: Icons.breakfast_dining),
             SizedBox(width: 20.w),
@@ -155,6 +155,9 @@ class _MyWidgetState extends State<HomeScreen> {
       ),
     );
   }
+
+
+  
 
   Widget _buildOfferSection() {
     return CarouselSlider(
@@ -218,6 +221,11 @@ class _MyWidgetState extends State<HomeScreen> {
           ),
           SizedBox(height: 10.h),
           PlaceCard(
+            heroTag: 'kbab_basha_tag',
+            onTab: () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => Kbab()),
+            ),
             imagePath: 'assets/images/kbabbasha.png',
             title: 'كباب باشا',
             rating: '4.9',
@@ -228,6 +236,8 @@ class _MyWidgetState extends State<HomeScreen> {
           ),
           SizedBox(height: 20.h),
           PlaceCard(
+            heroTag: 'bob_watch_tag',
+            onTab: () {},
             imagePath: 'assets/images/bob.jpeg',
             title: 'بوب وتش',
             rating: '4.9',
