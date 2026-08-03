@@ -7,9 +7,53 @@ import 'package:engez/widgets/menu_item_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart'; // تمت إضافة المكتبة هنا
 
 class Kbab extends StatelessWidget {
   const Kbab({super.key});
+
+  // دالة إظهار المنيو في نافذة منبثقة
+  void _showPdfMenu(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20.r),
+          ),
+          child: Container(
+            height: 600.h,
+            width: double.infinity,
+            padding: EdgeInsets.all(10.w),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(20.r),
+            ),
+            child: Column(
+              children: [
+                Align(
+                  alignment: Alignment.topRight,
+                  child: IconButton(
+                    icon: const Icon(Icons.close, color: Colors.black),
+                    onPressed: () => Navigator.pop(context),
+                  ),
+                ),
+                Expanded(
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(15.r),
+                    child: SfPdfViewer.asset(
+                      'menu/menukbab.pdf', // مسار الملف بناءً على المجلد الخاص بك
+                      canShowScrollHead: false,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
 
   Widget _buildBottomBar(BuildContext context) {
     return BlocBuilder<CartCubit, CartState>(
@@ -32,7 +76,7 @@ class Kbab extends StatelessWidget {
                   },
             style: ElevatedButton.styleFrom(
               backgroundColor: MyColors.myOrange,
-              disabledBackgroundColor: MyColors.myOrange.withValues(alpha: 0.4),
+              disabledBackgroundColor: MyColors.myOrange.withOpacity(0.4),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(20.r),
               ),
@@ -155,7 +199,7 @@ class Kbab extends StatelessWidget {
     return const CategoryList();
   }
 
-  Widget _buildImageAndDetailsBar() {
+  Widget _buildImageAndDetailsBar(BuildContext context) {
     return SizedBox(
       height: 400.h,
       child: Stack(
@@ -186,7 +230,7 @@ class Kbab extends StatelessWidget {
                 borderRadius: BorderRadius.circular(20.r),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withValues(alpha: .1),
+                    color: Colors.black.withOpacity(.1),
                     blurRadius: 10,
                     spreadRadius: 2,
                     offset: const Offset(0, 5),
@@ -200,12 +244,47 @@ class Kbab extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          'Kbab Basha',
-                          style: TextStyle(
-                            fontSize: 24.sp,
-                            fontWeight: FontWeight.bold,
-                          ),
+                        // تم التعديل هنا لإضافة زر المنيو
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              'Kbab Basha',
+                              style: TextStyle(
+                                fontSize: 24.sp,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            GestureDetector(
+                              onTap: () => _showPdfMenu(context),
+                              child: Container(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 10.w, vertical: 6.h),
+                                decoration: BoxDecoration(
+                                  color: MyColors.myOrange.withOpacity(0.1),
+                                  borderRadius: BorderRadius.circular(10.r),
+                                ),
+                                child: Row(
+                                  children: [
+                                    Icon(
+                                      Icons.picture_as_pdf_rounded,
+                                      color: MyColors.myOrange,
+                                      size: 18.sp,
+                                    ),
+                                    SizedBox(width: 4.w),
+                                    Text(
+                                      'Menu',
+                                      style: TextStyle(
+                                        color: MyColors.myOrange,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 12.sp,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                         SizedBox(height: 4.h),
                         Text(
@@ -217,7 +296,7 @@ class Kbab extends StatelessWidget {
                         ),
                         SizedBox(height: 12.h),
                         Divider(
-                          color: Colors.grey.withValues(alpha: .3),
+                          color: Colors.grey.withOpacity(.3),
                           height: 2,
                           thickness: 1,
                         ),
@@ -299,7 +378,7 @@ class Kbab extends StatelessWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            _buildImageAndDetailsBar(),
+            _buildImageAndDetailsBar(context), // تمرير الـ context هنا
             SizedBox(height: 20.h),
             _buildListOfTextButtons(),
             SizedBox(height: 20.h),
