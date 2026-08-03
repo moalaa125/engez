@@ -7,13 +7,14 @@ import 'package:engez/widgets/menu_item_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart'; // تمت إضافة المكتبة هنا
+import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';    
 
 class Kbab extends StatelessWidget {
   const Kbab({super.key});
 
-  // دالة إظهار المنيو في نافذة منبثقة
   void _showPdfMenu(BuildContext context) {
+    final PdfViewerController pdfViewerController = PdfViewerController();
+
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -31,18 +32,37 @@ class Kbab extends StatelessWidget {
             ),
             child: Column(
               children: [
-                Align(
-                  alignment: Alignment.topRight,
-                  child: IconButton(
-                    icon: const Icon(Icons.close, color: Colors.black),
-                    onPressed: () => Navigator.pop(context),
-                  ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: [
+                        IconButton(
+                          icon: const Icon(Icons.zoom_in, color: Colors.black),
+                          onPressed: () {
+                            pdfViewerController.zoomLevel = pdfViewerController.zoomLevel + 1;
+                          },
+                        ),
+                        IconButton(
+                          icon: const Icon(Icons.zoom_out, color: Colors.black),
+                          onPressed: () {
+                            pdfViewerController.zoomLevel = pdfViewerController.zoomLevel - 1;
+                          },
+                        ),
+                      ],
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.close, color: Colors.black),
+                      onPressed: () => Navigator.pop(context),
+                    ),
+                  ],
                 ),
                 Expanded(
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(15.r),
                     child: SfPdfViewer.asset(
-                      'menu/menukbab.pdf', // مسار الملف بناءً على المجلد الخاص بك
+                      'menu/menukbab.pdf',
+                      controller: pdfViewerController, 
                       canShowScrollHead: false,
                     ),
                   ),
@@ -230,7 +250,7 @@ class Kbab extends StatelessWidget {
                 borderRadius: BorderRadius.circular(20.r),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(.1),
+                    color: Colors.black.withValues(alpha: .1),
                     blurRadius: 10,
                     spreadRadius: 2,
                     offset: const Offset(0, 5),
@@ -244,7 +264,6 @@ class Kbab extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // تم التعديل هنا لإضافة زر المنيو
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -261,7 +280,7 @@ class Kbab extends StatelessWidget {
                                 padding: EdgeInsets.symmetric(
                                     horizontal: 10.w, vertical: 6.h),
                                 decoration: BoxDecoration(
-                                  color: MyColors.myOrange.withOpacity(0.1),
+                                  color: MyColors.myOrange.withValues(alpha: .1),
                                   borderRadius: BorderRadius.circular(10.r),
                                 ),
                                 child: Row(
@@ -378,7 +397,7 @@ class Kbab extends StatelessWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            _buildImageAndDetailsBar(context), // تمرير الـ context هنا
+            _buildImageAndDetailsBar(context), 
             SizedBox(height: 20.h),
             _buildListOfTextButtons(),
             SizedBox(height: 20.h),
