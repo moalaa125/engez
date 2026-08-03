@@ -84,7 +84,7 @@ class Kbab extends StatelessWidget {
                       borderRadius: BorderRadius.circular(15.r),
                       child: SfPdfViewerTheme(
                         data: SfPdfViewerThemeData(
-                          backgroundColor: MyColors.myBackground,
+                          backgroundColor: MyColors.myWhite,
                         ),
                         child: SfPdfViewer.asset(
                           'menu/menukbab.pdf',
