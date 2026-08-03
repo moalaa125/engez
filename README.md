@@ -1,60 +1,69 @@
 # Engez (إنجز)
 
-تطبيق Flutter لطلب الأكل والمشروبات مقدمًا من الكافيهات والمطاعم القريبة، والدفع أونلاين، واستلام الطلب جاهز من غير انتظار في الطابور.
+A Flutter app for pre-ordering food and drinks from nearby cafes and restaurants, paying online, and getting notified when the order is ready for pickup — no more waiting in line.
 
-##  الفكرة
+##  Concept
 
-المستخدم يفتح التطبيق، يشوف الكافيهات/المطاعم القريبة منه بناءً على موقعه، يختار الأوردر ويدفعه أونلاين، وبعدين يوصله إشعار لما الطلب يبقى جاهز للاستلام.
+The user opens the app, sees nearby cafes/restaurants based on their location, places and pays for an order online, then gets notified once the order is ready for pickup.
 
-##  المميزات الحالية
+## 📱 Screens
 
-- **تسجيل الدخول (Auth)**
-  - تسجيل دخول عن طريق رقم الموبايل المصري + OTP عبر Firebase Phone Auth
-  - تسجيل دخول عن طريق Google (Google Sign-In)
-- **تحديد الموقع (Location)**
-  - جلب الموقع الحالي للمستخدم وتحويله لعنوان مقروء (Geocoding)
-  - التعامل مع كل حالات صلاحيات الموقع (مرفوضة، مغلقة، مرفوضة نهائيًا)
-- **الفئات (Categories)**
-  - اختيار فئة من قائمة تصنيفات الأماكن/الأصناف
-- **واجهة المستخدم**
-  - تصميم متجاوب لكل أحجام الشاشات (flutter_screenutil)
-  - ثيم بألوان مخصصة ودعم خطوط عربية (Google Fonts - Cairo)
-  - مكونات UI جاهزة قابلة لإعادة الاستخدام (أزرار، كروت، حقول إدخال، شريط تنقل سفلي، كاروسيل عروض...)
+<!-- Add your screenshots below, e.g.: -->
+<!-- <img src="screenshots/login.png" width="250" /> -->
 
-## 🛠️ التقنيات المستخدمة
+| Login | Home | Place Details |
+|---|---|---|
+| *(add screenshot here)* | *(add screenshot here)* | *(add screenshot here)* |
 
-| التقنية | الاستخدام |
+##  Current Features
+
+- **Auth**
+  - Login with Egyptian phone number + OTP via Firebase Phone Auth
+  - Google Sign-In
+- **Location**
+  - Fetches the user's current location and resolves it to a readable address (Geocoding)
+  - Handles all location permission states (denied, disabled, permanently denied)
+- **Categories**
+  - Select a category from a list of place/item categories
+- **UI**
+  - Responsive design across all screen sizes (flutter_screenutil)
+  - Custom color theme with Arabic font support (Google Fonts - Cairo)
+  - Reusable UI components (buttons, cards, input fields, bottom nav bar, offers carousel...)
+
+## 🛠️ Tech Stack
+
+| Technology | Purpose |
 |---|---|
-| Flutter | إطار العمل الأساسي |
-| Firebase Core / Firebase Auth | تسجيل الدخول والمصادقة |
-| Google Sign-In | تسجيل الدخول بجوجل |
-| flutter_bloc (Cubit) | إدارة الحالة (State Management) |
-| equatable | مقارنة الحالات (States) بكفاءة |
-| flutter_screenutil | تصميم متجاوب (Responsive UI) |
-| google_fonts | خطوط مخصصة (Cairo) |
-| geolocator / geocoding | تحديد الموقع الجغرافي وتحويله لعنوان |
-| google_nav_bar | شريط التنقل السفلي |
-| carousel_slider | عرض السلايدر/العروض |
+| Flutter | Core framework |
+| Firebase Core / Firebase Auth | Login and authentication |
+| Google Sign-In | Google login |
+| flutter_bloc (Cubit) | State management |
+| equatable | Efficient state comparison |
+| flutter_screenutil | Responsive UI |
+| google_fonts | Custom fonts (Cairo) |
+| geolocator / geocoding | Geolocation and reverse geocoding |
+| google_nav_bar | Bottom navigation bar |
+| carousel_slider | Offers/slider display |
 
-## 📁 هيكل المشروع
+## 📁 Project Structure
 
 ```
 lib/
-├── main.dart                      # نقطة تشغيل التطبيق وتهيئة Firebase
-├── firebase_options.dart          # إعدادات Firebase (مولدة تلقائيًا)
+├── main.dart                      # App entry point and Firebase initialization
+├── firebase_options.dart          # Firebase config (auto-generated)
 ├── constants/
-│   └── my_colors.dart             # الألوان الأساسية للتطبيق
+│   └── my_colors.dart             # Core app colors
 ├── core/
 │   └── theme/
-│       └── app_theme.dart         # الثيم العام (ألوان، خطوط، أزرار، حقول إدخال)
+│       └── app_theme.dart         # Global theme (colors, fonts, buttons, input fields)
 ├── features/
 │   ├── auth/
 │   │   ├── manager/                       # AuthCubit + AuthState
-│   │   └── presentation/screens/          # شاشات تسجيل الدخول والصفحة الرئيسية
+│   │   └── presentation/screens/          # Login and home screens
 │   ├── category/                          # SelectCategoryCubit + State
 │   └── location/
 │       └── manger/                        # LocationCubit + State
-└── widgets/                        # مكونات UI قابلة لإعادة الاستخدام
+└── widgets/                        # Reusable UI components
     ├── custom_button.dart
     ├── custom_icon_button.dart
     ├── custom_image.dart
@@ -67,31 +76,30 @@ lib/
     └── place_card.dart
 ```
 
-## ⚙️ الإعداد والتشغيل
+## ⚙️ Setup & Run
 
-### المتطلبات
-- Flutter SDK مثبت على جهازك
-- حساب Firebase مربوط بالمشروع (لازم ملف `firebase_options.dart` يكون مظبوط على مشروعك في Firebase Console)
-- تفعيل **Phone Authentication** و **Google Sign-In** من لوحة تحكم Firebase Authentication
+### Requirements
+- Flutter SDK installed on your machine
+- A Firebase project linked to the app (the `firebase_options.dart` file must be configured for your own Firebase project)
+- **Phone Authentication** and **Google Sign-In** enabled in the Firebase Authentication console
 
-### خطوات التشغيل
+### Run Steps
 
 ```bash
-# تثبيت الحزم
+# Install dependencies
 flutter pub get
 
-# تشغيل التطبيق
+# Run the app
 flutter run
 ```
 
-> ملاحظة: تأكد إن ملف `firebase_options.dart` متولد من مشروعك الخاص على Firebase (عن طريق `flutterfire configure`)، مش الملف الموجود في المستودع كما هو، لأنه مرتبط بمشروع Firebase بعينه.
+> Note: Make sure `firebase_options.dart` is generated from your own Firebase project (via `flutterfire configure`), not used as-is from the repo, since it's tied to a specific Firebase project.
 
-## 🗺️ خطوات قادمة (مقترحة)
+## 🗺️ Suggested Next Steps
 
-- شاشات: عرض المنيو، السلة والدفع، تتبع الطلب، وتاريخ الطلبات
-- ربط الدفع الإلكتروني (Visa)
-- ربط قائمة الأماكن الحقيقية بدل البيانات الوهمية الحالية
-- الإشعارات (Push Notifications) عند جهوزية الطلب
+- Screens: menu view, cart & checkout, order tracking, order history
+- Integrate online payment (Visa)
+- Connect a real places list instead of the current placeholder data
+- Push notifications when the order is ready
 
 ---
-تم توليد هذا الملف تلقائيًا بناءً على الكود الحالي للمشروع.
