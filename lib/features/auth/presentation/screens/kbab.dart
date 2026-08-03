@@ -1,4 +1,4 @@
-import 'dart:ui'; // 1. أضفنا هذه المكتبة لعمل تأثير الـ Blur
+import 'dart:ui';
 import 'package:engez/constants/my_colors.dart';
 import 'package:engez/features/cart/manager/cart_cubit.dart';
 import 'package:engez/features/cart/manager/cart_state.dart';
@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
+import 'package:syncfusion_flutter_core/theme.dart';
 
 class Kbab extends StatelessWidget {
   const Kbab({super.key});
@@ -18,13 +19,12 @@ class Kbab extends StatelessWidget {
 
     showDialog(
       context: context,
-      barrierColor: Colors.black.withOpacity(0.3), // تغميق خفيف للخلفية مع العزل
+      barrierColor: Colors.black.withValues(alpha: .3),
       builder: (BuildContext context) {
-        // 2. استخدام BackdropFilter لعمل الـ Frosted Glass
         return BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 6.0, sigmaY: 6.0), // درجة الـ Blur
+          filter: ImageFilter.blur(sigmaX: 6.0, sigmaY: 6.0),
           child: Dialog(
-            backgroundColor: Colors.transparent, // شفاف حتى تظهر حواف الـ Container
+            backgroundColor: Colors.transparent,
             elevation: 0,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(20.r),
@@ -38,10 +38,10 @@ class Kbab extends StatelessWidget {
                 borderRadius: BorderRadius.circular(20.r),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.2),
+                    color: Colors.black.withValues(alpha: .2),
                     blurRadius: 15,
                     spreadRadius: 5,
-                  )
+                  ),
                 ],
               ),
               child: Column(
@@ -52,14 +52,20 @@ class Kbab extends StatelessWidget {
                       Row(
                         children: [
                           IconButton(
-                            icon: const Icon(Icons.zoom_in, color: Colors.black),
+                            icon: const Icon(
+                              Icons.zoom_in,
+                              color: Colors.black,
+                            ),
                             onPressed: () {
                               pdfViewerController.zoomLevel =
                                   pdfViewerController.zoomLevel + 1;
                             },
                           ),
                           IconButton(
-                            icon: const Icon(Icons.zoom_out, color: Colors.black),
+                            icon: const Icon(
+                              Icons.zoom_out,
+                              color: Colors.black,
+                            ),
                             onPressed: () {
                               pdfViewerController.zoomLevel =
                                   pdfViewerController.zoomLevel - 1;
@@ -76,10 +82,15 @@ class Kbab extends StatelessWidget {
                   Expanded(
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(15.r),
-                      child: SfPdfViewer.asset(
-                        'menu/menukbab.pdf',
-                        controller: pdfViewerController,
-                        canShowScrollHead: false,
+                      child: SfPdfViewerTheme(
+                        data: SfPdfViewerThemeData(
+                          backgroundColor: MyColors.myBackground,
+                        ),
+                        child: SfPdfViewer.asset(
+                          'menu/menukbab.pdf',
+                          controller: pdfViewerController,
+                          canShowScrollHead: false,
+                        ),
                       ),
                     ),
                   ),
@@ -374,7 +385,7 @@ class Kbab extends StatelessWidget {
                       ],
                     ),
                   ),
-                  SizedBox(width: 12.w), // 3. المسافة الفاصلة بين المنيو ومربع التقييم
+                  SizedBox(width: 12.w),
                   Container(
                     padding: EdgeInsets.symmetric(
                       horizontal: 10.w,
