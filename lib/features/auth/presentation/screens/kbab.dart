@@ -1,3 +1,4 @@
+import 'dart:ui'; // 1. أضفنا هذه المكتبة لعمل تأثير الـ Blur
 import 'package:engez/constants/my_colors.dart';
 import 'package:engez/features/cart/manager/cart_cubit.dart';
 import 'package:engez/features/cart/manager/cart_state.dart';
@@ -7,7 +8,7 @@ import 'package:engez/widgets/menu_item_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';    
+import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 
 class Kbab extends StatelessWidget {
   const Kbab({super.key});
@@ -17,57 +18,73 @@ class Kbab extends StatelessWidget {
 
     showDialog(
       context: context,
+      barrierColor: Colors.black.withOpacity(0.3), // تغميق خفيف للخلفية مع العزل
       builder: (BuildContext context) {
-        return Dialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20.r),
-          ),
-          child: Container(
-            height: 600.h,
-            width: double.infinity,
-            padding: EdgeInsets.all(10.w),
-            decoration: BoxDecoration(
-              color: Colors.white,
+        // 2. استخدام BackdropFilter لعمل الـ Frosted Glass
+        return BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 6.0, sigmaY: 6.0), // درجة الـ Blur
+          child: Dialog(
+            backgroundColor: Colors.transparent, // شفاف حتى تظهر حواف الـ Container
+            elevation: 0,
+            shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(20.r),
             ),
-            child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      children: [
-                        IconButton(
-                          icon: const Icon(Icons.zoom_in, color: Colors.black),
-                          onPressed: () {
-                            pdfViewerController.zoomLevel = pdfViewerController.zoomLevel + 1;
-                          },
-                        ),
-                        IconButton(
-                          icon: const Icon(Icons.zoom_out, color: Colors.black),
-                          onPressed: () {
-                            pdfViewerController.zoomLevel = pdfViewerController.zoomLevel - 1;
-                          },
-                        ),
-                      ],
-                    ),
-                    IconButton(
-                      icon: const Icon(Icons.close, color: Colors.black),
-                      onPressed: () => Navigator.pop(context),
-                    ),
-                  ],
-                ),
-                Expanded(
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(15.r),
-                    child: SfPdfViewer.asset(
-                      'menu/menukbab.pdf',
-                      controller: pdfViewerController, 
-                      canShowScrollHead: false,
+            child: Container(
+              height: 600.h,
+              width: double.infinity,
+              padding: EdgeInsets.all(10.w),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(20.r),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.2),
+                    blurRadius: 15,
+                    spreadRadius: 5,
+                  )
+                ],
+              ),
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: [
+                          IconButton(
+                            icon: const Icon(Icons.zoom_in, color: Colors.black),
+                            onPressed: () {
+                              pdfViewerController.zoomLevel =
+                                  pdfViewerController.zoomLevel + 1;
+                            },
+                          ),
+                          IconButton(
+                            icon: const Icon(Icons.zoom_out, color: Colors.black),
+                            onPressed: () {
+                              pdfViewerController.zoomLevel =
+                                  pdfViewerController.zoomLevel - 1;
+                            },
+                          ),
+                        ],
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.close, color: Colors.black),
+                        onPressed: () => Navigator.pop(context),
+                      ),
+                    ],
+                  ),
+                  Expanded(
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(15.r),
+                      child: SfPdfViewer.asset(
+                        'menu/menukbab.pdf',
+                        controller: pdfViewerController,
+                        canShowScrollHead: false,
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         );
@@ -96,7 +113,7 @@ class Kbab extends StatelessWidget {
                   },
             style: ElevatedButton.styleFrom(
               backgroundColor: MyColors.myOrange,
-              disabledBackgroundColor: MyColors.myOrange.withOpacity(0.4),
+              disabledBackgroundColor: MyColors.myOrange.withValues(alpha: .4),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(20.r),
               ),
@@ -278,9 +295,13 @@ class Kbab extends StatelessWidget {
                               onTap: () => _showPdfMenu(context),
                               child: Container(
                                 padding: EdgeInsets.symmetric(
-                                    horizontal: 10.w, vertical: 6.h),
+                                  horizontal: 10.w,
+                                  vertical: 6.h,
+                                ),
                                 decoration: BoxDecoration(
-                                  color: MyColors.myOrange.withValues(alpha: .1),
+                                  color: MyColors.myOrange.withValues(
+                                    alpha: .1,
+                                  ),
                                   borderRadius: BorderRadius.circular(10.r),
                                 ),
                                 child: Row(
@@ -315,7 +336,7 @@ class Kbab extends StatelessWidget {
                         ),
                         SizedBox(height: 12.h),
                         Divider(
-                          color: Colors.grey.withOpacity(.3),
+                          color: Colors.grey.withValues(alpha: .3),
                           height: 2,
                           thickness: 1,
                         ),
@@ -353,6 +374,7 @@ class Kbab extends StatelessWidget {
                       ],
                     ),
                   ),
+                  SizedBox(width: 12.w), // 3. المسافة الفاصلة بين المنيو ومربع التقييم
                   Container(
                     padding: EdgeInsets.symmetric(
                       horizontal: 10.w,
@@ -397,7 +419,7 @@ class Kbab extends StatelessWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            _buildImageAndDetailsBar(context), 
+            _buildImageAndDetailsBar(context),
             SizedBox(height: 20.h),
             _buildListOfTextButtons(),
             SizedBox(height: 20.h),
