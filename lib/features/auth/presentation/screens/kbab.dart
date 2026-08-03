@@ -1,38 +1,70 @@
 import 'package:engez/constants/my_colors.dart';
+import 'package:engez/features/cart/manager/cart_cubit.dart';
+import 'package:engez/features/cart/manager/cart_state.dart';
+import 'package:engez/features/cart/models/cart_item.dart';
 import 'package:engez/widgets/category_list.dart';
 import 'package:engez/widgets/menu_item_card.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class Kbab extends StatelessWidget {
   const Kbab({super.key});
 
-  Widget _buildBottomBar() {
-    return SizedBox(
-      height: 60.h,
-      width: double.infinity,
-      child: ElevatedButton(
-        onPressed: () {},
-        style: ElevatedButton.styleFrom(
-          backgroundColor: MyColors.myOrange,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20.r),
-          ),
-          elevation: 3,
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Row(
+  Widget _buildBottomBar(BuildContext context) {
+    return BlocBuilder<CartCubit, CartState>(
+      builder: (context, state) {
+        return SizedBox(
+          height: 60.h,
+          width: double.infinity,
+          child: ElevatedButton(
+            onPressed: state.isEmpty
+                ? null
+                : () {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(
+                          'Cart screen coming soon — ${state.totalItemsCount} item(s), EGP ${state.totalPrice.toStringAsFixed(0)}',
+                        ),
+                        backgroundColor: MyColors.myOrange,
+                      ),
+                    );
+                  },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: MyColors.myOrange,
+              disabledBackgroundColor: MyColors.myOrange.withValues(
+                alpha: 0.4,
+              ),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20.r),
+              ),
+              elevation: 3,
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Icon(
-                  Icons.shopping_cart_outlined,
-                  size: 30,
-                  color: MyColors.myWhite,
+                Row(
+                  children: [
+                    Icon(
+                      Icons.shopping_cart_outlined,
+                      size: 30,
+                      color: MyColors.myWhite,
+                    ),
+                    SizedBox(width: 10.w),
+                    Text(
+                      state.isEmpty
+                          ? 'Cart is empty'
+                          : 'View Cart (${state.totalItemsCount})',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 18.sp,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
                 ),
-                SizedBox(width: 10.w),
                 Text(
-                  'View Cart',
+                  'EGP ${state.totalPrice.toStringAsFixed(0)}',
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 18.sp,
@@ -41,21 +73,43 @@ class Kbab extends StatelessWidget {
                 ),
               ],
             ),
-            Text(
-              'EGP 250',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 18.sp,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 
-  Widget _buildPopularItemsSection() {
+  Widget _buildPopularItemsSection(BuildContext context) {
+    final menuItems = const [
+      CartItem(
+        id: 'mix_grill_platter',
+        title: 'Mix Grill Platter',
+        imagePath: 'assets/images/burger_kbab.jpeg',
+        price: 250,
+      ),
+      CartItem(
+        id: 'shish_taouk_wrap',
+        title: 'Shish Taouk Wrap',
+        imagePath: 'assets/images/burger2.jpg',
+        price: 120,
+      ),
+      CartItem(
+        id: 'kofta_platter',
+        title: 'Kofta Platter',
+        imagePath: 'assets/images/burger3.jpg',
+        price: 200,
+      ),
+    ];
+
+    const descriptions = {
+      'mix_grill_platter':
+          'Tender kofta, shish taouk, and kebab served with rice and...',
+      'shish_taouk_wrap':
+          'Grilled chicken cubes wrapped in fresh bread with garlic...',
+      'kofta_platter':
+          'Premium minced meat kofta grilled to perfection, served...',
+    };
+
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 16.w),
       child: Column(
@@ -75,32 +129,24 @@ class Kbab extends StatelessWidget {
             physics: const NeverScrollableScrollPhysics(),
             shrinkWrap: true,
             padding: EdgeInsets.zero,
-            children: [
-              MenuItemCard(
-                imagePath: 'assets/images/burger_kbab.jpeg',
-                title: 'Mix Grill Platter',
-                description:
-                    'Tender kofta, shish taouk, and kebab served with rice and...',
-                price: '250',
-                onAddTap: () {},
-              ),
-              MenuItemCard(
-                imagePath: 'assets/images/burger2.jpg',
-                title: 'Shish Taouk Wrap',
-                description:
-                    'Grilled chicken cubes wrapped in fresh bread with garlic...',
-                price: '120',
-                onAddTap: () {},
-              ),
-              MenuItemCard(
-                imagePath: 'assets/images/burger3.jpg',
-                title: 'Kofta Platter',
-                description:
-                    'Premium minced meat kofta grilled to perfection, served...',
-                price: '200',
-                onAddTap: () {},
-              ),
-            ],
+            children: menuItems.map((item) {
+              return MenuItemCard(
+                imagePath: item.imagePath,
+                title: item.title,
+                description: descriptions[item.id] ?? '',
+                price: item.price.toStringAsFixed(0),
+                onAddTap: () {
+                  context.read<CartCubit>().addItem(item);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      duration: const Duration(milliseconds: 800),
+                      content: Text('${item.title} added to cart'),
+                      backgroundColor: MyColors.myOrange,
+                    ),
+                  );
+                },
+              );
+            }).toList(),
           ),
         ],
       ),
@@ -117,7 +163,7 @@ class Kbab extends StatelessWidget {
       backgroundColor: MyColors.myWhite,
       bottomNavigationBar: Padding(
         padding: EdgeInsets.all(16.w),
-        child: _buildBottomBar(),
+        child: _buildBottomBar(context),
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -262,7 +308,7 @@ class Kbab extends StatelessWidget {
             SizedBox(height: 20.h),
             _buildListOfTextButtons(),
             SizedBox(height: 20.h),
-            _buildPopularItemsSection(),
+            _buildPopularItemsSection(context),
           ],
         ),
       ),
