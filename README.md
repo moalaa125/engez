@@ -2,20 +2,17 @@
 
 A Flutter app for pre-ordering food and drinks from nearby cafes and restaurants, paying online, and getting notified when the order is ready for pickup — no more waiting in line.
 
-##  Concept
+## ✨ Concept
 
 The user opens the app, sees nearby cafes/restaurants based on their location, places and pays for an order online, then gets notified once the order is ready for pickup.
 
 ## 📱 Screens
 
-<!-- Add your screenshots below, e.g.: -->
-<!-- <img src="screenshots/login.png" width="250" /> -->
-
 | Login | Home | Place Details |
 |---|---|---|
-| *(add screenshot here)* | *(add screenshot here)* | *(add screenshot here)* |
+| <img src="screenshots/login.PNG" width="250" /> | <img src="screenshots/home.PNG" width="250" /> | <img src="screenshots/placeDetails.PNG" width="250" /> |
 
-##  Current Features
+## 🚀 Current Features
 
 - **Auth**
   - Login with Egyptian phone number + OTP via Firebase Phone Auth
@@ -103,3 +100,4 @@ flutter run
 - Push notifications when the order is ready
 
 ---
+This file was auto-generated based on the current project code.
