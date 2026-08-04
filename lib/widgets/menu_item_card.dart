@@ -8,6 +8,9 @@ class MenuItemCard extends StatelessWidget {
   final String description;
   final String price;
   final VoidCallback onAddTap;
+  
+  final int quantity;
+  final VoidCallback onRemoveTap;
 
   const MenuItemCard({
     super.key,
@@ -16,6 +19,8 @@ class MenuItemCard extends StatelessWidget {
     required this.description,
     required this.price,
     required this.onAddTap,
+    this.quantity = 0, 
+    required this.onRemoveTap,
   });
 
   @override
@@ -28,7 +33,7 @@ class MenuItemCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(20.r),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
+            color: Colors.black.withValues(alpha: .04),
             blurRadius: 10,
             spreadRadius: 1,
             offset: const Offset(0, 4),
@@ -38,7 +43,6 @@ class MenuItemCard extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          // جزء الصورة مع حماية ضد الـ Crash
           ClipRRect(
             borderRadius: BorderRadius.circular(16.r),
             child: Image.asset(
@@ -46,7 +50,6 @@ class MenuItemCard extends StatelessWidget {
               height: 90.h,
               width: 90.w,
               fit: BoxFit.cover,
-              // هذا الجزء يحمي التطبيق من الانهيار إذا لم يجد الصورة
               errorBuilder: (context, error, stackTrace) {
                 return Container(
                   height: 90.h,
@@ -59,14 +62,13 @@ class MenuItemCard extends StatelessWidget {
           ),
           SizedBox(width: 12.w),
           
-          // جزء النصوص 
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   title,
-                  maxLines: 1, // منع العنوان من عمل Overflow
+                  maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
                     fontSize: 16.sp,
@@ -89,7 +91,6 @@ class MenuItemCard extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    // استخدام Flexible لمنع السعر من دفع الأيقونة خارج الشاشة
                     Flexible(
                       child: Text(
                         'EGP $price',
@@ -102,17 +103,71 @@ class MenuItemCard extends StatelessWidget {
                         ),
                       ),
                     ),
-                    GestureDetector(
-                      onTap: onAddTap,
-                      child: CircleAvatar(
-                        radius: 15.r,
-                        backgroundColor: MyColors.myOrange,
-                        child: Icon(
-                          Icons.add,
-                          color: Colors.white,
-                          size: 20.r,
-                        ),
-                      ),
+                    
+                    AnimatedSwitcher(
+                      duration: const Duration(milliseconds: 300),
+                      transitionBuilder: (Widget child, Animation<double> animation) {
+                        return ScaleTransition(scale: animation, child: child);
+                      },
+                      child: quantity == 0
+                          ? GestureDetector(
+                              key: const ValueKey('add_button_only'),
+                              onTap: onAddTap,
+                              child: CircleAvatar(
+                                radius: 15.r,
+                                backgroundColor: MyColors.myOrange,
+                                child: Icon(
+                                  Icons.add,
+                                  color: Colors.white,
+                                  size: 20.r,
+                                ),
+                              ),
+                            )
+                          : Row(
+                              key: const ValueKey('quantity_controls'),
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                GestureDetector(
+                                  onTap: onRemoveTap,
+                                  child: Container(
+                                    width: 30.r,
+                                    height: 30.r,
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: Colors.transparent,
+                                      border: Border.all(color: MyColors.myOrange),
+                                    ),
+                                    child: Icon(
+                                      Icons.remove,
+                                      color: MyColors.myOrange,
+                                      size: 20.r,
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(width: 8.w),
+                                Text(
+                                  '$quantity',
+                                  style: TextStyle(
+                                    fontSize: 14.sp,
+                                    fontWeight: FontWeight.bold,
+                                    color: const Color(0xFF572000),
+                                  ),
+                                ),
+                                SizedBox(width: 8.w),
+                                GestureDetector(
+                                  onTap: onAddTap,
+                                  child: CircleAvatar(
+                                    radius: 15.r,
+                                    backgroundColor: MyColors.myOrange,
+                                    child: Icon(
+                                      Icons.add,
+                                      color: Colors.white,
+                                      size: 20.r,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
                     ),
                   ],
                 ),

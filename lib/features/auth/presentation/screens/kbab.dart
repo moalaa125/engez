@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:engez/constants/my_colors.dart';
+import 'package:engez/features/auth/presentation/screens/cart_screen.dart';
 import 'package:engez/features/cart/manager/cart_cubit.dart';
 import 'package:engez/features/cart/manager/cart_state.dart';
 import 'package:engez/features/cart/models/cart_item.dart';
@@ -110,18 +111,13 @@ class Kbab extends StatelessWidget {
           height: 60.h,
           width: double.infinity,
           child: ElevatedButton(
+            // Restored the disabled state handling
             onPressed: state.isEmpty
                 ? null
-                : () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(
-                          'Cart screen coming soon — ${state.totalItemsCount} item(s), EGP ${state.totalPrice.toStringAsFixed(0)}',
-                        ),
-                        backgroundColor: MyColors.myOrange,
-                      ),
-                    );
-                  },
+                : () => Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => const CartScreen()),
+                  ),
             style: ElevatedButton.styleFrom(
               backgroundColor: MyColors.myOrange,
               disabledBackgroundColor: MyColors.myOrange.withValues(alpha: .4),
@@ -215,28 +211,37 @@ class Kbab extends StatelessWidget {
             ),
           ),
           SizedBox(height: 16.h),
-          ListView(
-            physics: const NeverScrollableScrollPhysics(),
-            shrinkWrap: true,
-            padding: EdgeInsets.zero,
-            children: menuItems.map((item) {
-              return MenuItemCard(
-                imagePath: item.imagePath,
-                title: item.title,
-                description: descriptions[item.id] ?? '',
-                price: item.price.toStringAsFixed(0),
-                onAddTap: () {
-                  context.read<CartCubit>().addItem(item);
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      duration: const Duration(milliseconds: 800),
-                      content: Text('${item.title} added to cart'),
-                      backgroundColor: MyColors.myOrange,
-                    ),
+          BlocBuilder<CartCubit, CartState>(
+            builder: (context, state) {
+              return ListView(
+                physics: const NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                padding: EdgeInsets.zero,
+                children: menuItems.map((item) {
+                  // Fixed the code smell: Using Dart's native firstOrNull for safe lookup
+                  int currentQuantity =
+                      state.items
+                          .where((e) => e.id == item.id)
+                          .firstOrNull
+                          ?.quantity ??
+                      0;
+
+                  return MenuItemCard(
+                    imagePath: item.imagePath,
+                    title: item.title,
+                    description: descriptions[item.id] ?? '',
+                    price: item.price.toStringAsFixed(0),
+                    quantity: currentQuantity,
+                    onAddTap: () {
+                      context.read<CartCubit>().addItem(item);
+                    },
+                    onRemoveTap: () {
+                      context.read<CartCubit>().decrementItem(item.id);
+                    },
                   );
-                },
+                }).toList(),
               );
-            }).toList(),
+            },
           ),
         ],
       ),
