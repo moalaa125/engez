@@ -8,7 +8,7 @@ class PlaceCard extends StatelessWidget {
   final String category;
   final String distanceTime;
   final VoidCallback? onFavoriteTap;
-  final void Function() onTab;
+  final void Function()? onTab;
   final String heroTag;
 
   const PlaceCard({
@@ -20,7 +20,7 @@ class PlaceCard extends StatelessWidget {
     required this.category,
     required this.distanceTime,
     this.onFavoriteTap,
-    required this.onTab,
+    this.onTab,
     required this.heroTag,
   });
 

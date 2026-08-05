@@ -7,9 +7,12 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'custom_text_bubble.dart';
 
 class CategoryList extends StatelessWidget {
-  final List<String> categories = const ['Popular', 'Meals', 'Juices', 'Desserts'];
+  final List<String> categories;
 
-  const CategoryList({super.key});
+  const CategoryList({
+    super.key, 
+    required this.categories,
+  });
 
   @override
   Widget build(BuildContext context) {

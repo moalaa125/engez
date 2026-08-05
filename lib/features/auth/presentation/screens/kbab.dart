@@ -249,7 +249,9 @@ class Kbab extends StatelessWidget {
   }
 
   Widget _buildListOfTextButtons() {
-    return const CategoryList();
+    return const CategoryList(
+      categories: ['Popular', 'Meals', 'Juices', 'Desserts'],
+    );
   }
 
   Widget _buildImageAndDetailsBar(BuildContext context) {
