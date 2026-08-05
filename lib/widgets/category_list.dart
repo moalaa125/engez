@@ -17,10 +17,10 @@ class CategoryList extends StatelessWidget {
       create: (context) => SelectCategoryCubit(),
       child: BlocBuilder<SelectCategoryCubit, SelectCategoryState>(
         builder: (context, state) {
-          return Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16.w),
-            child: SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
+          return SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Row(
                 children: List.generate(categories.length, (index) {
                   return Padding(

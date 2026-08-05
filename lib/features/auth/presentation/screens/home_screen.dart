@@ -1,5 +1,6 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:engez/constants/my_colors.dart';
+import 'package:engez/features/auth/presentation/screens/all_places.dart';
 import 'package:engez/features/auth/presentation/screens/kbab.dart';
 import 'package:engez/features/location/manger/location_cubit.dart';
 import 'package:engez/features/location/manger/location_state.dart';
@@ -156,9 +157,6 @@ class _MyWidgetState extends State<HomeScreen> {
     );
   }
 
-
-  
-
   Widget _buildOfferSection() {
     return CarouselSlider(
       options: CarouselOptions(
@@ -208,7 +206,12 @@ class _MyWidgetState extends State<HomeScreen> {
                 style: TextStyle(fontSize: 30.sp, fontWeight: FontWeight.bold),
               ),
               TextButton(
-                onPressed: () {}, // TODO: see all logic
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => AllPlaces()),
+                  );
+                },
                 child: Text(
                   'See All',
                   style: TextStyle(

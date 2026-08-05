@@ -28,7 +28,7 @@ class PlaceCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTab,
-      child: Container(
+      child: SizedBox(
         height: 220,
         width: 400,
         child: ClipRRect(
