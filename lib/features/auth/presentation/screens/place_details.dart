@@ -4,6 +4,7 @@ import 'package:engez/features/auth/presentation/screens/cart_screen.dart';
 import 'package:engez/features/cart/manager/cart_cubit.dart';
 import 'package:engez/features/cart/manager/cart_state.dart';
 import 'package:engez/features/cart/models/cart_item.dart';
+import 'package:engez/models/place_model.dart';
 import 'package:engez/widgets/category_list.dart';
 import 'package:engez/widgets/menu_item_card.dart';
 import 'package:flutter/material.dart';
@@ -12,10 +13,68 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 import 'package:syncfusion_flutter_core/theme.dart';
 
-class Kbab extends StatelessWidget {
-  const Kbab({super.key});
+class PlaceDetailsScreen extends StatelessWidget {
+  final Place place;
+
+  PlaceDetailsScreen({super.key, required this.place});
+
+  final Map<String, String> _pdfPaths = {
+    'kbab_basha': 'menu/menukbab.pdf',
+    'bob_wich': 'menu/menubob.pdf',
+  };
+
+  final Map<String, List<CartItem>> _menuItemsData = {
+    'kbab_basha': const [
+      CartItem(
+        id: 'mix_grill_platter',
+        title: 'Mix Grill Platter',
+        imagePath: 'assets/images/burger_kbab.jpeg',
+        price: 250,
+      ),
+      CartItem(
+        id: 'shish_taouk_wrap',
+        title: 'Shish Taouk Wrap',
+        imagePath: 'assets/images/burger2.jpg',
+        price: 120,
+      ),
+      CartItem(
+        id: 'kofta_platter',
+        title: 'Kofta Platter',
+        imagePath: 'assets/images/burger3.jpg',
+        price: 200,
+      ),
+    ],
+    'bob_wich': const [
+      CartItem(
+        id: 'bob_wich_burger',
+        title: 'Bob Wich Burger',
+        imagePath: 'assets/images/bob.jpeg',
+        price: 150,
+      ),
+    ],
+  };
+
+  final Map<String, String> _descriptions = {
+    'kbab_basha': 'Grill & smash burger',
+    'bob_wich': 'Fresh & healthy sandwiches',
+  };
+
+  final Map<String, String> _descriptionsItems = {
+    'mix_grill_platter': 'Tender kofta, shish taouk, and kebab served with rice and...',
+    'shish_taouk_wrap': 'Grilled chicken cubes wrapped in fresh bread with garlic...',
+    'kofta_platter': 'Premium minced meat kofta grilled to perfection, served...',
+    'bob_wich_burger': 'Delicious classic burger with secret sauce...',
+  };
 
   void _showPdfMenu(BuildContext context) {
+    final String? pdfPath = _pdfPaths[place.id];
+    if (pdfPath == null || pdfPath.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('No menu PDF available for this place yet.')),
+      );
+      return;
+    }
+
     final PdfViewerController pdfViewerController = PdfViewerController();
 
     showDialog(
@@ -53,23 +112,15 @@ class Kbab extends StatelessWidget {
                       Row(
                         children: [
                           IconButton(
-                            icon: const Icon(
-                              Icons.zoom_in,
-                              color: Colors.black,
-                            ),
+                            icon: const Icon(Icons.zoom_in, color: Colors.black),
                             onPressed: () {
-                              pdfViewerController.zoomLevel =
-                                  pdfViewerController.zoomLevel + 1;
+                              pdfViewerController.zoomLevel = pdfViewerController.zoomLevel + 1;
                             },
                           ),
                           IconButton(
-                            icon: const Icon(
-                              Icons.zoom_out,
-                              color: Colors.black,
-                            ),
+                            icon: const Icon(Icons.zoom_out, color: Colors.black),
                             onPressed: () {
-                              pdfViewerController.zoomLevel =
-                                  pdfViewerController.zoomLevel - 1;
+                              pdfViewerController.zoomLevel = pdfViewerController.zoomLevel - 1;
                             },
                           ),
                         ],
@@ -88,7 +139,7 @@ class Kbab extends StatelessWidget {
                           backgroundColor: MyColors.myWhite,
                         ),
                         child: SfPdfViewer.asset(
-                          'menu/menukbab.pdf',
+                          pdfPath,
                           controller: pdfViewerController,
                           canShowScrollHead: false,
                         ),
@@ -111,7 +162,6 @@ class Kbab extends StatelessWidget {
           height: 60.h,
           width: double.infinity,
           child: ElevatedButton(
-            // Restored the disabled state handling
             onPressed: state.isEmpty
                 ? null
                 : () => Navigator.push(
@@ -166,39 +216,12 @@ class Kbab extends StatelessWidget {
   }
 
   Widget _buildPopularItemsSection(BuildContext context) {
-    final menuItems = const [
-      CartItem(
-        id: 'mix_grill_platter',
-        title: 'Mix Grill Platter',
-        imagePath: 'assets/images/burger_kbab.jpeg',
-        price: 250,
-      ),
-      CartItem(
-        id: 'shish_taouk_wrap',
-        title: 'Shish Taouk Wrap',
-        imagePath: 'assets/images/burger2.jpg',
-        price: 120,
-      ),
-      CartItem(
-        id: 'kofta_platter',
-        title: 'Kofta Platter',
-        imagePath: 'assets/images/burger3.jpg',
-        price: 200,
-      ),
-    ];
-
-    const descriptions = {
-      'mix_grill_platter':
-          'Tender kofta, shish taouk, and kebab served with rice and...',
-      'shish_taouk_wrap':
-          'Grilled chicken cubes wrapped in fresh bread with garlic...',
-      'kofta_platter':
-          'Premium minced meat kofta grilled to perfection, served...',
-    };
+    final List<CartItem> menuItems = _menuItemsData[place.id] ?? [];
 
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 16.w),
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(height: 24.h),
@@ -218,18 +241,13 @@ class Kbab extends StatelessWidget {
                 shrinkWrap: true,
                 padding: EdgeInsets.zero,
                 children: menuItems.map((item) {
-                  // Fixed the code smell: Using Dart's native firstOrNull for safe lookup
                   int currentQuantity =
-                      state.items
-                          .where((e) => e.id == item.id)
-                          .firstOrNull
-                          ?.quantity ??
-                      0;
+                      state.items.where((e) => e.id == item.id).firstOrNull?.quantity ?? 0;
 
                   return MenuItemCard(
                     imagePath: item.imagePath,
                     title: item.title,
-                    description: descriptions[item.id] ?? '',
+                    description: _descriptionsItems[item.id] ?? '',
                     price: item.price.toStringAsFixed(0),
                     quantity: currentQuantity,
                     onAddTap: () {
@@ -265,9 +283,9 @@ class Kbab extends StatelessWidget {
             right: 0,
             height: 330.h,
             child: Hero(
-              tag: 'kbab_basha_tag',
+              tag: place.id,
               child: Image.asset(
-                'assets/images/kbabbasha.png',
+                place.imagePath,
                 fit: BoxFit.cover,
               ),
             ),
@@ -303,7 +321,7 @@ class Kbab extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              'Kbab Basha',
+                              place.title,
                               style: TextStyle(
                                 fontSize: 24.sp,
                                 fontWeight: FontWeight.bold,
@@ -317,9 +335,7 @@ class Kbab extends StatelessWidget {
                                   vertical: 6.h,
                                 ),
                                 decoration: BoxDecoration(
-                                  color: MyColors.myOrange.withValues(
-                                    alpha: .1,
-                                  ),
+                                  color: MyColors.myOrange.withValues(alpha: .1),
                                   borderRadius: BorderRadius.circular(10.r),
                                 ),
                                 child: Row(
@@ -346,9 +362,9 @@ class Kbab extends StatelessWidget {
                         ),
                         SizedBox(height: 4.h),
                         Text(
-                          'Grill & smash burger',
+                          _descriptions[place.id] ?? place.category,
                           style: TextStyle(
-                            fontSize: 16.sp,
+                            fontSize: 14.sp,
                             color: Colors.grey[700],
                           ),
                         ),
@@ -408,7 +424,7 @@ class Kbab extends StatelessWidget {
                         const Icon(Icons.star, color: Colors.orange, size: 16),
                         SizedBox(width: 4.w),
                         Text(
-                          '4.9',
+                          place.rating.toString(),
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 13.sp,
@@ -429,13 +445,15 @@ class Kbab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       backgroundColor: MyColors.myWhite,
       bottomNavigationBar: Padding(
-        padding: EdgeInsets.all(16.w),
+        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
         child: _buildBottomBar(context),
       ),
       body: SingleChildScrollView(
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
             _buildImageAndDetailsBar(context),
             SizedBox(height: 20.h),
