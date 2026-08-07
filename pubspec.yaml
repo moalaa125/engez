@@ -50,6 +50,8 @@ dependencies:
   carousel_slider: ^5.1.2
   syncfusion_flutter_pdfviewer: ^34.1.33
   cloud_firestore: ^6.8.0
+  sign_in_with_apple: ^8.1.0
+  crypto: ^3.0.7
 
 dev_dependencies:
   flutter_test:

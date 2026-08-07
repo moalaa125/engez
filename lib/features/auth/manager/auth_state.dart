@@ -17,7 +17,7 @@ class OtpSentSuccess extends AuthState {
   const OtpSentSuccess({required this.verificationId});
 
   @override
-  List<Object> get props => [verificationId]; // Equatable
+  List<Object> get props => [verificationId]; 
 }
 
 class AuthSuccess extends AuthState {}

@@ -1,4 +1,7 @@
 import 'package:engez/constants/my_colors.dart';
+import 'package:engez/features/auth/presentation/screens/place_details.dart';
+import 'package:engez/models/place_model.dart';
+import 'package:engez/services/place_service.dart';
 import 'package:engez/widgets/category_list.dart';
 import 'package:engez/widgets/place_card.dart';
 import 'package:flutter/material.dart';
@@ -18,49 +21,49 @@ class AllPlaces extends StatelessWidget {
       padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
       child: Column(
         children: [
-          PlaceCard(
-            heroTag: 'hero1',
-            imagePath: 'assets/images/kbabbasha.png',
-            title: 'كباب باشا',
-            rating: '4.9',
-            reviewsCount: '210',
-            category: 'Coffee',
-            distanceTime: '30 min',
-            onFavoriteTap: () {},
-          ),
-          SizedBox(height: 20.h),
-          PlaceCard(
-            heroTag: 'hero2',
-            imagePath: 'assets/images/bob.jpeg',
-            title: 'بوب وتش',
-            rating: '4.9',
-            reviewsCount: '210',
-            category: 'Coffee',
-            distanceTime: '15 min',
-            onFavoriteTap: () {},
-          ),
-          SizedBox(height: 20.h),
+          FutureBuilder<List<Place>>(
+            future: PlaceService().fetchPlaces(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Center(
+                  child: const CircularProgressIndicator(color: Colors.deepOrange),
+                );
+              }
+              if (snapshot.hasError) {
+                return Center(child: Text('Error: ${snapshot.error}'));
+              }
+              final places = snapshot.data!;
+              if (places.isEmpty) {
+                return const Center(child: Text('No places found'));
+              }
+              return Column(
+                children: places.map((place) {
+                  return Padding(
+                    padding: EdgeInsets.only(bottom: 20.h),
+                    child: PlaceCard(
+                      heroTag: place.id,
 
-          PlaceCard(
-            heroTag: 'hero3',
-            imagePath: 'assets/images/kbabbasha.png',
-            title: 'كباب باشا',
-            rating: '4.9',
-            reviewsCount: '210',
-            category: 'Coffee',
-            distanceTime: '30 min',
-            onFavoriteTap: () {},
-          ),
-          SizedBox(height: 20.h),
-          PlaceCard(
-            heroTag: 'hero4',
-            imagePath: 'assets/images/bob.jpeg',
-            title: 'بوب وتش',
-            rating: '4.9',
-            reviewsCount: '210',
-            category: 'Coffee',
-            distanceTime: '15 min',
-            onFavoriteTap: () {},
+                      onTab: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                PlaceDetailsScreen(place: place),
+                          ),
+                        );
+                      },
+                      imagePath: place.imagePath,
+                      title: place.title,
+                      rating: place.rating.toString(),
+                      reviewsCount: '200',
+                      category: place.category,
+                      distanceTime: '20 min',
+                      onFavoriteTap: () {},
+                    ),
+                  );
+                }).toList(),
+              );
+            },
           ),
         ],
       ),

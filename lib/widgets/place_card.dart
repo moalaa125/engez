@@ -42,23 +42,6 @@ class PlaceCard extends StatelessWidget {
                 ),
               ),
               Positioned(
-                top: 12,
-                right: 12,
-                child: CircleAvatar(
-                  backgroundColor: Colors.white.withValues(alpha: .8),
-                  radius: 18,
-                  child: IconButton(
-                    padding: EdgeInsets.zero,
-                    icon: const Icon(
-                      Icons.favorite_border,
-                      size: 20,
-                      color: Colors.black87,
-                    ),
-                    onPressed: onFavoriteTap ?? () {},
-                  ),
-                ),
-              ),
-              Positioned(
                 bottom: 10,
                 left: 12,
                 right: 12,
@@ -68,7 +51,7 @@ class PlaceCard extends StatelessWidget {
                     vertical: 12,
                   ),
                   decoration: BoxDecoration(
-                    color: const Color(0xFFF3ECE5).withValues(alpha: .9),
+                    color:  const Color(0xFFEAE8E9).withValues(alpha: .9),
                     borderRadius: BorderRadius.circular(16),
                   ),
                   child: Row(
@@ -122,7 +105,6 @@ class PlaceCard extends StatelessWidget {
                         ],
                       ),
 
-                      // Walking Time Box
                       Container(
                         padding: const EdgeInsets.symmetric(
                           horizontal: 10,

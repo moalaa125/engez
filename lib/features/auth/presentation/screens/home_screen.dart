@@ -1,6 +1,7 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:engez/constants/my_colors.dart';
 import 'package:engez/features/auth/presentation/screens/all_places.dart';
+import 'package:engez/features/auth/presentation/screens/profile.dart';
 import 'package:engez/features/auth/presentation/screens/place_details.dart';
 import 'package:engez/features/location/manger/location_cubit.dart';
 import 'package:engez/features/location/manger/location_state.dart';
@@ -89,10 +90,15 @@ class _MyWidgetState extends State<HomeScreen> {
       actions: [
         Padding(
           padding: EdgeInsets.only(right: 10.w),
-          child: CircleAvatar(
-            radius: 22.r,
-            backgroundImage: const AssetImage(
-              'assets/images/enterPhoneNumber.png',
+          child: GestureDetector(
+            onTap: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) => Profile(),));
+            },
+            child: CircleAvatar(
+              radius: 22.r,
+              backgroundImage: const AssetImage(
+                'assets/images/enterPhoneNumber.png',
+              ),
             ),
           ),
         ),
@@ -105,7 +111,10 @@ class _MyWidgetState extends State<HomeScreen> {
       return SizedBox(
         height: 16.h,
         width: 16.w,
-        child: const CircularProgressIndicator(strokeWidth: 2),
+        child: const CircularProgressIndicator(
+          strokeWidth: 2,
+          color: Colors.deepOrange,
+        ),
       );
     }
 
@@ -150,8 +159,6 @@ class _MyWidgetState extends State<HomeScreen> {
             SizedBox(width: 20.w),
             const CustomIconButton(iconData: Icons.food_bank_outlined),
             SizedBox(width: 20.w),
-            const CustomIconButton(iconData: Icons.apple),
-            SizedBox(width: 20.w),
           ],
         ),
       ),
@@ -194,84 +201,84 @@ class _MyWidgetState extends State<HomeScreen> {
     );
   }
 
-
- Widget _buildNearbyPlaces() {
-  return Padding(
-    padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
-    child: Column(
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              'Nearby Places',
-              style: TextStyle(fontSize: 30.sp, fontWeight: FontWeight.bold),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => AllPlaces()),
-                );
-              },
-              child: Text(
-                'See All',
-                style: TextStyle(
-                  color: const Color(0xFF572000),
-                  fontSize: 14.sp,
+  Widget _buildNearbyPlaces() {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Nearby Places',
+                style: TextStyle(fontSize: 30.sp, fontWeight: FontWeight.bold),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => AllPlaces()),
+                  );
+                },
+                child: Text(
+                  'See All',
+                  style: TextStyle(
+                    color: const Color(0xFF572000),
+                    fontSize: 14.sp,
+                  ),
                 ),
               ),
-            ),
-          ],
-        ),
-        SizedBox(height: 10.h), 
-
-        FutureBuilder<List<Place>>(
-          future: PlaceService().fetchPlaces(),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(child: CircularProgressIndicator());
-            }
-            if (snapshot.hasError) {
-              return Center(child: Text('Error: ${snapshot.error}'));
-            }
-            final places = snapshot.data!;
-            if (places.isEmpty) {
-              return const Center(child: Text('No places found'));
-            }
-            return Column(
-              children: places.map((place) {
-                return Padding(
-                  padding: EdgeInsets.only(bottom: 20.h),
-                  child: PlaceCard(
-                    heroTag: place.id,
-                    
-                    onTab: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => PlaceDetailsScreen(place: place,), 
-                        ),
-                      );
-                    },                    
-                    imagePath: place.imagePath,
-                    title: place.title,
-                    rating: place.rating.toString(),
-                    reviewsCount: '200',
-                    category: place.category,
-                    distanceTime: '20 min',
-                    onFavoriteTap: () {},
-                  ),
+            ],
+          ),
+          SizedBox(height: 10.h),
+          FutureBuilder<List<Place>>(
+            future: PlaceService().fetchPlaces(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Center(
+                  child: CircularProgressIndicator(color: Colors.deepOrange),
                 );
-              }).toList(),
-            );
-          },
-        ),
-      ],
-    ),
-  );
-}
-  
+              }
+              if (snapshot.hasError) {
+                return Center(child: Text('Error: ${snapshot.error}'));
+              }
+              final places = snapshot.data!;
+              if (places.isEmpty) {
+                return const Center(child: Text('No places found'));
+              }
+              return Column(
+                children: places.map((place) {
+                  return Padding(
+                    padding: EdgeInsets.only(bottom: 20.h),
+                    child: PlaceCard(
+                      heroTag: place.id,
+
+                      onTab: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                PlaceDetailsScreen(place: place),
+                          ),
+                        );
+                      },
+                      imagePath: place.imagePath,
+                      title: place.title,
+                      rating: place.rating.toString(),
+                      reviewsCount: '200',
+                      category: place.category,
+                      distanceTime: '20 min',
+                      onFavoriteTap: () {},
+                    ),
+                  );
+                }).toList(),
+              );
+            },
+          ),
+        ],
+      ),
+    );
+  }
 
   Widget _buidTextField() {
     return CustomTextField(
@@ -306,70 +313,3 @@ class _MyWidgetState extends State<HomeScreen> {
     );
   }
 }
-
-
-
-/*
-
-Widget _buildNearbyPlaces() {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
-      child: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Nearby Places',
-                style: TextStyle(fontSize: 30.sp, fontWeight: FontWeight.bold),
-              ),
-              TextButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => AllPlaces()),
-                  );
-                },
-                child: Text(
-                  'See All',
-                  style: TextStyle(
-                    color: const Color(0xFF572000),
-                    fontSize: 14.sp,
-                  ),
-                ),
-              ),
-            ],
-          ),
-          SizedBox(height: 10.h),
-          PlaceCard(
-            heroTag: 'kbab_basha_tag',
-            onTab: () => Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => Kbab()),
-            ),
-            imagePath: 'assets/images/kbabbasha.png',
-            title: 'كباب باشا',
-            rating: '4.9',
-            reviewsCount: '210',
-            category: 'Coffee',
-            distanceTime: '30 min',
-            onFavoriteTap: () {},
-          ),
-          SizedBox(height: 20.h),
-          PlaceCard(
-            heroTag: 'bob_watch_tag',
-            onTab: () {},
-            imagePath: 'assets/images/bob.jpeg',
-            title: 'بوب وتش',
-            rating: '4.9',
-            reviewsCount: '210',
-            category: 'Coffee',
-            distanceTime: '15 min',
-            onFavoriteTap: () {},
-          ),
-        ],
-      ),
-    );
-  }
-
- */

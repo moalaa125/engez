@@ -52,6 +52,14 @@ class PlaceDetailsScreen extends StatelessWidget {
         price: 150,
       ),
     ],
+    'rolz': const [
+      CartItem(
+        id: 'rolz',
+        title: 'Rolz Burger',
+        imagePath: 'assets/images/rolz.png',
+        price: 150,
+      ),
+    ],
   };
 
   final Map<String, String> _descriptions = {
@@ -64,6 +72,7 @@ class PlaceDetailsScreen extends StatelessWidget {
     'shish_taouk_wrap': 'Grilled chicken cubes wrapped in fresh bread with garlic...',
     'kofta_platter': 'Premium minced meat kofta grilled to perfection, served...',
     'bob_wich_burger': 'Delicious classic burger with secret sauce...',
+    'rolz' : 'rolz burger',
   };
 
   void _showPdfMenu(BuildContext context) {
