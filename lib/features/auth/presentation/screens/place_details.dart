@@ -72,8 +72,57 @@ class PlaceDetailsScreen extends StatelessWidget {
     'shish_taouk_wrap': 'Grilled chicken cubes wrapped in fresh bread with garlic...',
     'kofta_platter': 'Premium minced meat kofta grilled to perfection, served...',
     'bob_wich_burger': 'Delicious classic burger with secret sauce...',
-    'rolz' : 'rolz burger',
+    'rolz': 'rolz burger',
   };
+
+  Widget _buildPlaceImage(String imagePath, {double? height, double? width, BoxFit fit = BoxFit.cover}) {
+    if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
+      return Image.network(
+        imagePath,
+        height: height,
+        width: width,
+        fit: fit,
+        errorBuilder: (context, error, stackTrace) {
+          return _buildPlaceholderImage(height: height, width: width);
+        },
+        loadingBuilder: (context, child, loadingProgress) {
+          if (loadingProgress == null) return child;
+          return Center(
+            child: CircularProgressIndicator(
+              color: Colors.orange,
+              strokeWidth: 2,
+            ),
+          );
+        },
+      );
+    } else {
+      return Image.asset(
+        imagePath,
+        height: height,
+        width: width,
+        fit: fit,
+        errorBuilder: (context, error, stackTrace) {
+          return _buildPlaceholderImage(height: height, width: width);
+        },
+      );
+    }
+  }
+
+  Widget _buildPlaceholderImage({double? height, double? width}) {
+    return Container(
+      height: height,
+      width: width,
+      color: Colors.grey[300],
+      child: Center(
+        child: Icon(
+          Icons.image_not_supported,
+          size: 40,
+          color: Colors.grey[600],
+        ),
+      ),
+    );
+  }
+
 
   void _showPdfMenu(BuildContext context) {
     final String? pdfPath = _pdfPaths[place.id];
@@ -293,10 +342,7 @@ class PlaceDetailsScreen extends StatelessWidget {
             height: 330.h,
             child: Hero(
               tag: place.id,
-              child: Image.asset(
-                place.imagePath,
-                fit: BoxFit.cover,
-              ),
+              child: _buildPlaceImage(place.imagePath),
             ),
           ),
           Positioned(

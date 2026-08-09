@@ -1,7 +1,7 @@
 import 'package:engez/constants/my_colors.dart';
 import 'package:engez/features/auth/manager/auth_state.dart';
 import 'package:engez/features/auth/presentation/screens/home_screen.dart';
-import 'package:engez/features/auth/presentation/screens/role_selection_screen.dart'; // ✅ استيراد شاشة اختيار الدور
+import 'package:engez/features/auth/presentation/screens/role_selection_screen.dart'; 
 import 'package:engez/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -44,7 +44,6 @@ class _LoginScreenContentState extends State<_LoginScreenContent> {
             ),
           );
 
-          // ✅ التوجيه إلى شاشة اختيار الدور بدلاً من HomeScreen
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(builder: (_) => const RoleSelectionScreen()),
@@ -100,8 +99,7 @@ class _LoginScreenContentState extends State<_LoginScreenContent> {
                     iconPath: 'assets/images/apple.png',
                     text: 'تسجيل الدخول باستخدام apple',
                     function: () {
-                      // TODO: سيتم تنفيذ تسجيل الدخول عبر Apple لاحقاً
-                      // حالياً يتم التوجيه مباشرة إلى HomeScreen (يمكن تغييره لاحقاً)
+                      // TODO: 
                       Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(builder: (context) => HomeScreen()),

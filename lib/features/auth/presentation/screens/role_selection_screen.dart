@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:engez/features/auth/presentation/screens/owner_dashboard_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -60,7 +61,7 @@ class _RoleSelectionScreenState extends State<RoleSelectionScreen> {
       } else if (selectedRole == 'owner') {
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (_) => const Placeholder()),
+          MaterialPageRoute(builder: (_) => const OwnerDashboardScreen()),
         );
       }
     } catch (e) {

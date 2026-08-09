@@ -24,6 +24,48 @@ class PlaceCard extends StatelessWidget {
     required this.heroTag,
   });
 
+  Widget _buildPlaceImage() {
+    if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
+      return Image.network(
+        imagePath,
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) {
+          return _buildPlaceholderImage();
+        },
+        loadingBuilder: (context, child, loadingProgress) {
+          if (loadingProgress == null) return child;
+          return Center(
+            child: CircularProgressIndicator(
+              color: Colors.orange,
+              strokeWidth: 2,
+            ),
+          );
+        },
+      );
+    } else {
+      return Image.asset(
+        imagePath,
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) {
+          return _buildPlaceholderImage();
+        },
+      );
+    }
+  }
+
+  Widget _buildPlaceholderImage() {
+    return Container(
+      color: Colors.grey[300],
+      child: Center(
+        child: Icon(
+          Icons.image_not_supported,
+          size: 40,
+          color: Colors.grey[600],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -38,7 +80,7 @@ class PlaceCard extends StatelessWidget {
               Positioned.fill(
                 child: Hero(
                   tag: heroTag,
-                  child: Image.asset(imagePath, fit: BoxFit.cover),
+                  child: _buildPlaceImage(),
                 ),
               ),
               Positioned(
@@ -51,7 +93,7 @@ class PlaceCard extends StatelessWidget {
                     vertical: 12,
                   ),
                   decoration: BoxDecoration(
-                    color:  const Color(0xFFEAE8E9).withValues(alpha: .9),
+                    color: const Color(0xFFEAE8E9).withValues(alpha: .9),
                     borderRadius: BorderRadius.circular(16),
                   ),
                   child: Row(
@@ -104,7 +146,6 @@ class PlaceCard extends StatelessWidget {
                           ),
                         ],
                       ),
-
                       Container(
                         padding: const EdgeInsets.symmetric(
                           horizontal: 10,
