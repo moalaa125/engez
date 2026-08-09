@@ -6,7 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:http/http.dart' as http;
-
+import 'package:image_picker/image_picker.dart';
 class Profile extends StatefulWidget {
   const Profile({super.key});
 
@@ -18,7 +18,7 @@ class _ProfileState extends State<Profile> {
   bool _isUploading = false;
 
   static const String _cloudName = 'dtneftgss';
-  static const String _uploadPreset = 'upload_app_profile_image';  
+  static const String _uploadPreset = 'upload_app_profile_image';
 
   Future<String?> _uploadToCloudinary(File imageFile) async {
     final uri = Uri.parse(
@@ -42,49 +42,55 @@ class _ProfileState extends State<Profile> {
     }
   }
 
-  // Future<void> _pickAndUploadImage() async {
-  //   final picker = ImagePicker();
-  //   final pickedFile = await picker.pickImage(
-  //     source: ImageSource.gallery,
-  //     imageQuality: 70,     
-  //   );
+  Future<void> _pickAndUploadImage() async {
+    final picker = ImagePicker();
+    final pickedFile = await picker.pickImage(
+      source: ImageSource.gallery,
+      imageQuality: 70,
+    );
 
-  //   if (pickedFile == null) return;
+    if (pickedFile == null) return;
 
-  //   setState(() => _isUploading = true);
+    setState(() => _isUploading = true);
 
-  //   try {
-  //     final user = FirebaseAuth.instance.currentUser;
-  //     if (user == null) return;
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+      if (user == null) return;
 
-  //     File imageFile = File(pickedFile.path);
+      File imageFile = File(pickedFile.path);
 
-  //     final downloadUrl = await _uploadToCloudinary(imageFile);
+      final downloadUrl = await _uploadToCloudinary(imageFile);
 
-  //     if (downloadUrl == null) throw Exception('Upload failed');
+      if (downloadUrl == null) throw Exception('Upload failed');
 
-  //     await FirebaseFirestore.instance
-  //         .collection('users')
-  //         .doc(user.uid)
-  //         .update({'profileImage': downloadUrl});
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .set({
+        'profileImage': downloadUrl,
+      }, SetOptions(merge: true));
 
-  //     if (mounted) {
-  //       ScaffoldMessenger.of(context).showSnackBar(
-  //         const SnackBar(
-  //           content: Text('Profile picture updated successfully!'),
-  //         ),
-  //       );
-  //     }
-  //   } catch (e) {
-  //     if (mounted) {
-  //       ScaffoldMessenger.of(context).showSnackBar(
-  //         SnackBar(content: Text('Failed to upload image: $e')),
-  //       );
-  //     }
-  //   } finally {
-  //     if (mounted) setState(() => _isUploading = false);
-  //   }
-  // }
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('تم تحديث الصورة الشخصية بنجاح!'),
+            backgroundColor: Colors.green,
+          ),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('فشل رفع الصورة: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } finally {
+      if (mounted) setState(() => _isUploading = false);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -98,14 +104,15 @@ class _ProfileState extends State<Profile> {
             .doc(user?.uid)
             .snapshots(),
         builder: (context, snapshot) {
-          String userName = 'Loading...';
-          String? profileImageUrl;
+          // قيم افتراضية من Google
+          String userName = user?.displayName ?? 'No Name';
+          String? profileImageUrl = user?.photoURL;
 
+          // إذا كانت البيانات موجودة في Firestore، استخدمها بدلاً من ذلك
           if (snapshot.hasData && snapshot.data!.exists) {
             var data = snapshot.data!.data() as Map<String, dynamic>;
-            userName = data['userName'] ?? 'No Name';
-            profileImageUrl =
-                data.containsKey('profileImage') ? data['profileImage'] : null;
+            userName = data['userName'] ?? user?.displayName ?? 'No Name';
+            profileImageUrl = data['profileImage'] ?? user?.photoURL;
           }
 
           return ListView(
@@ -121,7 +128,7 @@ class _ProfileState extends State<Profile> {
                       backgroundImage: profileImageUrl != null
                           ? NetworkImage(profileImageUrl)
                           : const AssetImage('assets/images/joinUs.png')
-                                as ImageProvider,
+                              as ImageProvider,
                     ),
                     CircleAvatar(
                       backgroundColor: MyColors.myOrange,
@@ -141,7 +148,7 @@ class _ProfileState extends State<Profile> {
                                 color: Colors.white,
                                 size: 20.sp,
                               ),
-                        onPressed: _isUploading ? null : null,
+                        onPressed: _isUploading ? null : _pickAndUploadImage,
                       ),
                     ),
                   ],
@@ -166,16 +173,16 @@ class _ProfileState extends State<Profile> {
                 ),
               ),
               SizedBox(height: 40.h),
-              _buildProfileOption(Icons.person, 'Edit Profile', () {}),
-              _buildProfileOption(Icons.lock, 'Change Password', () {}),
-              _buildProfileOption(Icons.settings, 'App Settings', () {}),
+              _buildProfileOption(Icons.person, 'تعديل الملف الشخصي', () {}),
+              _buildProfileOption(Icons.lock, 'تغيير كلمة المرور', () {}),
+              _buildProfileOption(Icons.settings, 'إعدادات التطبيق', () {}),
               _buildProfileOption(
                 Icons.logout,
-                'Logout',
+                'تسجيل الخروج',
                 () async {
                   await FirebaseAuth.instance.signOut();
                   if (!mounted) return;
-                  Navigator.of(context).pushReplacementNamed('loginPage');
+                  Navigator.of(context).pushReplacementNamed('login');
                 },
                 isDestructive: true,
               ),

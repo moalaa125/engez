@@ -12,6 +12,7 @@ import 'package:engez/widgets/custom_offer_section.dart';
 import 'package:engez/widgets/custom_text_field.dart';
 import 'package:engez/widgets/nav_bar.dart';
 import 'package:engez/widgets/place_card.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -39,6 +40,7 @@ class _MyWidgetState extends State<HomeScreen> {
   }
 
   PreferredSizeWidget _buildAppBar() {
+     final User? user = FirebaseAuth.instance.currentUser;
     return AppBar(
       scrolledUnderElevation: 0,
       bottom: PreferredSize(
