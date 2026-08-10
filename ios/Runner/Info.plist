@@ -49,5 +49,26 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+
+	<!-- ================================================= -->
+	<!-- ✅ الإضافات المطلوبة لتسجيل الدخول عبر Google    -->
+	<!-- ================================================= -->
+
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.googleusercontent.apps.717537004014-itfhl631g67h98dl2r2b45qrjvmaohgv</string>
+			</array>
+		</dict>
+	</array>
+
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>google</string>
+		<string>com.googleusercontent.apps.717537004014-itfhl631g67h98dl2r2b45qrjvmaohgv</string>
+	</array>
+
 </dict>
 </plist>

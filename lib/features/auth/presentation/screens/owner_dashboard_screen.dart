@@ -72,7 +72,8 @@ class _OwnerDashboardScreenState extends State<OwnerDashboardScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // الترحيب
+
+
             Row(
               children: [
                 CircleAvatar(
@@ -109,7 +110,7 @@ class _OwnerDashboardScreenState extends State<OwnerDashboardScreen> {
             ),
             SizedBox(height: 24.h),
 
-            // إحصائيات سريعة
+
             Row(
               children: [
                 _buildStatCard('المنتجات', '12', Icons.fastfood),
@@ -121,7 +122,7 @@ class _OwnerDashboardScreenState extends State<OwnerDashboardScreen> {
             ),
             SizedBox(height: 24.h),
 
-            // أزرار الإدارة
+
             Text(
               'إدارة المطعم',
               style: TextStyle(

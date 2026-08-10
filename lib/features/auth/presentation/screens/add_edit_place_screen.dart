@@ -55,7 +55,6 @@ class _AddEditPlaceScreenState extends State<AddEditPlaceScreen> {
     super.dispose();
   }
 
-  /// دالة لرفع الصورة إلى Cloudinary
   Future<String?> _uploadToCloudinary(File imageFile) async {
     final uri = Uri.parse(
       'https://api.cloudinary.com/v1_1/$_cloudName/image/upload',
@@ -78,7 +77,6 @@ class _AddEditPlaceScreenState extends State<AddEditPlaceScreen> {
     }
   }
 
-  /// دالة لاختيار الصورة من المعرض ورفعها
   Future<void> _pickImage() async {
     final picker = ImagePicker();
     final pickedFile = await picker.pickImage(
@@ -103,16 +101,14 @@ class _AddEditPlaceScreenState extends State<AddEditPlaceScreen> {
       setState(() => _isUploadingImage = false);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('فشل رفع الصورة: $e'),
+          content: Text('فشل رفع الصورة: $e', style: const TextStyle(fontFamily: 'Cairo')),
           backgroundColor: Colors.red,
         ),
       );
     }
   }
 
-  /// ✅ دالة مساعدة لعرض الصورة في المعاينة
   Widget _buildImagePreview() {
-    // ✅ حالة رفع الصورة
     if (_isUploadingImage) {
       return const Center(
         child: CircularProgressIndicator(
@@ -121,7 +117,6 @@ class _AddEditPlaceScreenState extends State<AddEditPlaceScreen> {
       );
     }
 
-    // ✅ صورة من الإنترنت (Cloudinary)
     if (_imageUrl != null && _imageUrl!.startsWith('http')) {
       return Image.network(
         _imageUrl!,
@@ -141,7 +136,6 @@ class _AddEditPlaceScreenState extends State<AddEditPlaceScreen> {
       );
     }
 
-    // ✅ صورة محلية تم اختيارها من المعرض (لم ترفع بعد)
     if (_imageFile != null) {
       return Image.file(
         _imageFile!,
@@ -149,7 +143,6 @@ class _AddEditPlaceScreenState extends State<AddEditPlaceScreen> {
       );
     }
 
-    // ✅ لا توجد صورة → عرض placeholder
     return _buildPlaceholderImage();
   }
 
@@ -166,6 +159,7 @@ class _AddEditPlaceScreenState extends State<AddEditPlaceScreen> {
         Text(
           'اضغط لإضافة صورة',
           style: TextStyle(
+            fontFamily: 'Cairo',
             color: Colors.grey[600],
             fontSize: 12.sp,
           ),
@@ -174,7 +168,6 @@ class _AddEditPlaceScreenState extends State<AddEditPlaceScreen> {
     );
   }
 
-  /// ✅ دالة لتوليد ID مفهوم للمكان
   String _generatePlaceId() {
     if (widget.place != null) return widget.place!.id;
 
@@ -183,14 +176,16 @@ class _AddEditPlaceScreenState extends State<AddEditPlaceScreen> {
     return '$title$uniqueSuffix';
   }
 
-  /// ✅ دالة حفظ المكان
   Future<void> _savePlace() async {
     if (!_formKey.currentState!.validate()) return;
 
     if (_imageUrl == null && _imageFile == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('الرجاء إضافة صورة للمكان'),
+          content: Text(
+            'الرجاء إضافة صورة للمكان',
+            style: TextStyle(fontFamily: 'Cairo'),
+          ),
           backgroundColor: Colors.orange,
         ),
       );
@@ -205,7 +200,6 @@ class _AddEditPlaceScreenState extends State<AddEditPlaceScreen> {
 
       final placeService = PlaceService();
 
-      // ✅ توليد ID مفهوم
       final placeId = _generatePlaceId();
 
       final place = Place(
@@ -220,10 +214,8 @@ class _AddEditPlaceScreenState extends State<AddEditPlaceScreen> {
       );
 
       if (widget.place == null) {
-        // ✅ إضافة مكان جديد
         await placeService.addPlace(place);
 
-        // ✅ تحديث مستند المستخدم
         await FirebaseFirestore.instance
             .collection('users')
             .doc(user.uid)
@@ -235,18 +227,23 @@ class _AddEditPlaceScreenState extends State<AddEditPlaceScreen> {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
-              content: Text('✅ تم إضافة المكان بنجاح'),
+              content: Text(
+                '✅ تم إضافة المكان بنجاح',
+                style: TextStyle(fontFamily: 'Cairo'),
+              ),
               backgroundColor: Colors.green,
             ),
           );
         }
       } else {
-        // ✅ تعديل مكان موجود
         await placeService.updatePlace(place);
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
-              content: Text('✅ تم تحديث المكان بنجاح'),
+              content: Text(
+                '✅ تم تحديث المكان بنجاح',
+                style: TextStyle(fontFamily: 'Cairo'),
+              ),
               backgroundColor: Colors.green,
             ),
           );
@@ -258,7 +255,10 @@ class _AddEditPlaceScreenState extends State<AddEditPlaceScreen> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('❌ حدث خطأ: $e'),
+            content: Text(
+              '❌ حدث خطأ: $e',
+              style: const TextStyle(fontFamily: 'Cairo'),
+            ),
             backgroundColor: Colors.red,
           ),
         );
@@ -275,7 +275,10 @@ class _AddEditPlaceScreenState extends State<AddEditPlaceScreen> {
     return Scaffold(
       backgroundColor: MyColors.myBackground,
       appBar: AppBar(
-        title: Text(isEditing ? 'تعديل المكان' : 'إضافة مكان جديد'),
+        title: Text(
+          isEditing ? 'تعديل المكان' : 'إضافة مكان جديد',
+          style: const TextStyle(fontFamily: 'Cairo'),
+        ),
         centerTitle: true,
         backgroundColor: Colors.white,
         elevation: 0,
@@ -293,7 +296,6 @@ class _AddEditPlaceScreenState extends State<AddEditPlaceScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // ✅ صورة المكان (مع دالة المعاينة الجديدة)
                   Center(
                     child: GestureDetector(
                       onTap: _pickImage,
@@ -317,10 +319,11 @@ class _AddEditPlaceScreenState extends State<AddEditPlaceScreen> {
                   ),
                   SizedBox(height: 20.h),
 
-                  // اسم المكان
+
                   Text(
                     'اسم المكان *',
                     style: TextStyle(
+                      fontFamily: 'Cairo',
                       fontSize: 14.sp,
                       fontWeight: FontWeight.bold,
                       color: Colors.black87,
@@ -329,8 +332,20 @@ class _AddEditPlaceScreenState extends State<AddEditPlaceScreen> {
                   SizedBox(height: 8.h),
                   TextFormField(
                     controller: _titleController,
+                    textDirection: TextDirection.rtl,
+                    textAlign: TextAlign.right,
+                    style: TextStyle(
+                      fontFamily: 'Cairo',
+                      fontSize: 16.sp,
+                      color: Colors.black87,
+                    ),
                     decoration: InputDecoration(
                       hintText: 'مثال: مطعم كباب باشا',
+                      hintStyle: TextStyle(
+                        fontFamily: 'Cairo',
+                        color: Colors.grey[500],
+                        fontSize: 14.sp,
+                      ),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12.r),
                       ),
@@ -338,7 +353,7 @@ class _AddEditPlaceScreenState extends State<AddEditPlaceScreen> {
                       fillColor: Colors.white,
                     ),
                     validator: (value) {
-                      if (value == null || value.isEmpty) {
+                      if (value == null || value.trim().isEmpty) {
                         return 'الرجاء إدخال اسم المكان';
                       }
                       return null;
@@ -346,10 +361,11 @@ class _AddEditPlaceScreenState extends State<AddEditPlaceScreen> {
                   ),
                   SizedBox(height: 16.h),
 
-                  // التصنيف
+
                   Text(
                     'التصنيف *',
                     style: TextStyle(
+                      fontFamily: 'Cairo',
                       fontSize: 14.sp,
                       fontWeight: FontWeight.bold,
                       color: Colors.black87,
@@ -358,8 +374,20 @@ class _AddEditPlaceScreenState extends State<AddEditPlaceScreen> {
                   SizedBox(height: 8.h),
                   TextFormField(
                     controller: _categoryController,
+                    textDirection: TextDirection.rtl,
+                    textAlign: TextAlign.right,
+                    style: TextStyle(
+                      fontFamily: 'Cairo',
+                      fontSize: 16.sp,
+                      color: Colors.black87,
+                    ),
                     decoration: InputDecoration(
                       hintText: 'مثال: مطعم، مقهى، مخبز',
+                      hintStyle: TextStyle(
+                        fontFamily: 'Cairo',
+                        color: Colors.grey[500],
+                        fontSize: 14.sp,
+                      ),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12.r),
                       ),
@@ -367,7 +395,7 @@ class _AddEditPlaceScreenState extends State<AddEditPlaceScreen> {
                       fillColor: Colors.white,
                     ),
                     validator: (value) {
-                      if (value == null || value.isEmpty) {
+                      if (value == null || value.trim().isEmpty) {
                         return 'الرجاء إدخال التصنيف';
                       }
                       return null;
@@ -375,10 +403,11 @@ class _AddEditPlaceScreenState extends State<AddEditPlaceScreen> {
                   ),
                   SizedBox(height: 16.h),
 
-                  // الوصف
+
                   Text(
                     'الوصف',
                     style: TextStyle(
+                      fontFamily: 'Cairo',
                       fontSize: 14.sp,
                       fontWeight: FontWeight.bold,
                       color: Colors.black87,
@@ -388,8 +417,20 @@ class _AddEditPlaceScreenState extends State<AddEditPlaceScreen> {
                   TextFormField(
                     controller: _descriptionController,
                     maxLines: 3,
+                    textDirection: TextDirection.rtl,
+                    textAlign: TextAlign.right,
+                    style: TextStyle(
+                      fontFamily: 'Cairo',
+                      fontSize: 16.sp,
+                      color: Colors.black87,
+                    ),
                     decoration: InputDecoration(
                       hintText: 'وصف مختصر عن المكان...',
+                      hintStyle: TextStyle(
+                        fontFamily: 'Cairo',
+                        color: Colors.grey[500],
+                        fontSize: 14.sp,
+                      ),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12.r),
                       ),
@@ -399,10 +440,11 @@ class _AddEditPlaceScreenState extends State<AddEditPlaceScreen> {
                   ),
                   SizedBox(height: 16.h),
 
-                  // الموقع
+
                   Text(
                     'الموقع',
                     style: TextStyle(
+                      fontFamily: 'Cairo',
                       fontSize: 14.sp,
                       fontWeight: FontWeight.bold,
                       color: Colors.black87,
@@ -411,8 +453,20 @@ class _AddEditPlaceScreenState extends State<AddEditPlaceScreen> {
                   SizedBox(height: 8.h),
                   TextFormField(
                     controller: _locationController,
+                    textDirection: TextDirection.rtl,
+                    textAlign: TextAlign.right,
+                    style: TextStyle(
+                      fontFamily: 'Cairo',
+                      fontSize: 16.sp,
+                      color: Colors.black87,
+                    ),
                     decoration: InputDecoration(
                       hintText: 'مثال: الزمالك، القاهرة',
+                      hintStyle: TextStyle(
+                        fontFamily: 'Cairo',
+                        color: Colors.grey[500],
+                        fontSize: 14.sp,
+                      ),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12.r),
                       ),
@@ -422,7 +476,7 @@ class _AddEditPlaceScreenState extends State<AddEditPlaceScreen> {
                   ),
                   SizedBox(height: 30.h),
 
-                  // زر الحفظ
+
                   SizedBox(
                     width: double.infinity,
                     height: 56.h,
@@ -439,6 +493,7 @@ class _AddEditPlaceScreenState extends State<AddEditPlaceScreen> {
                           : Text(
                               isEditing ? 'تحديث المكان' : 'إضافة المكان',
                               style: TextStyle(
+                                fontFamily: 'Cairo',
                                 fontSize: 18.sp,
                                 fontWeight: FontWeight.bold,
                                 color: Colors.white,

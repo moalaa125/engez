@@ -52,6 +52,7 @@ class _RoleSelectionScreenState extends State<RoleSelectionScreen> {
           .set({'role': selectedRole}, SetOptions(merge: true));
 
       if (!mounted) return;
+      
 
       if (selectedRole == 'customer') {
         Navigator.pushReplacement(
