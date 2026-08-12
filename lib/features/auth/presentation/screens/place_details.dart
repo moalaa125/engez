@@ -1,15 +1,16 @@
 import 'dart:ui';
 import 'package:engez/constants/my_colors.dart';
-import 'package:engez/features/auth/presentation/screens/cart_screen.dart';
 import 'package:engez/features/cart/manager/cart_cubit.dart';
 import 'package:engez/features/cart/manager/cart_state.dart';
 import 'package:engez/features/cart/models/cart_item.dart';
+import 'package:engez/features/category/select_category_cubit.dart';
 import 'package:engez/models/place_model.dart';
 import 'package:engez/widgets/category_list.dart';
 import 'package:engez/widgets/menu_item_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 import 'package:syncfusion_flutter_core/theme.dart';
 
@@ -27,19 +28,19 @@ class PlaceDetailsScreen extends StatelessWidget {
     'kbab_basha': const [
       CartItem(
         id: 'mix_grill_platter',
-        title: 'Mix Grill Platter',
+        title: 'مشاوي مشكلة',
         imagePath: 'assets/images/burger_kbab.jpeg',
         price: 250,
       ),
       CartItem(
         id: 'shish_taouk_wrap',
-        title: 'Shish Taouk Wrap',
+        title: 'شيش طاووق ساندوتش',
         imagePath: 'assets/images/burger2.jpg',
         price: 120,
       ),
       CartItem(
         id: 'kofta_platter',
-        title: 'Kofta Platter',
+        title: 'طبق كفتة',
         imagePath: 'assets/images/burger3.jpg',
         price: 200,
       ),
@@ -47,7 +48,7 @@ class PlaceDetailsScreen extends StatelessWidget {
     'bob_wich': const [
       CartItem(
         id: 'bob_wich_burger',
-        title: 'Bob Wich Burger',
+        title: 'برجر بوب ويتش',
         imagePath: 'assets/images/bob.jpeg',
         price: 150,
       ),
@@ -55,7 +56,7 @@ class PlaceDetailsScreen extends StatelessWidget {
     'rolz': const [
       CartItem(
         id: 'rolz',
-        title: 'Rolz Burger',
+        title: 'برجر رولز',
         imagePath: 'assets/images/rolz.png',
         price: 150,
       ),
@@ -63,16 +64,16 @@ class PlaceDetailsScreen extends StatelessWidget {
   };
 
   final Map<String, String> _descriptions = {
-    'kbab_basha': 'Grill & smash burger',
-    'bob_wich': 'Fresh & healthy sandwiches',
+    'kbab_basha': 'مشاوي وبرجر مشوي',
+    'bob_wich': 'ساندوتشات طازجة وصحية',
   };
 
   final Map<String, String> _descriptionsItems = {
-    'mix_grill_platter': 'Tender kofta, shish taouk, and kebab served with rice and...',
-    'shish_taouk_wrap': 'Grilled chicken cubes wrapped in fresh bread with garlic...',
-    'kofta_platter': 'Premium minced meat kofta grilled to perfection, served...',
-    'bob_wich_burger': 'Delicious classic burger with secret sauce...',
-    'rolz': 'rolz burger',
+    'mix_grill_platter': 'كفتة طريه، شيش طاووق وكباب مشوي مع أرز...',
+    'shish_taouk_wrap': 'مكعبات دجاج مشوية في خبز طازج مع ثومية...',
+    'kofta_platter': 'كفتة لحم مفروم فاخر مشوية إلى الكمال...',
+    'bob_wich_burger': 'برجر كلاسيكي لذيذ مع صوص سري...',
+    'rolz': 'برجر رولز',
   };
 
   Widget _buildPlaceImage(String imagePath, {double? height, double? width, BoxFit fit = BoxFit.cover}) {
@@ -89,7 +90,7 @@ class PlaceDetailsScreen extends StatelessWidget {
           if (loadingProgress == null) return child;
           return Center(
             child: CircularProgressIndicator(
-              color: Colors.orange,
+              color: MyColors.myOrange,
               strokeWidth: 2,
             ),
           );
@@ -123,12 +124,11 @@ class PlaceDetailsScreen extends StatelessWidget {
     );
   }
 
-
   void _showPdfMenu(BuildContext context) {
     final String? pdfPath = _pdfPaths[place.id];
     if (pdfPath == null || pdfPath.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('No menu PDF available for this place yet.')),
+        const SnackBar(content: Text('لا توجد قائمة PDF لهذا المكان حالياً.')),
       );
       return;
     }
@@ -222,10 +222,7 @@ class PlaceDetailsScreen extends StatelessWidget {
           child: ElevatedButton(
             onPressed: state.isEmpty
                 ? null
-                : () => Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (_) => const CartScreen()),
-                  ),
+                : () => context.push('/cart'),
             style: ElevatedButton.styleFrom(
               backgroundColor: MyColors.myOrange,
               disabledBackgroundColor: MyColors.myOrange.withValues(alpha: .4),
@@ -247,8 +244,8 @@ class PlaceDetailsScreen extends StatelessWidget {
                     SizedBox(width: 10.w),
                     Text(
                       state.isEmpty
-                          ? 'Cart is empty'
-                          : 'View Cart (${state.totalItemsCount})',
+                          ? 'السلة فارغة'
+                          : 'عرض السلة (${state.totalItemsCount})',
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 18.sp,
@@ -258,7 +255,7 @@ class PlaceDetailsScreen extends StatelessWidget {
                   ],
                 ),
                 Text(
-                  'EGP ${state.totalPrice.toStringAsFixed(0)}',
+                  'ج.م ${state.totalPrice.toStringAsFixed(0)}',
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 18.sp,
@@ -284,11 +281,11 @@ class PlaceDetailsScreen extends StatelessWidget {
         children: [
           SizedBox(height: 24.h),
           Text(
-            'Popular Items',
+            'الأصناف الأكثر طلباً',
             style: TextStyle(
               fontSize: 22.sp,
               fontWeight: FontWeight.bold,
-              color: const Color(0xFF572000),
+              color: MyColors.myDarkText,
             ),
           ),
           SizedBox(height: 16.h),
@@ -325,8 +322,11 @@ class PlaceDetailsScreen extends StatelessWidget {
   }
 
   Widget _buildListOfTextButtons() {
-    return const CategoryList(
-      categories: ['Popular', 'Meals', 'Juices', 'Desserts'],
+    return BlocProvider(
+      create: (_) => SelectCategoryCubit(),
+      child: const CategoryList(
+        categories: ['الأكثر طلباً', 'وجبات', 'عصائر', 'حلويات'],
+      ),
     );
   }
 
@@ -350,9 +350,9 @@ class PlaceDetailsScreen extends StatelessWidget {
             left: 16.w,
             right: 16.w,
             child: Container(
-              height: 140.h,
+              height: 150.h, 
               width: double.infinity,
-              padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
+              padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
               decoration: BoxDecoration(
                 color: MyColors.myWhite,
                 borderRadius: BorderRadius.circular(20.r),
@@ -371,6 +371,7 @@ class PlaceDetailsScreen extends StatelessWidget {
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min, 
                       children: [
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -378,7 +379,7 @@ class PlaceDetailsScreen extends StatelessWidget {
                             Text(
                               place.title,
                               style: TextStyle(
-                                fontSize: 24.sp,
+                                fontSize: 22.sp,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
@@ -387,7 +388,7 @@ class PlaceDetailsScreen extends StatelessWidget {
                               child: Container(
                                 padding: EdgeInsets.symmetric(
                                   horizontal: 10.w,
-                                  vertical: 6.h,
+                                  vertical: 4.h,
                                 ),
                                 decoration: BoxDecoration(
                                   color: MyColors.myOrange.withValues(alpha: .1),
@@ -398,11 +399,11 @@ class PlaceDetailsScreen extends StatelessWidget {
                                     Icon(
                                       Icons.picture_as_pdf_rounded,
                                       color: MyColors.myOrange,
-                                      size: 18.sp,
+                                      size: 16.sp,
                                     ),
                                     SizedBox(width: 4.w),
                                     Text(
-                                      'Menu',
+                                      'القائمة',
                                       style: TextStyle(
                                         color: MyColors.myOrange,
                                         fontWeight: FontWeight.bold,
@@ -419,43 +420,43 @@ class PlaceDetailsScreen extends StatelessWidget {
                         Text(
                           _descriptions[place.id] ?? place.category,
                           style: TextStyle(
-                            fontSize: 14.sp,
+                            fontSize: 13.sp,
                             color: Colors.grey[700],
                           ),
                         ),
-                        SizedBox(height: 12.h),
+                        SizedBox(height: 8.h),
                         Divider(
                           color: Colors.grey.withValues(alpha: .3),
-                          height: 2,
+                          height: 1,
                           thickness: 1,
                         ),
-                        SizedBox(height: 12.h),
+                        SizedBox(height: 8.h),
                         Row(
                           children: [
                             const Icon(
                               Icons.directions_walk,
-                              size: 18,
+                              size: 16,
                               color: Colors.brown,
                             ),
                             SizedBox(width: 6.w),
                             Text(
-                              '30 min',
+                              '30 دقيقة',
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
-                                fontSize: 14.sp,
+                                fontSize: 13.sp,
                               ),
                             ),
                             SizedBox(width: 10.w),
                             const CircleAvatar(
-                              radius: 3,
+                              radius: 2.5,
                               backgroundColor: Colors.grey,
                             ),
                             SizedBox(width: 10.w),
                             Text(
-                              'Delivery available',
+                              'التوصيل متاح',
                               style: TextStyle(
                                 color: Colors.grey[700],
-                                fontSize: 14.sp,
+                                fontSize: 13.sp,
                               ),
                             ),
                           ],
@@ -466,8 +467,8 @@ class PlaceDetailsScreen extends StatelessWidget {
                   SizedBox(width: 12.w),
                   Container(
                     padding: EdgeInsets.symmetric(
-                      horizontal: 10.w,
-                      vertical: 6.h,
+                      horizontal: 8.w,
+                      vertical: 4.h,
                     ),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(20.r),
@@ -476,13 +477,13 @@ class PlaceDetailsScreen extends StatelessWidget {
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        const Icon(Icons.star, color: Colors.orange, size: 16),
+                        const Icon(Icons.star, color: Colors.orange, size: 14),
                         SizedBox(width: 4.w),
                         Text(
                           place.rating.toString(),
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
-                            fontSize: 13.sp,
+                            fontSize: 12.sp,
                           ),
                         ),
                       ],
@@ -511,9 +512,9 @@ class PlaceDetailsScreen extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             _buildImageAndDetailsBar(context),
-            SizedBox(height: 20.h),
+            SizedBox(height: 16.h),
             _buildListOfTextButtons(),
-            SizedBox(height: 20.h),
+            SizedBox(height: 16.h),
             _buildPopularItemsSection(context),
           ],
         ),

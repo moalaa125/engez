@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:engez/constants/my_colors.dart';
 
 class PlaceCard extends StatelessWidget {
   final String imagePath;
   final String title;
   final String rating;
-  final String reviewsCount;
+  final String? reviewsCount; // يمكن أن يكون null أو فارغ
   final String category;
   final String distanceTime;
   final VoidCallback? onFavoriteTap;
@@ -16,7 +17,7 @@ class PlaceCard extends StatelessWidget {
     required this.imagePath,
     required this.title,
     required this.rating,
-    required this.reviewsCount,
+    this.reviewsCount,
     required this.category,
     required this.distanceTime,
     this.onFavoriteTap,
@@ -36,7 +37,7 @@ class PlaceCard extends StatelessWidget {
           if (loadingProgress == null) return child;
           return Center(
             child: CircularProgressIndicator(
-              color: Colors.orange,
+              color: MyColors.myOrange,
               strokeWidth: 2,
             ),
           );
@@ -127,13 +128,15 @@ class PlaceCard extends StatelessWidget {
                                   fontSize: 13,
                                 ),
                               ),
-                              Text(
-                                ' ($reviewsCount)',
-                                style: const TextStyle(
-                                  color: Colors.grey,
-                                  fontSize: 13,
+                              if (reviewsCount != null && reviewsCount!.isNotEmpty) ...[
+                                Text(
+                                  ' ($reviewsCount)',
+                                  style: const TextStyle(
+                                    color: Colors.grey,
+                                    fontSize: 13,
+                                  ),
                                 ),
-                              ),
+                              ],
                               const SizedBox(width: 12),
                               Text(
                                 category,

@@ -1,12 +1,13 @@
-import 'dart:convert';
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:engez/constants/my_colors.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:http/http.dart' as http;
+import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:engez/constants/my_colors.dart';
+import 'package:engez/services/upload_service.dart';
+
 class Profile extends StatefulWidget {
   const Profile({super.key});
 
@@ -16,31 +17,7 @@ class Profile extends StatefulWidget {
 
 class _ProfileState extends State<Profile> {
   bool _isUploading = false;
-
-  static const String _cloudName = 'dtneftgss';
-  static const String _uploadPreset = 'upload_app_profile_image';
-
-  Future<String?> _uploadToCloudinary(File imageFile) async {
-    final uri = Uri.parse(
-      'https://api.cloudinary.com/v1_1/$_cloudName/image/upload',
-    );
-
-    var request = http.MultipartRequest('POST', uri);
-    request.fields['upload_preset'] = _uploadPreset;
-    request.files.add(
-      await http.MultipartFile.fromPath('file', imageFile.path),
-    );
-
-    var response = await request.send();
-    var responseData = await response.stream.bytesToString();
-    var data = jsonDecode(responseData);
-
-    if (response.statusCode == 200) {
-      return data['secure_url'];
-    } else {
-      throw Exception('Cloudinary upload failed: ${data['error']['message']}');
-    }
-  }
+  final UploadService _uploadService = UploadService();
 
   Future<void> _pickAndUploadImage() async {
     final picker = ImagePicker();
@@ -48,7 +25,6 @@ class _ProfileState extends State<Profile> {
       source: ImageSource.gallery,
       imageQuality: 70,
     );
-
     if (pickedFile == null) return;
 
     setState(() => _isUploading = true);
@@ -57,24 +33,18 @@ class _ProfileState extends State<Profile> {
       final user = FirebaseAuth.instance.currentUser;
       if (user == null) return;
 
-      File imageFile = File(pickedFile.path);
+      final imageFile = File(pickedFile.path);
+      final downloadUrl = await _uploadService.uploadImage(imageFile);
 
-      final downloadUrl = await _uploadToCloudinary(imageFile);
-
-      if (downloadUrl == null) throw Exception('Upload failed');
-
-      await FirebaseFirestore.instance
-          .collection('users')
-          .doc(user.uid)
-          .set({
+      await FirebaseFirestore.instance.collection('users').doc(user.uid).set({
         'profileImage': downloadUrl,
       }, SetOptions(merge: true));
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
+          SnackBar(
             content: Text('تم تحديث الصورة الشخصية بنجاح!'),
-            backgroundColor: Colors.green,
+            backgroundColor: MyColors.mySuccess,
           ),
         );
       }
@@ -83,7 +53,7 @@ class _ProfileState extends State<Profile> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('فشل رفع الصورة: $e'),
-            backgroundColor: Colors.red,
+            backgroundColor: MyColors.myError,
           ),
         );
       }
@@ -104,14 +74,12 @@ class _ProfileState extends State<Profile> {
             .doc(user?.uid)
             .snapshots(),
         builder: (context, snapshot) {
-          // قيم افتراضية من Google
-          String userName = user?.displayName ?? 'No Name';
+          String userName = user?.displayName ?? 'لا يوجد اسم';
           String? profileImageUrl = user?.photoURL;
 
-          // إذا كانت البيانات موجودة في Firestore، استخدمها بدلاً من ذلك
           if (snapshot.hasData && snapshot.data!.exists) {
             var data = snapshot.data!.data() as Map<String, dynamic>;
-            userName = data['userName'] ?? user?.displayName ?? 'No Name';
+            userName = data['userName'] ?? user?.displayName ?? 'لا يوجد اسم';
             profileImageUrl = data['profileImage'] ?? user?.photoURL;
           }
 
@@ -128,7 +96,7 @@ class _ProfileState extends State<Profile> {
                       backgroundImage: profileImageUrl != null
                           ? NetworkImage(profileImageUrl)
                           : const AssetImage('assets/images/joinUs.png')
-                              as ImageProvider,
+                                as ImageProvider,
                     ),
                     CircleAvatar(
                       backgroundColor: MyColors.myOrange,
@@ -168,7 +136,7 @@ class _ProfileState extends State<Profile> {
               SizedBox(height: 5.h),
               Center(
                 child: Text(
-                  user?.email ?? 'No Email',
+                  user?.email ?? 'لا يوجد بريد إلكتروني',
                   style: TextStyle(fontSize: 16.sp, color: Colors.black),
                 ),
               ),
@@ -176,16 +144,10 @@ class _ProfileState extends State<Profile> {
               _buildProfileOption(Icons.person, 'تعديل الملف الشخصي', () {}),
               _buildProfileOption(Icons.lock, 'تغيير كلمة المرور', () {}),
               _buildProfileOption(Icons.settings, 'إعدادات التطبيق', () {}),
-              _buildProfileOption(
-                Icons.logout,
-                'تسجيل الخروج',
-                () async {
-                  await FirebaseAuth.instance.signOut();
-                  if (!mounted) return;
-                  Navigator.of(context).pushReplacementNamed('login');
-                },
-                isDestructive: true,
-              ),
+              _buildProfileOption(Icons.logout, 'تسجيل الخروج', () async {
+                await FirebaseAuth.instance.signOut();
+                if (mounted) context.go('/login');
+              }, isDestructive: true),
             ],
           );
         },
@@ -202,19 +164,17 @@ class _ProfileState extends State<Profile> {
     return Card(
       color: const Color(0xFFF0F0F0),
       margin: EdgeInsets.symmetric(vertical: 8.h),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15.r),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.r)),
       child: ListTile(
         leading: Icon(
           icon,
-          color: isDestructive ? Colors.red : MyColors.myOrange,
+          color: isDestructive ? MyColors.myError : MyColors.myOrange,
           size: 24.sp,
         ),
         title: Text(
           title,
           style: TextStyle(
-            color: isDestructive ? Colors.red : Colors.black87,
+            color: isDestructive ? MyColors.myError : Colors.black87,
             fontWeight: FontWeight.bold,
             fontSize: 16.sp,
           ),

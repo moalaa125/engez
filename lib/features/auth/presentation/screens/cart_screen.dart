@@ -4,6 +4,7 @@ import 'package:engez/features/cart/manager/cart_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 
 class CartScreen extends StatelessWidget {
   const CartScreen({super.key});
@@ -11,14 +12,14 @@ class CartScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFFFF8F6), // MyColors.myBackground
+      backgroundColor: MyColors.myBackground,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
         centerTitle: true,
         iconTheme: const IconThemeData(color: Colors.black),
         title: Text(
-          'Your Cart',
+          'سلتك',
           style: TextStyle(
             color: Colors.black,
             fontSize: 20.sp,
@@ -40,7 +41,7 @@ class CartScreen extends StatelessWidget {
                   ),
                   SizedBox(height: 16.h),
                   Text(
-                    'Your cart is empty',
+                    'سلتك فارغة',
                     style: TextStyle(
                       fontSize: 18.sp,
                       color: Colors.grey[700],
@@ -54,10 +55,10 @@ class CartScreen extends StatelessWidget {
                         borderRadius: BorderRadius.circular(20.r),
                       ),
                     ),
-                    onPressed: () => Navigator.pop(context),
+                    onPressed: () => context.pop(),
                     child: Padding(
                       padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
-                      child: const Text('Browse Menu', style: TextStyle(color: Colors.white)),
+                      child: const Text('تصفح القائمة', style: TextStyle(color: Colors.white)),
                     ),
                   ),
                 ],
@@ -115,12 +116,12 @@ class CartScreen extends StatelessWidget {
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 16.sp,
-                                    color: const Color(0xFF572000),
+                                    color: MyColors.myDarkText,
                                   ),
                                 ),
                                 SizedBox(height: 4.h),
                                 Text(
-                                  'EGP ${item.price}',
+                                  'ج.م ${item.price}',
                                   style: TextStyle(
                                     color: MyColors.myOrange,
                                     fontWeight: FontWeight.bold,
@@ -151,7 +152,7 @@ class CartScreen extends StatelessWidget {
                                 style: TextStyle(
                                   fontSize: 14.sp,
                                   fontWeight: FontWeight.bold,
-                                  color: const Color(0xFF572000),
+                                  color: MyColors.myDarkText,
                                 ),
                               ),
                               SizedBox(width: 8.w),
@@ -193,7 +194,7 @@ class CartScreen extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text('Total Items:', style: TextStyle(fontSize: 16.sp, color: Colors.grey[700])),
+                          Text('إجمالي العناصر:', style: TextStyle(fontSize: 16.sp, color: Colors.grey[700])),
                           Text('${state.totalItemsCount}', style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold)),
                         ],
                       ),
@@ -201,8 +202,8 @@ class CartScreen extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text('Total Price:', style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold)),
-                          Text('EGP ${state.totalPrice.toStringAsFixed(0)}', style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold, color: MyColors.myOrange)),
+                          Text('السعر الإجمالي:', style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold)),
+                          Text('ج.م ${state.totalPrice.toStringAsFixed(0)}', style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold, color: MyColors.myOrange)),
                         ],
                       ),
                       SizedBox(height: 16.h),
@@ -217,12 +218,12 @@ class CartScreen extends StatelessWidget {
                           onPressed: () {
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
-                                content: const Text('Checkout coming soon'),
+                                content: const Text('قريباً سيتم تفعيل إتمام الطلب'),
                                 backgroundColor: MyColors.myOrange,
                               ),
                             );
                           },
-                          child: Text('Proceed to Checkout', style: TextStyle(color: Colors.white, fontSize: 16.sp, fontWeight: FontWeight.bold)),
+                          child: Text('إتمام الطلب', style: TextStyle(color: Colors.white, fontSize: 16.sp, fontWeight: FontWeight.bold)),
                         ),
                       )
                     ],

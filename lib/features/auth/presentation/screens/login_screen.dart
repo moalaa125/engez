@@ -1,12 +1,11 @@
 import 'package:engez/constants/my_colors.dart';
+import 'package:engez/features/auth/manager/auth_cubit.dart';
 import 'package:engez/features/auth/manager/auth_state.dart';
-import 'package:engez/features/auth/presentation/screens/home_screen.dart';
-import 'package:engez/features/auth/presentation/screens/role_selection_screen.dart'; 
 import 'package:engez/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../manager/auth_cubit.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
@@ -43,11 +42,12 @@ class _LoginScreenContentState extends State<_LoginScreenContent> {
               backgroundColor: Color(0xFF003527),
             ),
           );
-
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (_) => const RoleSelectionScreen()),
-          );
+          // 🔥 تأخير بسيط لضمان اكتمال كتابة Firestore
+          Future.delayed(const Duration(milliseconds: 500), () {
+            if (mounted) {
+              context.go('/role-selection');
+            }
+          });
         } else if (state is AuthError) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
@@ -99,11 +99,12 @@ class _LoginScreenContentState extends State<_LoginScreenContent> {
                     iconPath: 'assets/images/apple.png',
                     text: 'تسجيل الدخول باستخدام apple',
                     function: () {
-                      // TODO: 
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(builder: (context) => HomeScreen()),
-                      );
+                      // TODO: تنفيذ Apple Sign-In
+                      Future.delayed(const Duration(milliseconds: 500), () {
+                        if (mounted) {
+                          context.go('/role-selection');
+                        }
+                      });
                     },
                   ),
                 ],
@@ -113,16 +114,6 @@ class _LoginScreenContentState extends State<_LoginScreenContent> {
         );
       },
     );
-  }
-
-  String generateCountryFlag() {
-    String countryCode = 'eg';
-
-    String flag = countryCode.toUpperCase().replaceAllMapped(
-      RegExp(r'[A-Z]'),
-      (match) => String.fromCharCode(match.group(0)!.codeUnitAt(0) + 127397),
-    );
-    return flag;
   }
 
   Widget _buildEndMessage() {

@@ -1,10 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:engez/features/auth/presentation/screens/owner_dashboard_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:engez/constants/my_colors.dart';
-import 'package:engez/features/auth/presentation/screens/home_screen.dart';
 
 class RoleSelectionScreen extends StatefulWidget {
   const RoleSelectionScreen({super.key});
@@ -52,18 +51,11 @@ class _RoleSelectionScreenState extends State<RoleSelectionScreen> {
           .set({'role': selectedRole}, SetOptions(merge: true));
 
       if (!mounted) return;
-      
 
       if (selectedRole == 'customer') {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (_) => const HomeScreen()),
-        );
+        context.go('/home');
       } else if (selectedRole == 'owner') {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (_) => const OwnerDashboardScreen()),
-        );
+        context.go('/owner-dashboard');
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -138,9 +130,7 @@ class _RoleSelectionScreenState extends State<RoleSelectionScreen> {
         margin: EdgeInsets.only(bottom: 16.h),
         padding: EdgeInsets.all(16.w),
         decoration: BoxDecoration(
-          color: isSelected
-              ? MyColors.myOrange.withValues(alpha: 0.1)
-              : Colors.grey[50],
+          color: isSelected ? MyColors.myOrange.withValues(alpha: 0.1) : Colors.grey[50],
           borderRadius: BorderRadius.circular(16.r),
           border: Border.all(
             color: isSelected ? MyColors.myOrange : Colors.grey[300]!,
@@ -158,11 +148,7 @@ class _RoleSelectionScreenState extends State<RoleSelectionScreen> {
         ),
         child: Row(
           children: [
-            Icon(
-              role['icon'],
-              size: 36.r,
-              color: isSelected ? MyColors.myOrange : Colors.grey,
-            ),
+            Icon(role['icon'], size: 36.r, color: isSelected ? MyColors.myOrange : Colors.grey),
             SizedBox(width: 16.w),
             Expanded(
               child: Column(

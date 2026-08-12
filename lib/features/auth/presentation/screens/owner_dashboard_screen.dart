@@ -1,10 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:engez/features/auth/presentation/screens/add_edit_place_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:engez/constants/my_colors.dart';
-import 'package:engez/features/auth/presentation/screens/profile.dart';
+import 'package:go_router/go_router.dart';
 
 class OwnerDashboardScreen extends StatefulWidget {
   const OwnerDashboardScreen({super.key});
@@ -58,10 +57,7 @@ class _OwnerDashboardScreenState extends State<OwnerDashboardScreen> {
         actions: [
           IconButton(
             onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (_) => const Profile()),
-              );
+              context.push('/profile');
             },
             icon: Icon(Icons.person_outline, color: MyColors.myDarkOrange),
           ),
@@ -72,8 +68,6 @@ class _OwnerDashboardScreenState extends State<OwnerDashboardScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-
-
             Row(
               children: [
                 CircleAvatar(
@@ -110,7 +104,6 @@ class _OwnerDashboardScreenState extends State<OwnerDashboardScreen> {
             ),
             SizedBox(height: 24.h),
 
-
             Row(
               children: [
                 _buildStatCard('المنتجات', '12', Icons.fastfood),
@@ -121,7 +114,6 @@ class _OwnerDashboardScreenState extends State<OwnerDashboardScreen> {
               ],
             ),
             SizedBox(height: 24.h),
-
 
             Text(
               'إدارة المطعم',
@@ -138,10 +130,7 @@ class _OwnerDashboardScreenState extends State<OwnerDashboardScreen> {
               subtitle: 'أضف مطعمك أو مقهىك الجديد',
               color: MyColors.myOrange,
               onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => AddEditPlaceScreen()),
-                );
+                context.push('/owner-dashboard/add-place');
               },
             ),
             _buildMenuButton(

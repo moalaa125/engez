@@ -74,7 +74,6 @@ class AuthCubit extends Cubit<AuthState> {
             'userName': user.displayName ?? '',
             'email': user.email ?? '',
             'profileImage': user.photoURL ?? '',
-            'role': 'customer',
             'updatedAt': FieldValue.serverTimestamp(),
           },
           SetOptions(merge: true),

@@ -10,8 +10,10 @@ class CustomTextField extends StatelessWidget {
   });
   final String hintText;
   final IconData? suffixIcon;
+
   @override
   Widget build(BuildContext context) {
+    // في RTL، الـ suffixIcon يصبح على اليسار، وهذا صحيح
     return TextField(
       textAlign: TextAlign.right,
       cursorColor: MyColors.myOrange,
