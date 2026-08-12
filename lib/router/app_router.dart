@@ -1,5 +1,6 @@
 import 'package:engez/features/auth/presentation/screens/loading_screen.dart';
 import 'package:engez/features/auth/presentation/screens/login_screen.dart';
+import 'package:engez/features/auth/presentation/screens/manage_menu_screen.dart';
 import 'package:engez/features/auth/presentation/screens/role_selection_screen.dart';
 import 'package:engez/features/auth/presentation/screens/home_screen.dart';
 import 'package:engez/features/auth/presentation/screens/all_places.dart';
@@ -66,6 +67,19 @@ class AppRouter {
             builder: (context, state) {
               final place = state.extra as Place?;
               return AddEditPlaceScreen(place: place);
+            },
+          ),
+          // ✅ المسار الجديد لإدارة القائمة (تحت owner-dashboard)
+          GoRoute(
+            path: 'manage-menu',
+            builder: (context, state) {
+              final place = state.extra as Place?;
+              if (place == null) {
+                return const Scaffold(
+                  body: Center(child: Text('المكان غير موجود')),
+                );
+              }
+              return ManageMenuScreen(place: place);
             },
           ),
         ],

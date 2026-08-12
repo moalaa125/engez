@@ -1,5 +1,8 @@
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:engez/constants/my_colors.dart';
+import 'package:engez/constants/place_categories.dart';
 import 'package:engez/features/category/select_category_cubit.dart';
 import 'package:engez/features/location/manger/location_cubit.dart';
 import 'package:engez/features/location/manger/location_state.dart';
@@ -11,7 +14,6 @@ import 'package:engez/widgets/custom_offer_section.dart';
 import 'package:engez/widgets/custom_text_field.dart';
 import 'package:engez/widgets/nav_bar.dart';
 import 'package:engez/widgets/place_card.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -98,20 +100,33 @@ class _HomeScreenState extends State<HomeScreen> {
       actions: [
         Padding(
           padding: EdgeInsets.only(right: 10.w),
-          child: GestureDetector(
-            onTap: () {
-              context.push('/profile');
+          child: StreamBuilder<DocumentSnapshot>(
+            stream: FirebaseFirestore.instance
+                .collection('users')
+                .doc(user?.uid)
+                .snapshots(),
+            builder: (context, snapshot) {
+              String? imageUrl = user?.photoURL;
+              if (snapshot.hasData && snapshot.data!.exists) {
+                final data = snapshot.data!.data() as Map<String, dynamic>;
+                imageUrl = data['profileImage'] ?? user?.photoURL;
+              }
+              return GestureDetector(
+                onTap: () {
+                  context.push('/profile');
+                },
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 9),
+                  child: CircleAvatar(
+                    radius: 22.r,
+                    backgroundColor: MyColors.mygrey,
+                    backgroundImage: imageUrl != null
+                        ? NetworkImage(imageUrl) as ImageProvider
+                        : const AssetImage('assets/images/enterPhoneNumber.png'),
+                  ),
+                ),
+              );
             },
-            child: Padding(
-              padding: const EdgeInsets.only(left: 9),
-              child: CircleAvatar(
-                radius: 22.r,
-                backgroundColor: MyColors.mygrey,
-                backgroundImage: (user?.photoURL != null)
-                    ? NetworkImage(user!.photoURL!) as ImageProvider
-                    : const AssetImage('assets/images/enterPhoneNumber.png'),
-              ),
-            ),
           ),
         ),
       ],
@@ -152,20 +167,10 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildListOfIcons() {
-    // قائمة الأيقونات مع التصنيف المقابل
-    final categories = ['قهوة', 'فطار', 'آيس كريم', 'بيتزا', 'مأكولات'];
-    final icons = [
-      Icons.coffee_outlined,
-      Icons.breakfast_dining,
-      Icons.icecream_outlined,
-      Icons.local_pizza_outlined,
-      Icons.food_bank_outlined,
-    ];
+    // استخدم القائمة الموحدة من PlaceCategories
+    final categories = PlaceCategories.list.where((c) => c != PlaceCategories.all).toList();
+    final icons = categories.map((c) => PlaceCategories.icons[c]).toList();
 
-    // Forced to LTR so the icons keep their original left-to-right order
-    // even though the app's global locale is Arabic/RTL. Remove this
-    // wrapper if you ever want this row to mirror along with the rest of
-    // the app.
     return Directionality(
       textDirection: TextDirection.ltr,
       child: SingleChildScrollView(
@@ -179,10 +184,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: CustomIconButton(
                   iconData: icons[index],
                   onTap: () {
-                    // تحديد التصنيف المختار
-                    final categoryIndex = categories.indexWhere(
-                      (cat) => cat == categories[index],
-                    );
+                    final categoryIndex = PlaceCategories.list.indexOf(categories[index]);
                     if (categoryIndex != -1) {
                       _categoryCubit.selectCategory(categoryIndex);
                     }
@@ -197,13 +199,6 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildOfferSection() {
-    // Forced to LTR so the carousel's page order and swipe direction stay
-    // as originally designed, even though the app's global locale is
-    // Arabic/RTL. Without this, each card's internal content looks right
-    // (thanks to the Directionality inside CustomOfferSection itself), but
-    // the order you swipe through the cards is still mirrored by the
-    // ambient RTL directionality. Remove this wrapper if you ever want the
-    // carousel to mirror along with the rest of the app.
     return Directionality(
       textDirection: TextDirection.ltr,
       child: CarouselSlider(
@@ -243,7 +238,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildNearbyPlaces() {
-    final categories = ['الكل', 'قهوة', 'مخبز', 'فطار'];
+    final categories = PlaceCategories.list;
 
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
@@ -299,7 +294,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 final selectedCategory = categories[selectedIndex];
 
                 final allPlaces = placeState.places;
-                final filteredPlaces = selectedCategory == 'الكل'
+                final filteredPlaces = selectedCategory == PlaceCategories.all
                     ? allPlaces
                     : allPlaces.where((p) => p.category == selectedCategory).toList();
 
@@ -326,10 +321,9 @@ class _HomeScreenState extends State<HomeScreen> {
                         imagePath: place.imagePath,
                         title: place.title,
                         rating: place.rating.toString(),
-                        // سيتم إزالة reviewsCount لاحقاً
-                        reviewsCount: '', // مؤقت
+                        reviewsCount: '',
                         category: place.category,
-                        distanceTime: '20 دقيقة', // مؤقت حتى حساب المسافة الحقيقية
+                        distanceTime: '20 دقيقة',
                         onFavoriteTap: () {},
                       ),
                     );

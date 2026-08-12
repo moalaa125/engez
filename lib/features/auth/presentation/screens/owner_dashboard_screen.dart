@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:engez/models/place_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -11,6 +12,35 @@ class OwnerDashboardScreen extends StatefulWidget {
   @override
   State<OwnerDashboardScreen> createState() => _OwnerDashboardScreenState();
 }
+
+// دالة التنقل إلى إدارة القائمة (خارج الكلاس)
+Future<void> _navigateToManageMenu(BuildContext context) async {
+  final user = FirebaseAuth.instance.currentUser;
+  if (user == null) return;
+  final doc = await FirebaseFirestore.instance
+      .collection('users')
+      .doc(user.uid)
+      .get();
+  final placeId = doc.data()?['placeId'] as String?;
+  if (placeId == null) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('لم يتم العثور على مكان مرتبط بحسابك')),
+    );
+    return;
+  }
+  final placeDoc = await FirebaseFirestore.instance
+      .collection('places')
+      .doc(placeId)
+      .get();
+  if (!placeDoc.exists) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('المكان غير موجود')),
+    );
+    return;
+  }
+  final place = Place.fromDoc(placeDoc);
+  // ✅ المسار الصحيح الآن موجود تحت /owner-dashboard
+context.push('/owner-dashboard/manage-menu', extra: place); }
 
 class _OwnerDashboardScreenState extends State<OwnerDashboardScreen> {
   String? _placeName;
@@ -124,6 +154,8 @@ class _OwnerDashboardScreenState extends State<OwnerDashboardScreen> {
               ),
             ),
             SizedBox(height: 12.h),
+
+            // زر إضافة مكان
             _buildMenuButton(
               icon: Icons.add_location,
               title: 'إضافة مكان',
@@ -133,6 +165,8 @@ class _OwnerDashboardScreenState extends State<OwnerDashboardScreen> {
                 context.push('/owner-dashboard/add-place');
               },
             ),
+
+            // زر تعديل المكان
             _buildMenuButton(
               icon: Icons.edit_location,
               title: 'تعديل المكان',
@@ -142,15 +176,17 @@ class _OwnerDashboardScreenState extends State<OwnerDashboardScreen> {
                 // TODO: الانتقال إلى EditPlaceScreen
               },
             ),
+
+            // ✅ زر إدارة القائمة (الوحيد)
             _buildMenuButton(
               icon: Icons.menu_book,
               title: 'إدارة القائمة',
               subtitle: 'أضف أو عدل عناصر القائمة',
               color: Colors.green,
-              onTap: () {
-                // TODO: الانتقال إلى ManageMenuScreen
-              },
+              onTap: () => _navigateToManageMenu(context),
             ),
+
+            // زر الطلبات الواردة
             _buildMenuButton(
               icon: Icons.shopping_bag_outlined,
               title: 'الطلبات الواردة',

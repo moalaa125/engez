@@ -4,7 +4,10 @@ import 'package:engez/features/cart/manager/cart_cubit.dart';
 import 'package:engez/features/cart/manager/cart_state.dart';
 import 'package:engez/features/cart/models/cart_item.dart';
 import 'package:engez/features/category/select_category_cubit.dart';
+import 'package:engez/features/menu/manger/menu_item_cubit.dart';
+import 'package:engez/features/menu/manger/menu_item_state.dart';
 import 'package:engez/models/place_model.dart';
+import 'package:engez/repositories/menu_item_repository.dart';
 import 'package:engez/widgets/category_list.dart';
 import 'package:engez/widgets/menu_item_card.dart';
 import 'package:flutter/material.dart';
@@ -24,56 +27,9 @@ class PlaceDetailsScreen extends StatelessWidget {
     'bob_wich': 'menu/menubob.pdf',
   };
 
-  final Map<String, List<CartItem>> _menuItemsData = {
-    'kbab_basha': const [
-      CartItem(
-        id: 'mix_grill_platter',
-        title: 'مشاوي مشكلة',
-        imagePath: 'assets/images/burger_kbab.jpeg',
-        price: 250,
-      ),
-      CartItem(
-        id: 'shish_taouk_wrap',
-        title: 'شيش طاووق ساندوتش',
-        imagePath: 'assets/images/burger2.jpg',
-        price: 120,
-      ),
-      CartItem(
-        id: 'kofta_platter',
-        title: 'طبق كفتة',
-        imagePath: 'assets/images/burger3.jpg',
-        price: 200,
-      ),
-    ],
-    'bob_wich': const [
-      CartItem(
-        id: 'bob_wich_burger',
-        title: 'برجر بوب ويتش',
-        imagePath: 'assets/images/bob.jpeg',
-        price: 150,
-      ),
-    ],
-    'rolz': const [
-      CartItem(
-        id: 'rolz',
-        title: 'برجر رولز',
-        imagePath: 'assets/images/rolz.png',
-        price: 150,
-      ),
-    ],
-  };
-
   final Map<String, String> _descriptions = {
     'kbab_basha': 'مشاوي وبرجر مشوي',
     'bob_wich': 'ساندوتشات طازجة وصحية',
-  };
-
-  final Map<String, String> _descriptionsItems = {
-    'mix_grill_platter': 'كفتة طريه، شيش طاووق وكباب مشوي مع أرز...',
-    'shish_taouk_wrap': 'مكعبات دجاج مشوية في خبز طازج مع ثومية...',
-    'kofta_platter': 'كفتة لحم مفروم فاخر مشوية إلى الكمال...',
-    'bob_wich_burger': 'برجر كلاسيكي لذيذ مع صوص سري...',
-    'rolz': 'برجر رولز',
   };
 
   Widget _buildPlaceImage(String imagePath, {double? height, double? width, BoxFit fit = BoxFit.cover}) {
@@ -271,15 +227,11 @@ class PlaceDetailsScreen extends StatelessWidget {
   }
 
   Widget _buildPopularItemsSection(BuildContext context) {
-    final List<CartItem> menuItems = _menuItemsData[place.id] ?? [];
-
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 16.w),
       child: Column(
-        mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(height: 24.h),
           Text(
             'الأصناف الأكثر طلباً',
             style: TextStyle(
@@ -289,31 +241,49 @@ class PlaceDetailsScreen extends StatelessWidget {
             ),
           ),
           SizedBox(height: 16.h),
-          BlocBuilder<CartCubit, CartState>(
+          BlocBuilder<MenuItemCubit, MenuItemState>(
             builder: (context, state) {
-              return ListView(
-                physics: const NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                padding: EdgeInsets.zero,
-                children: menuItems.map((item) {
-                  int currentQuantity =
-                      state.items.where((e) => e.id == item.id).firstOrNull?.quantity ?? 0;
-
-                  return MenuItemCard(
-                    imagePath: item.imagePath,
-                    title: item.title,
-                    description: _descriptionsItems[item.id] ?? '',
-                    price: item.price.toStringAsFixed(0),
-                    quantity: currentQuantity,
-                    onAddTap: () {
-                      context.read<CartCubit>().addItem(item);
-                    },
-                    onRemoveTap: () {
-                      context.read<CartCubit>().decrementItem(item.id);
-                    },
-                  );
-                }).toList(),
-              );
+              if (state is MenuItemLoading) {
+                return const Center(child: CircularProgressIndicator());
+              }
+              if (state is MenuItemError) {
+                return Center(child: Text('خطأ: ${state.message}'));
+              }
+              if (state is MenuItemLoaded) {
+                final items = state.items;
+                if (items.isEmpty) {
+                  return const Text('لا توجد عناصر في القائمة');
+                }
+                return ListView(
+                  physics: const NeverScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  padding: EdgeInsets.zero,
+                  children: items.map((item) {
+                    final cartState = context.watch<CartCubit>().state;
+                    int currentQuantity = cartState.items.where((e) => e.id == item.id).firstOrNull?.quantity ?? 0;
+                    return MenuItemCard(
+                      imagePath: item.imagePath,
+                      title: item.title,
+                      description: item.description,
+                      price: item.price.toStringAsFixed(0),
+                      quantity: currentQuantity,
+                      onAddTap: () {
+                        final cartItem = CartItem(
+                          id: item.id,
+                          title: item.title,
+                          imagePath: item.imagePath,
+                          price: item.price,
+                        );
+                        context.read<CartCubit>().addItem(cartItem);
+                      },
+                      onRemoveTap: () {
+                        context.read<CartCubit>().decrementItem(item.id);
+                      },
+                    );
+                  }).toList(),
+                );
+              }
+              return const SizedBox.shrink();
             },
           ),
         ],
@@ -350,7 +320,7 @@ class PlaceDetailsScreen extends StatelessWidget {
             left: 16.w,
             right: 16.w,
             child: Container(
-              height: 150.h, 
+              height: 150.h,
               width: double.infinity,
               padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
               decoration: BoxDecoration(
@@ -371,7 +341,7 @@ class PlaceDetailsScreen extends StatelessWidget {
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min, 
+                      mainAxisSize: MainAxisSize.min,
                       children: [
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -500,23 +470,26 @@ class PlaceDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      backgroundColor: MyColors.myWhite,
-      bottomNavigationBar: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
-        child: _buildBottomBar(context),
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            _buildImageAndDetailsBar(context),
-            SizedBox(height: 16.h),
-            _buildListOfTextButtons(),
-            SizedBox(height: 16.h),
-            _buildPopularItemsSection(context),
-          ],
+    return BlocProvider(
+      create: (_) => MenuItemCubit(MenuItemRepository(), place.id)..fetchMenuItems(),
+      child: Scaffold(
+        resizeToAvoidBottomInset: false,
+        backgroundColor: MyColors.myWhite,
+        bottomNavigationBar: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+          child: _buildBottomBar(context),
+        ),
+        body: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              _buildImageAndDetailsBar(context),
+              SizedBox(height: 16.h),
+              _buildListOfTextButtons(),
+              SizedBox(height: 16.h),
+              _buildPopularItemsSection(context),
+            ],
+          ),
         ),
       ),
     );
