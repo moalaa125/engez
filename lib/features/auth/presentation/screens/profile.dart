@@ -142,6 +142,9 @@ class _ProfileState extends State<Profile> {
               ),
               SizedBox(height: 40.h),
               _buildProfileOption(Icons.person, 'تعديل الملف الشخصي', () {}),
+              _buildProfileOption(Icons.receipt_long, 'سجل الطلبات', () {
+                context.push('/order-history');
+              }),
               _buildProfileOption(Icons.lock, 'تغيير كلمة المرور', () {}),
               _buildProfileOption(Icons.settings, 'إعدادات التطبيق', () {}),
               _buildProfileOption(Icons.logout, 'تسجيل الخروج', () async {

@@ -1,6 +1,7 @@
 import 'package:engez/constants/my_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:engez/widgets/custom_image.dart';
 
 class MenuItemCard extends StatelessWidget {
   final String imagePath;
@@ -45,19 +46,17 @@ class MenuItemCard extends StatelessWidget {
         children: [
           ClipRRect(
             borderRadius: BorderRadius.circular(16.r),
-            child: Image.asset(
-              imagePath,
+            child: CustomImage(
+              imagePath: imagePath,
               height: 90.h,
               width: 90.w,
               fit: BoxFit.cover,
-              errorBuilder: (context, error, stackTrace) {
-                return Container(
-                  height: 90.h,
-                  width: 90.w,
-                  color: Colors.grey[200],
-                  child: Icon(Icons.fastfood, color: Colors.grey[400]),
-                );
-              },
+              errorWidget: Container(
+                height: 90.h,
+                width: 90.w,
+                color: MyColors.myBorder,
+                child: Icon(Icons.fastfood, color: MyColors.myTextSecondary),
+              ),
             ),
           ),
           SizedBox(width: 12.w),
@@ -83,7 +82,7 @@ class MenuItemCard extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
                     fontSize: 12.sp,
-                    color: Colors.grey[600],
+                    color: MyColors.myTextSecondary,
                     height: 1.2,
                   ),
                 ),

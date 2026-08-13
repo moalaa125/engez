@@ -42,6 +42,24 @@ Future<void> _navigateToManageMenu(BuildContext context) async {
   // ✅ المسار الصحيح الآن موجود تحت /owner-dashboard
 context.push('/owner-dashboard/manage-menu', extra: place); }
 
+Future<void> _navigateToOwnerOrders(BuildContext context) async {
+  final user = FirebaseAuth.instance.currentUser;
+  if (user == null) return;
+  final doc = await FirebaseFirestore.instance.collection('users').doc(user.uid).get();
+  final placeId = doc.data()?['placeId'] as String?;
+  if (placeId == null) {
+    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('لم يتم العثور على مكان مرتبط بحسابك')));
+    return;
+  }
+  final placeDoc = await FirebaseFirestore.instance.collection('places').doc(placeId).get();
+  if (!placeDoc.exists) {
+    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('المكان غير موجود')));
+    return;
+  }
+  final place = Place.fromDoc(placeDoc);
+  context.push('/owner-dashboard/orders', extra: place);
+}
+
 class _OwnerDashboardScreenState extends State<OwnerDashboardScreen> {
   String? _placeName;
 
@@ -192,9 +210,7 @@ class _OwnerDashboardScreenState extends State<OwnerDashboardScreen> {
               title: 'الطلبات الواردة',
               subtitle: 'شاهد الطلبات الجديدة',
               color: Colors.purple,
-              onTap: () {
-                // TODO: الانتقال إلى OrdersScreen
-              },
+              onTap: () => _navigateToOwnerOrders(context),
             ),
           ],
         ),

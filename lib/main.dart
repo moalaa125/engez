@@ -3,6 +3,11 @@ import 'package:engez/constants/my_colors.dart';
 import 'package:engez/features/cart/manager/cart_cubit.dart';
 import 'package:engez/features/place/place_cubit.dart';
 import 'package:engez/repositories/place_repository.dart';
+import 'package:engez/features/order/manager/order_cubit.dart';
+import 'package:engez/features/order/repositories/order_repository.dart';
+import 'package:engez/features/offer/manager/offer_cubit.dart';
+import 'package:engez/features/offer/repositories/offer_repository.dart';
+import 'package:engez/features/admin/manager/admin_requests_cubit.dart';
 import 'package:engez/router/app_router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -26,6 +31,15 @@ class EngezApp extends StatelessWidget {
         BlocProvider(create: (_) => CartCubit()),
         BlocProvider(
           create: (_) => PlaceCubit(PlaceRepository()),
+        ),
+        BlocProvider(
+          create: (_) => OrderCubit(OrderRepository()),
+        ),
+        BlocProvider(
+          create: (_) => OfferCubit(OfferRepository())..fetchOffers(),
+        ),
+        BlocProvider(
+          create: (_) => AdminRequestsCubit(),
         ),
       ],
       child: ScreenUtilInit(

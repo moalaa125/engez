@@ -5,6 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:engez/features/order/models/order_model.dart';
+import 'package:engez/features/order/manager/order_cubit.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:engez/widgets/custom_image.dart';
 
 class CartScreen extends StatelessWidget {
   const CartScreen({super.key});
@@ -37,14 +42,14 @@ class CartScreen extends StatelessWidget {
                   Icon(
                     Icons.shopping_cart_outlined,
                     size: 100.r,
-                    color: Colors.grey,
+                    color: MyColors.myBorder,
                   ),
                   SizedBox(height: 16.h),
                   Text(
                     'سلتك فارغة',
                     style: TextStyle(
                       fontSize: 18.sp,
-                      color: Colors.grey[700],
+                      color: MyColors.myTextSecondary,
                     ),
                   ),
                   SizedBox(height: 24.h),
@@ -92,16 +97,15 @@ class CartScreen extends StatelessWidget {
                         children: [
                           ClipRRect(
                             borderRadius: BorderRadius.circular(10.r),
-                            child: Image.asset(
-                              item.imagePath,
+                            child: CustomImage(
+                              imagePath: item.imagePath,
                               height: 60.h,
                               width: 60.w,
                               fit: BoxFit.cover,
-                              errorBuilder: (context, error, stackTrace) =>
-                                  Container(
+                              errorWidget: Container(
                                 height: 60.h,
                                 width: 60.w,
-                                color: Colors.grey[300],
+                                color: MyColors.myBorder,
                                 child: const Icon(Icons.fastfood, color: Colors.white),
                               ),
                             ),
@@ -194,7 +198,7 @@ class CartScreen extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text('إجمالي العناصر:', style: TextStyle(fontSize: 16.sp, color: Colors.grey[700])),
+                          Text('إجمالي العناصر:', style: TextStyle(fontSize: 16.sp, color: MyColors.myTextSecondary)),
                           Text('${state.totalItemsCount}', style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold)),
                         ],
                       ),
@@ -215,13 +219,57 @@ class CartScreen extends StatelessWidget {
                             backgroundColor: MyColors.myOrange,
                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.r)),
                           ),
-                          onPressed: () {
+                          onPressed: () async {
+                            final user = FirebaseAuth.instance.currentUser;
+                            if (user == null) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(content: Text('يجب تسجيل الدخول لإتمام الطلب')),
+                              );
+                              return;
+                            }
+                            if (state.isEmpty) return;
+                            
+                            // Find placeId
+                            String resolvedPlaceId = '';
+                            try {
+                              final firstItem = state.items.first;
+                              final placesSnapshot = await FirebaseFirestore.instance.collection('places').get();
+                              for (var doc in placesSnapshot.docs) {
+                                final menuDoc = await doc.reference.collection('menuItems').doc(firstItem.id).get();
+                                if (menuDoc.exists) {
+                                  resolvedPlaceId = doc.id;
+                                  break;
+                                }
+                              }
+                            } catch (e) {
+                              // ignore
+                            }
+
+                            final order = OrderModel(
+                              id: '', // Firestore will auto-generate if we use add(), but our repo uses add(order.toMap()) which ignores id.
+                              customerId: user.uid,
+                              placeId: resolvedPlaceId,
+                              items: state.items.map((cartItem) => OrderItem(
+                                menuItemId: cartItem.id,
+                                title: cartItem.title,
+                                price: cartItem.price,
+                                quantity: cartItem.quantity,
+                              )).toList(),
+                              totalPrice: state.totalPrice,
+                              status: 'pending',
+                              createdAt: DateTime.now(),
+                            );
+
+                            context.read<OrderCubit>().createOrder(order);
+                            context.read<CartCubit>().clearCart();
+                            
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
-                                content: const Text('قريباً سيتم تفعيل إتمام الطلب'),
-                                backgroundColor: MyColors.myOrange,
+                                content: const Text('تم إرسال الطلب بنجاح!'),
+                                backgroundColor: MyColors.mySuccess,
                               ),
                             );
+                            context.pop();
                           },
                           child: Text('إتمام الطلب', style: TextStyle(color: Colors.white, fontSize: 16.sp, fontWeight: FontWeight.bold)),
                         ),

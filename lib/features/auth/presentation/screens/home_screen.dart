@@ -1,5 +1,7 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:engez/features/offer/manager/offer_cubit.dart';
+import 'package:engez/features/offer/manager/offer_state.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:engez/constants/my_colors.dart';
 import 'package:engez/constants/place_categories.dart';
@@ -29,6 +31,8 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   late final LocationCubit _locationCubit;
   late final SelectCategoryCubit _categoryCubit;
+  final TextEditingController _searchController = TextEditingController();
+  String _searchQuery = '';
 
   @override
   void initState() {
@@ -44,6 +48,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void dispose() {
     _locationCubit.close();
     _categoryCubit.close();
+    _searchController.dispose();
     super.dispose();
   }
 
@@ -119,7 +124,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   padding: const EdgeInsets.only(left: 9),
                   child: CircleAvatar(
                     radius: 22.r,
-                    backgroundColor: MyColors.mygrey,
+                    backgroundColor: MyColors.myBorder,
                     backgroundImage: imageUrl != null
                         ? NetworkImage(imageUrl) as ImageProvider
                         : const AssetImage('assets/images/enterPhoneNumber.png'),
@@ -199,41 +204,40 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildOfferSection() {
-    return Directionality(
-      textDirection: TextDirection.ltr,
-      child: CarouselSlider(
-        options: CarouselOptions(
-          height: 180.h,
-          viewportFraction: 0.9,
-          enableInfiniteScroll: false,
-          autoPlay: true,
-          autoPlayInterval: const Duration(seconds: 3),
-          autoPlayAnimationDuration: const Duration(milliseconds: 800),
-          autoPlayCurve: Curves.fastOutSlowIn,
-          enlargeCenterPage: false,
-          padEnds: false,
-        ),
-        items: const [
-          CustomOfferSection(
-            howMuchOffer: '10',
-            tittleOfTheOffer: 'on your first morning coffee.',
-            icon: Icons.coffee,
-            colorOfTheCard: Color(0xFFFF7A00),
-          ),
-          CustomOfferSection(
-            howMuchOffer: '20',
-            tittleOfTheOffer: 'on your lunch meal today.',
-            icon: Icons.fastfood,
-            colorOfTheCard: Colors.grey,
-          ),
-          CustomOfferSection(
-            howMuchOffer: '15',
-            tittleOfTheOffer: 'on fresh baked pastries.',
-            icon: Icons.bakery_dining,
-            colorOfTheCard: Color(0xFFFFB74D),
-          ),
-        ],
-      ),
+    return BlocBuilder<OfferCubit, OfferState>(
+      builder: (context, state) {
+        if (state is OfferError) {
+          debugPrint('Error loading offers: ${state.message}');
+          return const SizedBox.shrink(); // Hide gracefully on error
+        }
+        if (state is OfferLoaded && state.offers.isNotEmpty) {
+          return Directionality(
+            textDirection: TextDirection.ltr,
+            child: CarouselSlider(
+              options: CarouselOptions(
+                height: 180.h,
+                viewportFraction: 0.9,
+                enableInfiniteScroll: false,
+                autoPlay: true,
+                autoPlayInterval: const Duration(seconds: 3),
+                autoPlayAnimationDuration: const Duration(milliseconds: 800),
+                autoPlayCurve: Curves.fastOutSlowIn,
+                enlargeCenterPage: false,
+                padEnds: false,
+              ),
+              items: state.offers.map((offer) {
+                return CustomOfferSection(
+                  howMuchOffer: offer.discount.replaceAll(RegExp(r'[^0-9]'), ''),
+                  tittleOfTheOffer: offer.title,
+                  icon: offer.iconData,
+                  colorOfTheCard: offer.color,
+                );
+              }).toList(),
+            ),
+          );
+        }
+        return const SizedBox.shrink();
+      },
     );
   }
 
@@ -294,15 +298,22 @@ class _HomeScreenState extends State<HomeScreen> {
                 final selectedCategory = categories[selectedIndex];
 
                 final allPlaces = placeState.places;
-                final filteredPlaces = selectedCategory == PlaceCategories.all
+                var filteredPlaces = selectedCategory == PlaceCategories.all
                     ? allPlaces
                     : allPlaces.where((p) => p.category == selectedCategory).toList();
+
+                if (_searchQuery.isNotEmpty) {
+                  filteredPlaces = filteredPlaces.where((p) => 
+                    p.title.toLowerCase().contains(_searchQuery) ||
+                    p.category.toLowerCase().contains(_searchQuery)
+                  ).toList();
+                }
 
                 if (filteredPlaces.isEmpty) {
                   return Center(
                     child: Text(
                       'لا توجد أماكن في هذا التصنيف',
-                      style: TextStyle(color: Colors.grey[600]),
+                      style: TextStyle(color: MyColors.myTextSecondary),
                     ),
                   );
                 }
@@ -340,8 +351,14 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _buidTextField() {
     return CustomTextField(
+      controller: _searchController,
       hintText: 'بتدور علي إيه؟',
       suffixIcon: Icons.search,
+      onChanged: (value) {
+        setState(() {
+          _searchQuery = value.toLowerCase();
+        });
+      },
     );
   }
 

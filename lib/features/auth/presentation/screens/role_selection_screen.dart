@@ -45,17 +45,42 @@ class _RoleSelectionScreenState extends State<RoleSelectionScreen> {
       final user = FirebaseAuth.instance.currentUser;
       if (user == null) return;
 
-      await FirebaseFirestore.instance
-          .collection('users')
-          .doc(user.uid)
-          .set({'role': selectedRole}, SetOptions(merge: true));
+      // 1. Check existing role first to prevent resetting approved owners/admins
+      final doc = await FirebaseFirestore.instance.collection('users').doc(user.uid).get();
+      final existingRole = doc.data()?['role'] as String?;
 
-      if (!mounted) return;
+      if (existingRole == 'owner') {
+        if (mounted) context.go('/owner-dashboard');
+        return;
+      } else if (existingRole == 'admin') {
+        if (mounted) context.go('/admin/requests');
+        return;
+      }
 
       if (selectedRole == 'customer') {
-        context.go('/home');
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(user.uid)
+            .set({'role': 'customer'}, SetOptions(merge: true));
+        if (mounted) context.go('/home');
       } else if (selectedRole == 'owner') {
-        context.go('/owner-dashboard');
+        await FirebaseFirestore.instance
+            .collection('ownerRequests')
+            .doc(user.uid)
+            .set({'status': 'pending'}, SetOptions(merge: true));
+            
+        // تعيين الدور مبدئياً كعميل حتى تتم الموافقة
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(user.uid)
+            .set({'role': 'customer'}, SetOptions(merge: true));
+
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('تم إرسال طلبك. ستتم مراجعته من الإدارة. أنت الآن مسجل كعميل.')),
+          );
+          context.go('/home');
+        }
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(

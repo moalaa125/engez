@@ -92,7 +92,7 @@ class AllPlaces extends StatelessWidget {
                   return Center(
                     child: Text(
                       'لا توجد أماكن في هذا التصنيف' ,
-                      style: TextStyle(color: Colors.grey[600] , fontFamily: 'cairo'),
+                      style: TextStyle(color: MyColors.myTextSecondary , fontFamily: 'cairo'),
                     ),
                   );
                 }

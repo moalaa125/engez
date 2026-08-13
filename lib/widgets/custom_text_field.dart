@@ -7,20 +7,26 @@ class CustomTextField extends StatelessWidget {
     super.key,
     required this.hintText,
     required this.suffixIcon,
+    this.controller,
+    this.onChanged,
   });
   final String hintText;
   final IconData? suffixIcon;
+  final TextEditingController? controller;
+  final Function(String)? onChanged;
 
   @override
   Widget build(BuildContext context) {
     // في RTL، الـ suffixIcon يصبح على اليسار، وهذا صحيح
     return TextField(
+      controller: controller,
+      onChanged: onChanged,
       textAlign: TextAlign.right,
       cursorColor: MyColors.myOrange,
       decoration: InputDecoration(
         hintText: hintText,
         hintStyle: TextStyle(
-          color: Colors.grey.shade500,
+          color: MyColors.myTextSecondary,
           fontFamily: 'cairo',
           fontSize: 15.sp,
         ),

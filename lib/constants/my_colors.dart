@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 
 class MyColors {
-  static Color myOrange = const Color(0xFFFD6A00);
-  static Color myDarkOrange = const Color(0xFFA04100);
-  static Color myBackground = const Color(0xFFFFF8F6);
-  static Color myWhite = const Color(0xFFFFFFFF);
-  static Color mygrey = const Color(0xFFE7E8E9);
+  static const Color myOrange = Color(0xFFFD6A00);
+  static const Color myDarkOrange = Color(0xFFA04100);
+  static const Color myBackground = Color(0xFFFFF8F6);
+  static const Color myWhite = Color(0xFFFFFFFF);
 
-  static Color myDarkText = const Color(0xFF572000);
-  static Color mySuccess = const Color(0xFF1B8354);
-  static Color myError = const Color(0xFFD32F2F);
-  static Color myBackgroundAlt = const Color(0xFFFFF1E9);
-}
+  static const Color myDarkText = Color(0xFF3A1B0D);      // updated
+  static const Color mySuccess = Color(0xFF1B8354);
+  static const Color myError = Color(0xFFD32F2F);
+  static const Color myWarning = Color(0xFFF5A623);        // new
+  static const Color myBackgroundAlt = Color(0xFFFFF1E9);
+  static const Color myTextSecondary = Color(0xFF8A7A73);  // new
+  static const Color myBorder = Color(0xFFEFE3DC);         // updated
+}

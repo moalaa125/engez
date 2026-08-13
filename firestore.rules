@@ -1,24 +1,39 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    // التحقق من مصادقة المستخدم
-    match /users/{userId} {
-      allow read: if request.auth != null && request.auth.uid == userId;
-      allow write: if request.auth != null && request.auth.uid == userId;
+    // التحقق من وجود المستخدم
+    match /users/{uid} {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null && request.auth.uid == uid;
+      // منع تعديل حقل 'role' من العميل (سنقوم بمعالجته عبر request)
+      allow update: if request.auth.uid == uid
+                    && !('role' in request.resource.data);
     }
 
     // الأماكن
     match /places/{placeId} {
-      allow read: if true; // أي شخص يقرأ
-      allow create: if request.auth != null && request.resource.data.ownerId == request.auth.uid;
-      allow update, delete: if request.auth != null && resource.data.ownerId == request.auth.uid;
+      allow read: if true;
+      allow create: if request.auth != null
+                    && request.resource.data.ownerId == request.auth.uid;
+      allow update, delete: if request.auth != null
+                    && resource.data.ownerId == request.auth.uid;
+    }
 
-      // عناصر القائمة (تحت المجموعة الفرعية)
-      match /menuItems/{menuItemId} {
-        allow read: if true;
-        allow create: if request.auth != null && get(/databases/$(database)/documents/places/$(placeId)).data.ownerId == request.auth.uid;
-        allow update, delete: if request.auth != null && get(/databases/$(database)/documents/places/$(placeId)).data.ownerId == request.auth.uid;
-      }
+    // عناصر القائمة (تحت كل مكان)
+    match /places/{placeId}/menuItems/{itemId} {
+      allow read: if true;
+      allow create: if request.auth != null
+                    && exists(/databases/$(database)/documents/places/$(placeId))
+                    && get(/databases/$(database)/documents/places/$(placeId)).data.ownerId == request.auth.uid;
+      allow update, delete: if request.auth != null
+                    && get(/databases/$(database)/documents/places/$(placeId)).data.ownerId == request.auth.uid;
+    }
+
+    // طلبات التحقق من المالك (سنستخدمها في 2.2)
+    match /ownerRequests/{requestId} {
+      allow create: if request.auth != null;
+      allow read, update, delete: if request.auth != null
+                    && (request.auth.uid == resource.data.uid || request.auth.token.admin == true);
     }
   }
 }

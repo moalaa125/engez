@@ -69,12 +69,12 @@ class PlaceDetailsScreen extends StatelessWidget {
     return Container(
       height: height,
       width: width,
-      color: Colors.grey[300],
+      color: MyColors.myBorder,
       child: Center(
         child: Icon(
           Icons.image_not_supported,
           size: 40,
-          color: Colors.grey[600],
+          color: MyColors.myTextSecondary,
         ),
       ),
     );
@@ -391,12 +391,12 @@ class PlaceDetailsScreen extends StatelessWidget {
                           _descriptions[place.id] ?? place.category,
                           style: TextStyle(
                             fontSize: 13.sp,
-                            color: Colors.grey[700],
+                            color: MyColors.myTextSecondary,
                           ),
                         ),
                         SizedBox(height: 8.h),
                         Divider(
-                          color: Colors.grey.withValues(alpha: .3),
+                          color: MyColors.myBorder,
                           height: 1,
                           thickness: 1,
                         ),
@@ -419,13 +419,13 @@ class PlaceDetailsScreen extends StatelessWidget {
                             SizedBox(width: 10.w),
                             const CircleAvatar(
                               radius: 2.5,
-                              backgroundColor: Colors.grey,
+                              backgroundColor: MyColors.myBorder,
                             ),
                             SizedBox(width: 10.w),
                             Text(
                               'التوصيل متاح',
                               style: TextStyle(
-                                color: Colors.grey[700],
+                                color: MyColors.myTextSecondary,
                                 fontSize: 13.sp,
                               ),
                             ),
@@ -442,7 +442,7 @@ class PlaceDetailsScreen extends StatelessWidget {
                     ),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(20.r),
-                      border: Border.all(color: Colors.grey.shade300),
+                      border: Border.all(color: MyColors.myBorder),
                     ),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,

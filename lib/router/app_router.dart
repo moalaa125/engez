@@ -5,10 +5,14 @@ import 'package:engez/features/auth/presentation/screens/role_selection_screen.d
 import 'package:engez/features/auth/presentation/screens/home_screen.dart';
 import 'package:engez/features/auth/presentation/screens/all_places.dart';
 import 'package:engez/features/auth/presentation/screens/place_details.dart';
-import 'package:engez/features/auth/presentation/screens/cart_screen.dart';
+import 'package:engez/features/cart/presentation/screens/cart_screen.dart';
 import 'package:engez/features/auth/presentation/screens/profile.dart';
 import 'package:engez/features/auth/presentation/screens/owner_dashboard_screen.dart';
+import 'package:engez/features/admin/presentation/screens/admin_dashboard_screen.dart';
+import 'package:engez/features/admin/presentation/screens/admin_requests_screen.dart';
 import 'package:engez/features/auth/presentation/screens/add_edit_place_screen.dart';
+import 'package:engez/features/order/presentation/screens/order_history_screen.dart';
+import 'package:engez/features/order/presentation/screens/owner_orders_screen.dart';
 import 'package:engez/models/place_model.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -82,6 +86,18 @@ class AppRouter {
               return ManageMenuScreen(place: place);
             },
           ),
+          GoRoute(
+            path: 'orders',
+            builder: (context, state) {
+              final place = state.extra as Place?;
+              if (place == null) {
+                return const Scaffold(
+                  body: Center(child: Text('المكان غير موجود')),
+                );
+              }
+              return OwnerOrdersScreen(place: place);
+            },
+          ),
         ],
       ),
       GoRoute(
@@ -91,6 +107,10 @@ class AppRouter {
       GoRoute(
         path: '/profile',
         builder: (context, state) => const Profile(),
+      ),
+      GoRoute(
+        path: '/order-history',
+        builder: (context, state) => const OrderHistoryScreen(),
       ),
       GoRoute(
         path: '/all-places',
@@ -114,6 +134,14 @@ class AppRouter {
           final place = state.extra as Place?;
           return AddEditPlaceScreen(place: place);
         },
+      ),
+      GoRoute(
+        path: '/admin-dashboard',
+        builder: (context, state) => const AdminDashboardScreen(),
+      ),
+      GoRoute(
+        path: '/admin/requests',
+        builder: (context, state) => const AdminRequestsScreen(),
       ),
     ],
     errorBuilder: (context, state) => Scaffold(

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:engez/constants/my_colors.dart';
+import 'package:engez/widgets/custom_image.dart';
 
 class PlaceCard extends StatelessWidget {
   final String imagePath;
@@ -25,47 +26,7 @@ class PlaceCard extends StatelessWidget {
     required this.heroTag,
   });
 
-  Widget _buildPlaceImage() {
-    if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
-      return Image.network(
-        imagePath,
-        fit: BoxFit.cover,
-        errorBuilder: (context, error, stackTrace) {
-          return _buildPlaceholderImage();
-        },
-        loadingBuilder: (context, child, loadingProgress) {
-          if (loadingProgress == null) return child;
-          return Center(
-            child: CircularProgressIndicator(
-              color: MyColors.myOrange,
-              strokeWidth: 2,
-            ),
-          );
-        },
-      );
-    } else {
-      return Image.asset(
-        imagePath,
-        fit: BoxFit.cover,
-        errorBuilder: (context, error, stackTrace) {
-          return _buildPlaceholderImage();
-        },
-      );
-    }
-  }
 
-  Widget _buildPlaceholderImage() {
-    return Container(
-      color: Colors.grey[300],
-      child: Center(
-        child: Icon(
-          Icons.image_not_supported,
-          size: 40,
-          color: Colors.grey[600],
-        ),
-      ),
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -81,7 +42,7 @@ class PlaceCard extends StatelessWidget {
               Positioned.fill(
                 child: Hero(
                   tag: heroTag,
-                  child: _buildPlaceImage(),
+                  child: CustomImage(imagePath: imagePath),
                 ),
               ),
               Positioned(
@@ -132,7 +93,7 @@ class PlaceCard extends StatelessWidget {
                                 Text(
                                   ' ($reviewsCount)',
                                   style: const TextStyle(
-                                    color: Colors.grey,
+                                    color: MyColors.myTextSecondary,
                                     fontSize: 13,
                                   ),
                                 ),
@@ -141,7 +102,7 @@ class PlaceCard extends StatelessWidget {
                               Text(
                                 category,
                                 style: const TextStyle(
-                                  color: Colors.grey,
+                                  color: MyColors.myTextSecondary,
                                   fontSize: 13,
                                 ),
                               ),

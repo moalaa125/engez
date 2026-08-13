@@ -1,17 +1,69 @@
 import 'package:flutter/material.dart';
+import 'package:engez/constants/my_colors.dart';
 
 class CustomImage extends StatelessWidget {
-  const CustomImage({super.key, required this.image, required this.height});
+  final String imagePath;
+  final double? height;
+  final double? width;
+  final BoxFit fit;
+  final Widget? errorWidget;
 
-  final double height;
-  final String image;
+  const CustomImage({
+    super.key,
+    required this.imagePath,
+    this.height,
+    this.width,
+    this.fit = BoxFit.cover,
+    this.errorWidget,
+  });
+
+  Widget _buildPlaceholder() {
+    if (errorWidget != null) return errorWidget!;
+    return Container(
+      height: height,
+      width: width,
+      color: Colors.grey[300],
+      child: Center(
+        child: Icon(
+          Icons.image_not_supported,
+          size: 40,
+          color: Colors.grey[600],
+        ),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: height,
-      width: double.infinity,
-      child: Image.asset(image),
-    );
+    if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
+      return Image.network(
+        imagePath,
+        height: height,
+        width: width,
+        fit: fit,
+        errorBuilder: (context, error, stackTrace) => _buildPlaceholder(),
+        loadingBuilder: (context, child, loadingProgress) {
+          if (loadingProgress == null) return child;
+          return SizedBox(
+            height: height,
+            width: width,
+            child: Center(
+              child: CircularProgressIndicator(
+                color: MyColors.myOrange,
+                strokeWidth: 2,
+              ),
+            ),
+          );
+        },
+      );
+    } else {
+      return Image.asset(
+        imagePath,
+        height: height,
+        width: width,
+        fit: fit,
+        errorBuilder: (context, error, stackTrace) => _buildPlaceholder(),
+      );
+    }
   }
 }

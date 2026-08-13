@@ -45,7 +45,7 @@ class _LoginScreenContentState extends State<_LoginScreenContent> {
           // 🔥 تأخير بسيط لضمان اكتمال كتابة Firestore
           Future.delayed(const Duration(milliseconds: 500), () {
             if (mounted) {
-              context.go('/role-selection');
+              context.go('/loading');
             }
           });
         } else if (state is AuthError) {

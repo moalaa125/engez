@@ -1,6 +1,9 @@
 import 'package:engez/constants/my_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:engez/features/offer/manager/offer_cubit.dart';
+import 'package:engez/features/offer/manager/offer_state.dart';
 
 class OffersScreen extends StatelessWidget {
   const OffersScreen({super.key});
@@ -24,12 +27,38 @@ class OffersScreen extends StatelessWidget {
       ),
       body: Padding(
         padding: EdgeInsets.all(16.w),
-        child: ListView(
-          children: [
-            _buildOfferCard('20%', 'خصم على جميع الوجبات السريعة', Icons.fastfood, Color(0xFFFF7A00)),
-            _buildOfferCard('15%', 'خصم على المشروبات الساخنة', Icons.coffee, Color(0xFFA04100)),
-            _buildOfferCard('30%', 'عرض خاص للعائلات', Icons.family_restroom, Color(0xFF10B981)),
-          ],
+        child: BlocBuilder<OfferCubit, OfferState>(
+          builder: (context, state) {
+            if (state is OfferLoading) {
+              return const Center(child: CircularProgressIndicator());
+            }
+            if (state is OfferError) {
+              return Center(child: Text('خطأ: ${state.message}'));
+            }
+            if (state is OfferLoaded) {
+              if (state.offers.isEmpty) {
+                return Center(
+                  child: Text(
+                    'لا توجد عروض حالياً',
+                    style: TextStyle(fontSize: 18.sp, color: MyColors.myTextSecondary),
+                  ),
+                );
+              }
+              return ListView.builder(
+                itemCount: state.offers.length,
+                itemBuilder: (context, index) {
+                  final offer = state.offers[index];
+                  return _buildOfferCard(
+                    offer.discount,
+                    offer.title,
+                    offer.iconData,
+                    offer.color,
+                  );
+                },
+              );
+            }
+            return const SizedBox.shrink();
+          },
         ),
       ),
     );

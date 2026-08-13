@@ -41,6 +41,8 @@ class _LoadingScreenState extends State<LoadingScreen> {
         if (mounted) context.go('/home');
       } else if (role == 'owner') {
         if (mounted) context.go('/owner-dashboard');
+      } else if (role == 'admin') {
+        if (mounted) context.go('/admin-dashboard');
       } else {
         if (mounted) context.go('/role-selection');
       }
