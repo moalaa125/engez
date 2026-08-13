@@ -13,27 +13,31 @@ class OrderCubit extends Cubit<OrderState> {
   void fetchCustomerOrders(String customerId) {
     emit(OrderLoading());
     _ordersSubscription?.cancel();
-    _ordersSubscription = _repository.getCustomerOrders(customerId).listen(
-      (orders) {
-        emit(OrderLoaded(orders));
-      },
-      onError: (error) {
-        emit(OrderError(error.toString()));
-      },
-    );
+    _ordersSubscription = _repository
+        .getCustomerOrders(customerId)
+        .listen(
+          (orders) {
+            emit(OrderLoaded(orders));
+          },
+          onError: (error) {
+            emit(OrderError(error.toString()));
+          },
+        );
   }
 
   void fetchPlaceOrders(String placeId) {
     emit(OrderLoading());
     _ordersSubscription?.cancel();
-    _ordersSubscription = _repository.getPlaceOrders(placeId).listen(
-      (orders) {
-        emit(OrderLoaded(orders));
-      },
-      onError: (error) {
-        emit(OrderError(error.toString()));
-      },
-    );
+    _ordersSubscription = _repository
+        .getPlaceOrders(placeId)
+        .listen(
+          (orders) {
+            emit(OrderLoaded(orders));
+          },
+          onError: (error) {
+            emit(OrderError(error.toString()));
+          },
+        );
   }
 
   Future<void> createOrder(OrderModel order) async {
@@ -49,9 +53,7 @@ class OrderCubit extends Cubit<OrderState> {
   Future<void> updateOrderStatus(String orderId, String newStatus) async {
     try {
       await _repository.updateOrderStatus(orderId, newStatus);
-    } catch (e) {
-      // Handle error quietly
-    }
+    } catch (e) {}
   }
 
   @override

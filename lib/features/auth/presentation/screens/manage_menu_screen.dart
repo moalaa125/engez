@@ -17,9 +17,9 @@ class ManageMenuScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // ✅ توفير MenuItemCubit هنا مباشرة
     return BlocProvider(
-      create: (_) => MenuItemCubit(MenuItemRepository(), place.id)..fetchMenuItems(),
+      create: (_) =>
+          MenuItemCubit(MenuItemRepository(), place.id)..fetchMenuItems(),
       child: _ManageMenuScreenContent(place: place),
     );
   }
@@ -30,7 +30,8 @@ class _ManageMenuScreenContent extends StatefulWidget {
   const _ManageMenuScreenContent({required this.place});
 
   @override
-  State<_ManageMenuScreenContent> createState() => _ManageMenuScreenContentState();
+  State<_ManageMenuScreenContent> createState() =>
+      _ManageMenuScreenContentState();
 }
 
 class _ManageMenuScreenContentState extends State<_ManageMenuScreenContent> {
@@ -55,7 +56,10 @@ class _ManageMenuScreenContentState extends State<_ManageMenuScreenContent> {
 
   Future<void> _pickImage() async {
     final picker = ImagePicker();
-    final picked = await picker.pickImage(source: ImageSource.gallery, imageQuality: 70);
+    final picked = await picker.pickImage(
+      source: ImageSource.gallery,
+      imageQuality: 70,
+    );
     if (picked == null) return;
     setState(() {
       _imageFile = File(picked.path);
@@ -70,7 +74,10 @@ class _ManageMenuScreenContentState extends State<_ManageMenuScreenContent> {
     } catch (e) {
       setState(() => _isUploading = false);
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('فشل رفع الصورة: $e'), backgroundColor: MyColors.myError),
+        SnackBar(
+          content: Text('فشل رفع الصورة: $e'),
+          backgroundColor: MyColors.myError,
+        ),
       );
     }
   }
@@ -102,9 +109,9 @@ class _ManageMenuScreenContentState extends State<_ManageMenuScreenContent> {
   Future<void> _saveItem() async {
     if (!_formKey.currentState!.validate()) return;
     if (_imageUrl == null && _imageFile == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('الرجاء إضافة صورة للعنصر')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('الرجاء إضافة صورة للعنصر')));
       return;
     }
     final price = double.tryParse(_priceController.text.trim());
@@ -159,21 +166,31 @@ class _ManageMenuScreenContentState extends State<_ManageMenuScreenContent> {
                             color: Colors.grey[200],
                             borderRadius: BorderRadius.circular(12.r),
                             image: _imageUrl != null
-                                ? DecorationImage(image: NetworkImage(_imageUrl!), fit: BoxFit.cover)
+                                ? DecorationImage(
+                                    image: NetworkImage(_imageUrl!),
+                                    fit: BoxFit.cover,
+                                  )
                                 : null,
                           ),
                           child: _isUploading
                               ? const Center(child: CircularProgressIndicator())
                               : (_imageUrl == null
-                                  ? Icon(Icons.add_photo_alternate, size: 40, color: Colors.grey[600])
-                                  : null),
+                                    ? Icon(
+                                        Icons.add_photo_alternate,
+                                        size: 40,
+                                        color: Colors.grey[600],
+                                      )
+                                    : null),
                         ),
                       ),
                       SizedBox(height: 12.h),
                       TextFormField(
                         controller: _titleController,
-                        decoration: const InputDecoration(labelText: 'اسم العنصر'),
-                        validator: (v) => v?.trim().isEmpty ?? true ? 'مطلوب' : null,
+                        decoration: const InputDecoration(
+                          labelText: 'اسم العنصر',
+                        ),
+                        validator: (v) =>
+                            v?.trim().isEmpty ?? true ? 'مطلوب' : null,
                       ),
                       TextFormField(
                         controller: _descriptionController,
@@ -181,7 +198,9 @@ class _ManageMenuScreenContentState extends State<_ManageMenuScreenContent> {
                       ),
                       TextFormField(
                         controller: _priceController,
-                        decoration: const InputDecoration(labelText: 'السعر (ج.م)'),
+                        decoration: const InputDecoration(
+                          labelText: 'السعر (ج.م)',
+                        ),
                         keyboardType: TextInputType.number,
                         validator: (v) {
                           if (v == null || v.trim().isEmpty) return 'مطلوب';
@@ -195,7 +214,9 @@ class _ManageMenuScreenContentState extends State<_ManageMenuScreenContent> {
                           Expanded(
                             child: ElevatedButton(
                               onPressed: _saveItem,
-                              style: ElevatedButton.styleFrom(backgroundColor: MyColors.myOrange),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: MyColors.myOrange,
+                              ),
                               child: Text(_isEditing ? 'تحديث' : 'إضافة'),
                             ),
                           ),
@@ -223,14 +244,21 @@ class _ManageMenuScreenContentState extends State<_ManageMenuScreenContent> {
                 }
                 if (state is MenuItemLoaded) {
                   if (state.items.isEmpty) {
-                    return const Center(child: Text('لا توجد عناصر في القائمة'));
+                    return const Center(
+                      child: Text('لا توجد عناصر في القائمة'),
+                    );
                   }
                   return ListView.builder(
                     itemCount: state.items.length,
                     itemBuilder: (context, index) {
                       final item = state.items[index];
                       return ListTile(
-                        leading: Image.network(item.imagePath, width: 50, height: 50, fit: BoxFit.cover),
+                        leading: Image.network(
+                          item.imagePath,
+                          width: 50,
+                          height: 50,
+                          fit: BoxFit.cover,
+                        ),
                         title: Text(item.title),
                         subtitle: Text('${item.price} ج.م'),
                         trailing: Row(
@@ -243,7 +271,9 @@ class _ManageMenuScreenContentState extends State<_ManageMenuScreenContent> {
                             IconButton(
                               icon: const Icon(Icons.delete, color: Colors.red),
                               onPressed: () {
-                                context.read<MenuItemCubit>().deleteMenuItem(item.id);
+                                context.read<MenuItemCubit>().deleteMenuItem(
+                                  item.id,
+                                );
                               },
                             ),
                           ],

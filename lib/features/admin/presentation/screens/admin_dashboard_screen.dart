@@ -13,7 +13,13 @@ class AdminDashboardScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: MyColors.myBackground,
       appBar: AppBar(
-        title: Text('لوحة الإدارة', style: TextStyle(color: MyColors.myDarkOrange, fontWeight: FontWeight.bold)),
+        title: Text(
+          'لوحة الإدارة',
+          style: TextStyle(
+            color: MyColors.myDarkOrange,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
         backgroundColor: Colors.white,
         centerTitle: true,
         actions: [
@@ -77,21 +83,26 @@ class AdminDashboardScreen extends StatelessWidget {
                   });
                   if (context.mounted) {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('تمت إضافة العروض التجريبية بنجاح!')),
+                      const SnackBar(
+                        content: Text('تمت إضافة العروض التجريبية بنجاح!'),
+                      ),
                     );
                   }
                 } catch (e) {
                   if (context.mounted) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('خطأ: $e')),
-                    );
+                    ScaffoldMessenger.of(
+                      context,
+                    ).showSnackBar(SnackBar(content: Text('خطأ: $e')));
                   }
                 }
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: MyColors.myDarkText,
               ),
-              child: const Text('إضافة عروض تجريبية (Seed Offers)', style: TextStyle(color: Colors.white)),
+              child: const Text(
+                'إضافة عروض تجريبية (Seed Offers)',
+                style: TextStyle(color: Colors.white),
+              ),
             ),
           ],
         ),
@@ -148,7 +159,10 @@ class AdminDashboardScreen extends StatelessWidget {
                   ),
                   Text(
                     subtitle,
-                    style: TextStyle(fontSize: 13.sp, color: MyColors.myTextSecondary),
+                    style: TextStyle(
+                      fontSize: 13.sp,
+                      color: MyColors.myTextSecondary,
+                    ),
                   ),
                 ],
               ),

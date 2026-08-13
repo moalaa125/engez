@@ -127,7 +127,9 @@ class _HomeScreenState extends State<HomeScreen> {
                     backgroundColor: MyColors.myBorder,
                     backgroundImage: imageUrl != null
                         ? NetworkImage(imageUrl) as ImageProvider
-                        : const AssetImage('assets/images/enterPhoneNumber.png'),
+                        : const AssetImage(
+                            'assets/images/enterPhoneNumber.png',
+                          ),
                   ),
                 ),
               );
@@ -172,8 +174,9 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildListOfIcons() {
-    // استخدم القائمة الموحدة من PlaceCategories
-    final categories = PlaceCategories.list.where((c) => c != PlaceCategories.all).toList();
+    final categories = PlaceCategories.list
+        .where((c) => c != PlaceCategories.all)
+        .toList();
     final icons = categories.map((c) => PlaceCategories.icons[c]).toList();
 
     return Directionality(
@@ -189,7 +192,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: CustomIconButton(
                   iconData: icons[index],
                   onTap: () {
-                    final categoryIndex = PlaceCategories.list.indexOf(categories[index]);
+                    final categoryIndex = PlaceCategories.list.indexOf(
+                      categories[index],
+                    );
                     if (categoryIndex != -1) {
                       _categoryCubit.selectCategory(categoryIndex);
                     }
@@ -208,7 +213,7 @@ class _HomeScreenState extends State<HomeScreen> {
       builder: (context, state) {
         if (state is OfferError) {
           debugPrint('Error loading offers: ${state.message}');
-          return const SizedBox.shrink(); // Hide gracefully on error
+          return const SizedBox.shrink();
         }
         if (state is OfferLoaded && state.offers.isNotEmpty) {
           return Directionality(
@@ -227,7 +232,10 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               items: state.offers.map((offer) {
                 return CustomOfferSection(
-                  howMuchOffer: offer.discount.replaceAll(RegExp(r'[^0-9]'), ''),
+                  howMuchOffer: offer.discount.replaceAll(
+                    RegExp(r'[^0-9]'),
+                    '',
+                  ),
                   tittleOfTheOffer: offer.title,
                   icon: offer.iconData,
                   colorOfTheCard: offer.color,
@@ -261,10 +269,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 },
                 child: Text(
                   'عرض الكل',
-                  style: TextStyle(
-                    color: MyColors.myDarkText,
-                    fontSize: 14.sp,
-                  ),
+                  style: TextStyle(color: MyColors.myDarkText, fontSize: 14.sp),
                 ),
               ),
             ],
@@ -294,19 +299,27 @@ class _HomeScreenState extends State<HomeScreen> {
                 );
               }
               if (placeState is PlaceLoaded) {
-                final selectedIndex = context.watch<SelectCategoryCubit>().state.selectedIndex;
+                final selectedIndex = context
+                    .watch<SelectCategoryCubit>()
+                    .state
+                    .selectedIndex;
                 final selectedCategory = categories[selectedIndex];
 
                 final allPlaces = placeState.places;
                 var filteredPlaces = selectedCategory == PlaceCategories.all
                     ? allPlaces
-                    : allPlaces.where((p) => p.category == selectedCategory).toList();
+                    : allPlaces
+                          .where((p) => p.category == selectedCategory)
+                          .toList();
 
                 if (_searchQuery.isNotEmpty) {
-                  filteredPlaces = filteredPlaces.where((p) => 
-                    p.title.toLowerCase().contains(_searchQuery) ||
-                    p.category.toLowerCase().contains(_searchQuery)
-                  ).toList();
+                  filteredPlaces = filteredPlaces
+                      .where(
+                        (p) =>
+                            p.title.toLowerCase().contains(_searchQuery) ||
+                            p.category.toLowerCase().contains(_searchQuery),
+                      )
+                      .toList();
                 }
 
                 if (filteredPlaces.isEmpty) {
@@ -324,10 +337,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: PlaceCard(
                         heroTag: place.id,
                         onTab: () {
-                          context.push(
-                            '/place-details',
-                            extra: place,
-                          );
+                          context.push('/place-details', extra: place);
                         },
                         imagePath: place.imagePath,
                         title: place.title,

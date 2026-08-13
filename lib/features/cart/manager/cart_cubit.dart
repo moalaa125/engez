@@ -37,9 +37,7 @@ class CartCubit extends Cubit<CartState> {
     if (items[index].quantity <= 1) {
       items.removeAt(index);
     } else {
-      items[index] = items[index].copyWith(
-        quantity: items[index].quantity - 1,
-      );
+      items[index] = items[index].copyWith(quantity: items[index].quantity - 1);
     }
     emit(CartState(items: items));
   }

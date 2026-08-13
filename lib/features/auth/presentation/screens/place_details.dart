@@ -32,7 +32,12 @@ class PlaceDetailsScreen extends StatelessWidget {
     'bob_wich': 'ساندوتشات طازجة وصحية',
   };
 
-  Widget _buildPlaceImage(String imagePath, {double? height, double? width, BoxFit fit = BoxFit.cover}) {
+  Widget _buildPlaceImage(
+    String imagePath, {
+    double? height,
+    double? width,
+    BoxFit fit = BoxFit.cover,
+  }) {
     if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
       return Image.network(
         imagePath,
@@ -126,15 +131,23 @@ class PlaceDetailsScreen extends StatelessWidget {
                       Row(
                         children: [
                           IconButton(
-                            icon: const Icon(Icons.zoom_in, color: Colors.black),
+                            icon: const Icon(
+                              Icons.zoom_in,
+                              color: Colors.black,
+                            ),
                             onPressed: () {
-                              pdfViewerController.zoomLevel = pdfViewerController.zoomLevel + 1;
+                              pdfViewerController.zoomLevel =
+                                  pdfViewerController.zoomLevel + 1;
                             },
                           ),
                           IconButton(
-                            icon: const Icon(Icons.zoom_out, color: Colors.black),
+                            icon: const Icon(
+                              Icons.zoom_out,
+                              color: Colors.black,
+                            ),
                             onPressed: () {
-                              pdfViewerController.zoomLevel = pdfViewerController.zoomLevel - 1;
+                              pdfViewerController.zoomLevel =
+                                  pdfViewerController.zoomLevel - 1;
                             },
                           ),
                         ],
@@ -176,9 +189,7 @@ class PlaceDetailsScreen extends StatelessWidget {
           height: 60.h,
           width: double.infinity,
           child: ElevatedButton(
-            onPressed: state.isEmpty
-                ? null
-                : () => context.push('/cart'),
+            onPressed: state.isEmpty ? null : () => context.push('/cart'),
             style: ElevatedButton.styleFrom(
               backgroundColor: MyColors.myOrange,
               disabledBackgroundColor: MyColors.myOrange.withValues(alpha: .4),
@@ -260,7 +271,12 @@ class PlaceDetailsScreen extends StatelessWidget {
                   padding: EdgeInsets.zero,
                   children: items.map((item) {
                     final cartState = context.watch<CartCubit>().state;
-                    int currentQuantity = cartState.items.where((e) => e.id == item.id).firstOrNull?.quantity ?? 0;
+                    int currentQuantity =
+                        cartState.items
+                            .where((e) => e.id == item.id)
+                            .firstOrNull
+                            ?.quantity ??
+                        0;
                     return MenuItemCard(
                       imagePath: item.imagePath,
                       title: item.title,
@@ -361,7 +377,9 @@ class PlaceDetailsScreen extends StatelessWidget {
                                   vertical: 4.h,
                                 ),
                                 decoration: BoxDecoration(
-                                  color: MyColors.myOrange.withValues(alpha: .1),
+                                  color: MyColors.myOrange.withValues(
+                                    alpha: .1,
+                                  ),
                                   borderRadius: BorderRadius.circular(10.r),
                                 ),
                                 child: Row(
@@ -471,7 +489,8 @@ class PlaceDetailsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => MenuItemCubit(MenuItemRepository(), place.id)..fetchMenuItems(),
+      create: (_) =>
+          MenuItemCubit(MenuItemRepository(), place.id)..fetchMenuItems(),
       child: Scaffold(
         resizeToAvoidBottomInset: false,
         backgroundColor: MyColors.myWhite,

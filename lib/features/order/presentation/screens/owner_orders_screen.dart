@@ -56,7 +56,10 @@ class _OwnerOrdersScreenState extends State<OwnerOrdersScreen> {
     return Scaffold(
       backgroundColor: MyColors.myBackground,
       appBar: AppBar(
-        title: const Text('الطلبات الواردة', style: TextStyle(fontFamily: 'cairo')),
+        title: const Text(
+          'الطلبات الواردة',
+          style: TextStyle(fontFamily: 'cairo'),
+        ),
         backgroundColor: MyColors.myWhite,
         centerTitle: true,
       ),
@@ -72,7 +75,13 @@ class _OwnerOrdersScreenState extends State<OwnerOrdersScreen> {
             final orders = state.orders;
             if (orders.isEmpty) {
               return Center(
-                child: Text('لا توجد طلبات', style: TextStyle(fontSize: 18.sp, color: MyColors.myTextSecondary)),
+                child: Text(
+                  'لا توجد طلبات',
+                  style: TextStyle(
+                    fontSize: 18.sp,
+                    color: MyColors.myTextSecondary,
+                  ),
+                ),
               );
             }
             return ListView.builder(
@@ -83,7 +92,9 @@ class _OwnerOrdersScreenState extends State<OwnerOrdersScreen> {
                 return Card(
                   margin: EdgeInsets.only(bottom: 16.h),
                   color: MyColors.myWhite,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.r)),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15.r),
+                  ),
                   child: Padding(
                     padding: EdgeInsets.all(16.w),
                     child: Column(
@@ -92,37 +103,75 @@ class _OwnerOrdersScreenState extends State<OwnerOrdersScreen> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text('طلب #${order.id.length > 5 ? order.id.substring(0, 5) : order.id}', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16.sp)),
+                            Text(
+                              'طلب #${order.id.length > 5 ? order.id.substring(0, 5) : order.id}',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16.sp,
+                              ),
+                            ),
                             Container(
-                              padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 10.w,
+                                vertical: 4.h,
+                              ),
                               decoration: BoxDecoration(
-                                color: _getStatusColor(order.status).withValues(alpha: .1),
+                                color: _getStatusColor(
+                                  order.status,
+                                ).withValues(alpha: .1),
                                 borderRadius: BorderRadius.circular(10.r),
                               ),
                               child: Text(
                                 _getStatusText(order.status),
-                                style: TextStyle(color: _getStatusColor(order.status), fontWeight: FontWeight.bold),
+                                style: TextStyle(
+                                  color: _getStatusColor(order.status),
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
-                            )
+                            ),
                           ],
                         ),
                         SizedBox(height: 12.h),
-                        ...order.items.map((item) => Padding(
-                          padding: EdgeInsets.only(bottom: 4.h),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text('${item.quantity}x ${item.title}', style: TextStyle(fontSize: 14.sp)),
-                              Text('ج.م ${item.price * item.quantity}', style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.bold)),
-                            ],
+                        ...order.items.map(
+                          (item) => Padding(
+                            padding: EdgeInsets.only(bottom: 4.h),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  '${item.quantity}x ${item.title}',
+                                  style: TextStyle(fontSize: 14.sp),
+                                ),
+                                Text(
+                                  'ج.م ${item.price * item.quantity}',
+                                  style: TextStyle(
+                                    fontSize: 14.sp,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
-                        )),
+                        ),
                         Divider(height: 24.h),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text('الإجمالي', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16.sp)),
-                            Text('ج.م ${order.totalPrice}', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16.sp, color: MyColors.myOrange)),
+                            Text(
+                              'الإجمالي',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16.sp,
+                              ),
+                            ),
+                            Text(
+                              'ج.م ${order.totalPrice}',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16.sp,
+                                color: MyColors.myOrange,
+                              ),
+                            ),
                           ],
                         ),
                         SizedBox(height: 16.h),
@@ -131,22 +180,36 @@ class _OwnerOrdersScreenState extends State<OwnerOrdersScreen> {
                             children: [
                               Expanded(
                                 child: ElevatedButton(
-                                  style: ElevatedButton.styleFrom(backgroundColor: MyColors.mySuccess),
-                                  onPressed: () => context.read<OrderCubit>().updateOrderStatus(order.id, 'confirmed'),
-                                  child: const Text('تأكيد', style: TextStyle(color: Colors.white)),
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: MyColors.mySuccess,
+                                  ),
+                                  onPressed: () => context
+                                      .read<OrderCubit>()
+                                      .updateOrderStatus(order.id, 'confirmed'),
+                                  child: const Text(
+                                    'تأكيد',
+                                    style: TextStyle(color: Colors.white),
+                                  ),
                                 ),
                               ),
                               SizedBox(width: 8.w),
                               Expanded(
                                 child: ElevatedButton(
-                                  style: ElevatedButton.styleFrom(backgroundColor: MyColors.myError),
-                                  onPressed: () => context.read<OrderCubit>().updateOrderStatus(order.id, 'cancelled'),
-                                  child: const Text('رفض', style: TextStyle(color: Colors.white)),
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: MyColors.myError,
+                                  ),
+                                  onPressed: () => context
+                                      .read<OrderCubit>()
+                                      .updateOrderStatus(order.id, 'cancelled'),
+                                  child: const Text(
+                                    'رفض',
+                                    style: TextStyle(color: Colors.white),
+                                  ),
                                 ),
                               ),
                             ],
-                          )
-                        ]
+                          ),
+                        ],
                       ],
                     ),
                   ),

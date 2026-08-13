@@ -33,9 +33,9 @@ class _RoleSelectionScreenState extends State<RoleSelectionScreen> {
 
   Future<void> _saveRoleAndNavigate() async {
     if (selectedRole == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('الرجاء اختيار دورك')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('الرجاء اختيار دورك')));
       return;
     }
 
@@ -45,8 +45,10 @@ class _RoleSelectionScreenState extends State<RoleSelectionScreen> {
       final user = FirebaseAuth.instance.currentUser;
       if (user == null) return;
 
-      // 1. Check existing role first to prevent resetting approved owners/admins
-      final doc = await FirebaseFirestore.instance.collection('users').doc(user.uid).get();
+      final doc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .get();
       final existingRole = doc.data()?['role'] as String?;
 
       if (existingRole == 'owner') {
@@ -58,34 +60,35 @@ class _RoleSelectionScreenState extends State<RoleSelectionScreen> {
       }
 
       if (selectedRole == 'customer') {
-        await FirebaseFirestore.instance
-            .collection('users')
-            .doc(user.uid)
-            .set({'role': 'customer'}, SetOptions(merge: true));
+        await FirebaseFirestore.instance.collection('users').doc(user.uid).set({
+          'role': 'customer',
+        }, SetOptions(merge: true));
         if (mounted) context.go('/home');
       } else if (selectedRole == 'owner') {
         await FirebaseFirestore.instance
             .collection('ownerRequests')
             .doc(user.uid)
             .set({'status': 'pending'}, SetOptions(merge: true));
-            
-        // تعيين الدور مبدئياً كعميل حتى تتم الموافقة
-        await FirebaseFirestore.instance
-            .collection('users')
-            .doc(user.uid)
-            .set({'role': 'customer'}, SetOptions(merge: true));
+
+        await FirebaseFirestore.instance.collection('users').doc(user.uid).set({
+          'role': 'customer',
+        }, SetOptions(merge: true));
 
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('تم إرسال طلبك. ستتم مراجعته من الإدارة. أنت الآن مسجل كعميل.')),
+            const SnackBar(
+              content: Text(
+                'تم إرسال طلبك. ستتم مراجعته من الإدارة. أنت الآن مسجل كعميل.',
+              ),
+            ),
           );
           context.go('/home');
         }
       }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('حدث خطأ: $e')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('حدث خطأ: $e')));
     } finally {
       if (mounted) setState(() => isLoading = false);
     }
@@ -155,7 +158,9 @@ class _RoleSelectionScreenState extends State<RoleSelectionScreen> {
         margin: EdgeInsets.only(bottom: 16.h),
         padding: EdgeInsets.all(16.w),
         decoration: BoxDecoration(
-          color: isSelected ? MyColors.myOrange.withValues(alpha: 0.1) : Colors.grey[50],
+          color: isSelected
+              ? MyColors.myOrange.withValues(alpha: 0.1)
+              : Colors.grey[50],
           borderRadius: BorderRadius.circular(16.r),
           border: Border.all(
             color: isSelected ? MyColors.myOrange : Colors.grey[300]!,
@@ -167,13 +172,17 @@ class _RoleSelectionScreenState extends State<RoleSelectionScreen> {
                     color: MyColors.myOrange.withValues(alpha: 0.2),
                     blurRadius: 8,
                     offset: const Offset(0, 4),
-                  )
+                  ),
                 ]
               : [],
         ),
         child: Row(
           children: [
-            Icon(role['icon'], size: 36.r, color: isSelected ? MyColors.myOrange : Colors.grey),
+            Icon(
+              role['icon'],
+              size: 36.r,
+              color: isSelected ? MyColors.myOrange : Colors.grey,
+            ),
             SizedBox(width: 16.w),
             Expanded(
               child: Column(

@@ -29,18 +29,12 @@ class EngezApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (_) => CartCubit()),
-        BlocProvider(
-          create: (_) => PlaceCubit(PlaceRepository()),
-        ),
-        BlocProvider(
-          create: (_) => OrderCubit(OrderRepository()),
-        ),
+        BlocProvider(create: (_) => PlaceCubit(PlaceRepository())),
+        BlocProvider(create: (_) => OrderCubit(OrderRepository())),
         BlocProvider(
           create: (_) => OfferCubit(OfferRepository())..fetchOffers(),
         ),
-        BlocProvider(
-          create: (_) => AdminRequestsCubit(),
-        ),
+        BlocProvider(create: (_) => AdminRequestsCubit()),
       ],
       child: ScreenUtilInit(
         designSize: const Size(412, 915),
@@ -48,9 +42,9 @@ class EngezApp extends StatelessWidget {
         splitScreenMode: true,
         builder: (context, child) {
           return MaterialApp.router(
-            locale: const Locale('ar', 'EG'), 
-              supportedLocales: const [Locale('ar', 'EG')],
-               localizationsDelegates: const [ 
+            locale: const Locale('ar', 'EG'),
+            supportedLocales: const [Locale('ar', 'EG')],
+            localizationsDelegates: const [
               GlobalMaterialLocalizations.delegate,
               GlobalCupertinoLocalizations.delegate,
               GlobalWidgetsLocalizations.delegate,

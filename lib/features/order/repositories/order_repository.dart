@@ -14,7 +14,10 @@ class OrderRepository {
         .where('customerId', isEqualTo: customerId)
         .orderBy('createdAt', descending: true)
         .snapshots()
-        .map((snapshot) => snapshot.docs.map((doc) => OrderModel.fromDocument(doc)).toList());
+        .map(
+          (snapshot) =>
+              snapshot.docs.map((doc) => OrderModel.fromDocument(doc)).toList(),
+        );
   }
 
   Stream<List<OrderModel>> getPlaceOrders(String placeId) {
@@ -23,10 +26,15 @@ class OrderRepository {
         .where('placeId', isEqualTo: placeId)
         .orderBy('createdAt', descending: true)
         .snapshots()
-        .map((snapshot) => snapshot.docs.map((doc) => OrderModel.fromDocument(doc)).toList());
+        .map(
+          (snapshot) =>
+              snapshot.docs.map((doc) => OrderModel.fromDocument(doc)).toList(),
+        );
   }
 
   Future<void> updateOrderStatus(String orderId, String newStatus) async {
-    await _firestore.collection('orders').doc(orderId).update({'status': newStatus});
+    await _firestore.collection('orders').doc(orderId).update({
+      'status': newStatus,
+    });
   }
 }

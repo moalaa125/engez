@@ -63,21 +63,18 @@ class AuthCubit extends Cubit<AuthState> {
         idToken: googleAuth.idToken,
       );
 
-      final UserCredential userCredential =
-          await FirebaseAuth.instance.signInWithCredential(credential);
+      final UserCredential userCredential = await FirebaseAuth.instance
+          .signInWithCredential(credential);
 
       final User? user = userCredential.user;
 
       if (user != null) {
-        await _firestore.collection('users').doc(user.uid).set(
-          {
-            'userName': user.displayName ?? '',
-            'email': user.email ?? '',
-            'profileImage': user.photoURL ?? '',
-            'updatedAt': FieldValue.serverTimestamp(),
-          },
-          SetOptions(merge: true),
-        );
+        await _firestore.collection('users').doc(user.uid).set({
+          'userName': user.displayName ?? '',
+          'email': user.email ?? '',
+          'profileImage': user.photoURL ?? '',
+          'updatedAt': FieldValue.serverTimestamp(),
+        }, SetOptions(merge: true));
       }
 
       emit(AuthSuccess());

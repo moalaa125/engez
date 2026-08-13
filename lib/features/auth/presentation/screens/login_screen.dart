@@ -42,7 +42,7 @@ class _LoginScreenContentState extends State<_LoginScreenContent> {
               backgroundColor: Color(0xFF003527),
             ),
           );
-          // 🔥 تأخير بسيط لضمان اكتمال كتابة Firestore
+
           Future.delayed(const Duration(milliseconds: 500), () {
             if (mounted) {
               context.go('/loading');
@@ -99,7 +99,6 @@ class _LoginScreenContentState extends State<_LoginScreenContent> {
                     iconPath: 'assets/images/apple.png',
                     text: 'تسجيل الدخول باستخدام apple',
                     function: () {
-                      // TODO: تنفيذ Apple Sign-In
                       Future.delayed(const Duration(milliseconds: 500), () {
                         if (mounted) {
                           context.go('/role-selection');

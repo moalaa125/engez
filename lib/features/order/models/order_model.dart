@@ -68,7 +68,9 @@ class OrderModel {
       id: doc.id,
       customerId: map['customerId'] ?? '',
       placeId: map['placeId'] ?? '',
-      items: List<OrderItem>.from((map['items'] as List? ?? []).map((x) => OrderItem.fromMap(x))),
+      items: List<OrderItem>.from(
+        (map['items'] as List? ?? []).map((x) => OrderItem.fromMap(x)),
+      ),
       totalPrice: (map['totalPrice'] ?? 0.0).toDouble(),
       status: map['status'] ?? 'pending',
       createdAt: (map['createdAt'] as Timestamp?)?.toDate() ?? DateTime.now(),

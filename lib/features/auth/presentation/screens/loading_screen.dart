@@ -69,10 +69,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
               ),
             ),
             SizedBox(height: 30.h),
-             CircularProgressIndicator(
-              color: MyColors.myOrange,
-              strokeWidth: 4,
-            ),
+            CircularProgressIndicator(color: MyColors.myOrange, strokeWidth: 4),
             SizedBox(height: 20.h),
             Text(
               'جاري التحميل...',

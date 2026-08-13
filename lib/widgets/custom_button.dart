@@ -21,7 +21,7 @@ class CustomButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: Padding(
-        padding: const EdgeInsets.only(right: 20 , left: 20),
+        padding: const EdgeInsets.only(right: 20, left: 20),
         child: GestureDetector(
           onTap: function,
           child: Container(
@@ -30,10 +30,7 @@ class CustomButton extends StatelessWidget {
             decoration: BoxDecoration(
               color: buttonColor,
               borderRadius: BorderRadius.circular(20.r),
-              border: Border.all(
-                width: 1,
-                color: Colors.black,
-              )
+              border: Border.all(width: 1, color: Colors.black),
             ),
             child: Center(
               child: Row(

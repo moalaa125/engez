@@ -15,9 +15,7 @@ class AllPlaces extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
-      providers: [
-        BlocProvider(create: (_) => SelectCategoryCubit()),
-      ],
+      providers: [BlocProvider(create: (_) => SelectCategoryCubit())],
       child: Scaffold(
         backgroundColor: MyColors.myWhite,
         appBar: AppBar(
@@ -33,15 +31,12 @@ class AllPlaces extends StatelessWidget {
             ),
           ),
           centerTitle: true,
-       
         ),
         body: SingleChildScrollView(
           child: Column(
             children: [
               SizedBox(height: 20.h),
-              const CategoryList(
-                categories: ['الكل', 'قهوة', 'مخبز', 'فطار'],
-              ),
+              const CategoryList(categories: ['الكل', 'قهوة', 'مخبز', 'فطار']),
               SizedBox(height: 20.h),
               _buildNearbyPlaces(),
             ],
@@ -80,19 +75,27 @@ class AllPlaces extends StatelessWidget {
                 );
               }
               if (placeState is PlaceLoaded) {
-                final selectedIndex = context.watch<SelectCategoryCubit>().state.selectedIndex;
+                final selectedIndex = context
+                    .watch<SelectCategoryCubit>()
+                    .state
+                    .selectedIndex;
                 final selectedCategory = categories[selectedIndex];
 
                 final allPlaces = placeState.places;
                 final filteredPlaces = selectedCategory == 'الكل'
                     ? allPlaces
-                    : allPlaces.where((p) => p.category == selectedCategory).toList();
+                    : allPlaces
+                          .where((p) => p.category == selectedCategory)
+                          .toList();
 
                 if (filteredPlaces.isEmpty) {
                   return Center(
                     child: Text(
-                      'لا توجد أماكن في هذا التصنيف' ,
-                      style: TextStyle(color: MyColors.myTextSecondary , fontFamily: 'cairo'),
+                      'لا توجد أماكن في هذا التصنيف',
+                      style: TextStyle(
+                        color: MyColors.myTextSecondary,
+                        fontFamily: 'cairo',
+                      ),
                     ),
                   );
                 }
@@ -104,15 +107,12 @@ class AllPlaces extends StatelessWidget {
                       child: PlaceCard(
                         heroTag: place.id,
                         onTab: () {
-                          context.push(
-                            '/place-details',
-                            extra: place,
-                          );
+                          context.push('/place-details', extra: place);
                         },
                         imagePath: place.imagePath,
                         title: place.title,
                         rating: place.rating.toString(),
-                        reviewsCount: '', // مؤقت
+                        reviewsCount: '',
                         category: place.category,
                         distanceTime: '20 دقيقة',
                         onFavoriteTap: () {},

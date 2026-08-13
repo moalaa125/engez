@@ -17,7 +17,6 @@ class CustomTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // في RTL، الـ suffixIcon يصبح على اليسار، وهذا صحيح
     return TextField(
       controller: controller,
       onChanged: onChanged,

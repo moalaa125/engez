@@ -29,12 +29,18 @@ class OfferModel {
 
   IconData get iconData {
     switch (iconName) {
-      case 'fastfood': return Icons.fastfood;
-      case 'coffee': return Icons.coffee;
-      case 'family_restroom': return Icons.family_restroom;
-      case 'bakery_dining': return Icons.bakery_dining;
-      case 'local_pizza': return Icons.local_pizza;
-      default: return Icons.local_offer;
+      case 'fastfood':
+        return Icons.fastfood;
+      case 'coffee':
+        return Icons.coffee;
+      case 'family_restroom':
+        return Icons.family_restroom;
+      case 'bakery_dining':
+        return Icons.bakery_dining;
+      case 'local_pizza':
+        return Icons.local_pizza;
+      default:
+        return Icons.local_offer;
     }
   }
 

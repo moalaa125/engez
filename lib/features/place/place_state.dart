@@ -18,7 +18,6 @@ class PlaceLoaded extends PlaceState {
   List<Object> get props => [places];
 }
 
-// حدث خطأ
 class PlaceError extends PlaceState {
   final String message;
   const PlaceError(this.message);

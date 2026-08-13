@@ -136,20 +136,22 @@ class _AddEditPlaceScreenState extends State<AddEditPlaceScreen> {
   Future<String> _generatePlaceId() async {
     if (widget.place != null) return widget.place!.id;
 
-    final String title = _titleController.text.trim().toLowerCase().replaceAll(' ', '_');
-    
-    // التحقق من وجود مكان بنفس الاسم في Firestore
+    final String title = _titleController.text.trim().toLowerCase().replaceAll(
+      ' ',
+      '_',
+    );
+
     final snapshot = await FirebaseFirestore.instance
         .collection('places')
         .where('title', isEqualTo: _titleController.text.trim())
         .get();
 
     if (snapshot.docs.isEmpty) {
-      // لا يوجد تكرار → استخدم الاسم مباشرة
       return title;
     } else {
-      // يوجد تكرار → أضف رقم عشوائي
-      final String uniqueSuffix = DateTime.now().millisecondsSinceEpoch.toString().substring(8, 13);
+      final String uniqueSuffix = DateTime.now().millisecondsSinceEpoch
+          .toString()
+          .substring(8, 13);
       return '${title}_$uniqueSuffix';
     }
   }
@@ -175,7 +177,6 @@ class _AddEditPlaceScreenState extends State<AddEditPlaceScreen> {
       final user = FirebaseAuth.instance.currentUser;
       if (user == null) return;
 
-      // ✅ إنشاء المعرف باستخدام الاسم (مع التحقق من التكرار)
       final placeId = await _generatePlaceId();
 
       final place = Place(
@@ -190,9 +191,8 @@ class _AddEditPlaceScreenState extends State<AddEditPlaceScreen> {
       );
 
       if (widget.place == null) {
-        // إضافة جديدة
         await context.read<PlaceCubit>().addPlace(place);
-        // تحديث حقل placeId و placeName في user
+
         await FirebaseFirestore.instance
             .collection('users')
             .doc(user.uid)
@@ -209,7 +209,6 @@ class _AddEditPlaceScreenState extends State<AddEditPlaceScreen> {
           );
         }
       } else {
-        // تحديث
         await context.read<PlaceCubit>().updatePlace(place);
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(

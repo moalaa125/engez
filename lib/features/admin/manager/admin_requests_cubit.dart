@@ -17,25 +17,27 @@ class AdminRequestsCubit extends Cubit<AdminRequestsState> {
           .get();
 
       final List<AdminRequestModel> requests = [];
-      
+
       for (var doc in querySnapshot.docs) {
         final uid = doc.id;
         final status = doc.data()['status'] as String? ?? 'pending';
-        
-        // Fetch user details
+
         final userDoc = await _firestore.collection('users').doc(uid).get();
         final userData = userDoc.data();
-        final userName = userData?['userName'] ?? userData?['name'] ?? 'بدون اسم';
+        final userName =
+            userData?['userName'] ?? userData?['name'] ?? 'بدون اسم';
         final email = userData?['email'] ?? 'بدون بريد';
-        
-        requests.add(AdminRequestModel(
-          uid: uid,
-          status: status,
-          userName: userName,
-          email: email,
-        ));
+
+        requests.add(
+          AdminRequestModel(
+            uid: uid,
+            status: status,
+            userName: userName,
+            email: email,
+          ),
+        );
       }
-      
+
       emit(AdminRequestsLoaded(requests));
     } catch (e) {
       emit(AdminRequestsError(e.toString()));
@@ -45,16 +47,15 @@ class AdminRequestsCubit extends Cubit<AdminRequestsState> {
   Future<void> approveRequest(String uid) async {
     try {
       final batch = _firestore.batch();
-      
+
       final requestRef = _firestore.collection('ownerRequests').doc(uid);
       batch.update(requestRef, {'status': 'approved'});
-      
+
       final userRef = _firestore.collection('users').doc(uid);
       batch.update(userRef, {'role': 'owner'});
-      
+
       await batch.commit();
-      
-      // Refresh list
+
       fetchPendingRequests();
     } catch (e) {
       emit(AdminRequestsError(e.toString()));
@@ -63,8 +64,10 @@ class AdminRequestsCubit extends Cubit<AdminRequestsState> {
 
   Future<void> rejectRequest(String uid) async {
     try {
-      await _firestore.collection('ownerRequests').doc(uid).update({'status': 'rejected'});
-      // Refresh list
+      await _firestore.collection('ownerRequests').doc(uid).update({
+        'status': 'rejected',
+      });
+
       fetchPendingRequests();
     } catch (e) {
       emit(AdminRequestsError(e.toString()));

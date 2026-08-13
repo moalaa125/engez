@@ -28,10 +28,7 @@ class AppRouter {
         path: '/loading',
         builder: (context, state) => const LoadingScreen(),
       ),
-      GoRoute(
-        path: '/login',
-        builder: (context, state) => const LoginScreen(),
-      ),
+      GoRoute(path: '/login', builder: (context, state) => const LoginScreen()),
       GoRoute(
         path: '/role-selection',
         builder: (context, state) => const RoleSelectionScreen(),
@@ -73,7 +70,7 @@ class AppRouter {
               return AddEditPlaceScreen(place: place);
             },
           ),
-          // ✅ المسار الجديد لإدارة القائمة (تحت owner-dashboard)
+
           GoRoute(
             path: 'manage-menu',
             builder: (context, state) {
@@ -100,14 +97,8 @@ class AppRouter {
           ),
         ],
       ),
-      GoRoute(
-        path: '/cart',
-        builder: (context, state) => const CartScreen(),
-      ),
-      GoRoute(
-        path: '/profile',
-        builder: (context, state) => const Profile(),
-      ),
+      GoRoute(path: '/cart', builder: (context, state) => const CartScreen()),
+      GoRoute(path: '/profile', builder: (context, state) => const Profile()),
       GoRoute(
         path: '/order-history',
         builder: (context, state) => const OrderHistoryScreen(),

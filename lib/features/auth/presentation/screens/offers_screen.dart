@@ -40,7 +40,10 @@ class OffersScreen extends StatelessWidget {
                 return Center(
                   child: Text(
                     'لا توجد عروض حالياً',
-                    style: TextStyle(fontSize: 18.sp, color: MyColors.myTextSecondary),
+                    style: TextStyle(
+                      fontSize: 18.sp,
+                      color: MyColors.myTextSecondary,
+                    ),
                   ),
                 );
               }
@@ -64,7 +67,12 @@ class OffersScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildOfferCard(String discount, String title, IconData icon, Color color) {
+  Widget _buildOfferCard(
+    String discount,
+    String title,
+    IconData icon,
+    Color color,
+  ) {
     return Container(
       margin: EdgeInsets.only(bottom: 16.h),
       padding: EdgeInsets.all(16.w),
@@ -104,10 +112,7 @@ class OffersScreen extends StatelessWidget {
                 ),
                 Text(
                   title,
-                  style: TextStyle(
-                    fontSize: 16.sp,
-                    color: Colors.grey[700],
-                  ),
+                  style: TextStyle(fontSize: 16.sp, color: Colors.grey[700]),
                 ),
               ],
             ),

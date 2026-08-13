@@ -6,7 +6,7 @@ class PlaceCard extends StatelessWidget {
   final String imagePath;
   final String title;
   final String rating;
-  final String? reviewsCount; // يمكن أن يكون null أو فارغ
+  final String? reviewsCount;
   final String category;
   final String distanceTime;
   final VoidCallback? onFavoriteTap;
@@ -25,8 +25,6 @@ class PlaceCard extends StatelessWidget {
     this.onTab,
     required this.heroTag,
   });
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -89,7 +87,8 @@ class PlaceCard extends StatelessWidget {
                                   fontSize: 13,
                                 ),
                               ),
-                              if (reviewsCount != null && reviewsCount!.isNotEmpty) ...[
+                              if (reviewsCount != null &&
+                                  reviewsCount!.isNotEmpty) ...[
                                 Text(
                                   ' ($reviewsCount)',
                                   style: const TextStyle(

@@ -62,8 +62,14 @@ class CartScreen extends StatelessWidget {
                     ),
                     onPressed: () => context.pop(),
                     child: Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
-                      child: const Text('تصفح القائمة', style: TextStyle(color: Colors.white)),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 20.w,
+                        vertical: 10.h,
+                      ),
+                      child: const Text(
+                        'تصفح القائمة',
+                        style: TextStyle(color: Colors.white),
+                      ),
                     ),
                   ),
                 ],
@@ -106,7 +112,10 @@ class CartScreen extends StatelessWidget {
                                 height: 60.h,
                                 width: 60.w,
                                 color: MyColors.myBorder,
-                                child: const Icon(Icons.fastfood, color: Colors.white),
+                                child: const Icon(
+                                  Icons.fastfood,
+                                  color: Colors.white,
+                                ),
                               ),
                             ),
                           ),
@@ -135,19 +144,27 @@ class CartScreen extends StatelessWidget {
                               ],
                             ),
                           ),
-                          // Quantity Controls
+
                           Row(
                             children: [
                               InkWell(
-                                onTap: () => context.read<CartCubit>().decrementItem(item.id),
+                                onTap: () => context
+                                    .read<CartCubit>()
+                                    .decrementItem(item.id),
                                 child: Container(
                                   width: 28.r,
                                   height: 28.r,
                                   decoration: BoxDecoration(
                                     shape: BoxShape.circle,
-                                    border: Border.all(color: MyColors.myOrange),
+                                    border: Border.all(
+                                      color: MyColors.myOrange,
+                                    ),
                                   ),
-                                  child: Icon(Icons.remove, color: MyColors.myOrange, size: 18.r),
+                                  child: Icon(
+                                    Icons.remove,
+                                    color: MyColors.myOrange,
+                                    size: 18.r,
+                                  ),
                                 ),
                               ),
                               SizedBox(width: 8.w),
@@ -161,34 +178,50 @@ class CartScreen extends StatelessWidget {
                               ),
                               SizedBox(width: 8.w),
                               InkWell(
-                                onTap: () => context.read<CartCubit>().incrementItem(item.id),
+                                onTap: () => context
+                                    .read<CartCubit>()
+                                    .incrementItem(item.id),
                                 child: CircleAvatar(
                                   radius: 14.r,
                                   backgroundColor: MyColors.myOrange,
-                                  child: Icon(Icons.add, color: Colors.white, size: 18.r),
+                                  child: Icon(
+                                    Icons.add,
+                                    color: Colors.white,
+                                    size: 18.r,
+                                  ),
                                 ),
                               ),
                             ],
                           ),
                           SizedBox(width: 8.w),
                           IconButton(
-                            icon: const Icon(Icons.delete_outline, color: Colors.red),
-                            onPressed: () => context.read<CartCubit>().removeItem(item.id),
-                          )
+                            icon: const Icon(
+                              Icons.delete_outline,
+                              color: Colors.red,
+                            ),
+                            onPressed: () =>
+                                context.read<CartCubit>().removeItem(item.id),
+                          ),
                         ],
                       ),
                     );
                   },
                 ),
               ),
-              // Summary and Checkout Button
+
               Container(
                 padding: EdgeInsets.all(16.w),
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
+                  borderRadius: BorderRadius.vertical(
+                    top: Radius.circular(20.r),
+                  ),
                   boxShadow: [
-                    BoxShadow(color: Colors.black.withValues(alpha: .05), blurRadius: 10, offset: const Offset(0, -5))
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: .05),
+                      blurRadius: 10,
+                      offset: const Offset(0, -5),
+                    ),
                   ],
                 ),
                 child: SafeArea(
@@ -198,16 +231,41 @@ class CartScreen extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text('إجمالي العناصر:', style: TextStyle(fontSize: 16.sp, color: MyColors.myTextSecondary)),
-                          Text('${state.totalItemsCount}', style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold)),
+                          Text(
+                            'إجمالي العناصر:',
+                            style: TextStyle(
+                              fontSize: 16.sp,
+                              color: MyColors.myTextSecondary,
+                            ),
+                          ),
+                          Text(
+                            '${state.totalItemsCount}',
+                            style: TextStyle(
+                              fontSize: 16.sp,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                         ],
                       ),
                       SizedBox(height: 8.h),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text('السعر الإجمالي:', style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold)),
-                          Text('ج.م ${state.totalPrice.toStringAsFixed(0)}', style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold, color: MyColors.myOrange)),
+                          Text(
+                            'السعر الإجمالي:',
+                            style: TextStyle(
+                              fontSize: 18.sp,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          Text(
+                            'ج.م ${state.totalPrice.toStringAsFixed(0)}',
+                            style: TextStyle(
+                              fontSize: 18.sp,
+                              fontWeight: FontWeight.bold,
+                              color: MyColors.myOrange,
+                            ),
+                          ),
                         ],
                       ),
                       SizedBox(height: 16.h),
@@ -217,44 +275,57 @@ class CartScreen extends StatelessWidget {
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
                             backgroundColor: MyColors.myOrange,
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.r)),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15.r),
+                            ),
                           ),
                           onPressed: () async {
                             final user = FirebaseAuth.instance.currentUser;
                             if (user == null) {
                               ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(content: Text('يجب تسجيل الدخول لإتمام الطلب')),
+                                const SnackBar(
+                                  content: Text(
+                                    'يجب تسجيل الدخول لإتمام الطلب',
+                                  ),
+                                ),
                               );
                               return;
                             }
                             if (state.isEmpty) return;
-                            
-                            // Find placeId
+
                             String resolvedPlaceId = '';
                             try {
                               final firstItem = state.items.first;
-                              final placesSnapshot = await FirebaseFirestore.instance.collection('places').get();
+                              final placesSnapshot = await FirebaseFirestore
+                                  .instance
+                                  .collection('places')
+                                  .get();
                               for (var doc in placesSnapshot.docs) {
-                                final menuDoc = await doc.reference.collection('menuItems').doc(firstItem.id).get();
+                                final menuDoc = await doc.reference
+                                    .collection('menuItems')
+                                    .doc(firstItem.id)
+                                    .get();
                                 if (menuDoc.exists) {
                                   resolvedPlaceId = doc.id;
                                   break;
                                 }
                               }
-                            } catch (e) {
-                              // ignore
-                            }
+                            } catch (e) {}
 
                             final order = OrderModel(
-                              id: '', // Firestore will auto-generate if we use add(), but our repo uses add(order.toMap()) which ignores id.
+                              id: '',
                               customerId: user.uid,
                               placeId: resolvedPlaceId,
-                              items: state.items.map((cartItem) => OrderItem(
-                                menuItemId: cartItem.id,
-                                title: cartItem.title,
-                                price: cartItem.price,
-                                quantity: cartItem.quantity,
-                              )).toList(),
+                              items: state.items
+                                  .map(
+                                    (cartItem) => OrderItem(
+                                      menuItemId: cartItem.id,
+                                      title: cartItem.title,
+                                      price: cartItem.price,
+                                      quantity: cartItem.quantity,
+                                    ),
+                                  )
+                                  .toList(),
                               totalPrice: state.totalPrice,
                               status: 'pending',
                               createdAt: DateTime.now(),
@@ -262,7 +333,7 @@ class CartScreen extends StatelessWidget {
 
                             context.read<OrderCubit>().createOrder(order);
                             context.read<CartCubit>().clearCart();
-                            
+
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
                                 content: const Text('تم إرسال الطلب بنجاح!'),
@@ -271,13 +342,20 @@ class CartScreen extends StatelessWidget {
                             );
                             context.pop();
                           },
-                          child: Text('إتمام الطلب', style: TextStyle(color: Colors.white, fontSize: 16.sp, fontWeight: FontWeight.bold)),
+                          child: Text(
+                            'إتمام الطلب',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 16.sp,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                         ),
-                      )
+                      ),
                     ],
                   ),
                 ),
-              )
+              ),
             ],
           );
         },

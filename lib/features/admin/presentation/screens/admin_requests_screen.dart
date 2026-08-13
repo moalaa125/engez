@@ -24,7 +24,10 @@ class _AdminRequestsScreenState extends State<AdminRequestsScreen> {
     return Scaffold(
       backgroundColor: MyColors.myBackground,
       appBar: AppBar(
-        title: const Text('طلبات الانضمام', style: TextStyle(fontFamily: 'cairo')),
+        title: const Text(
+          'طلبات الانضمام',
+          style: TextStyle(fontFamily: 'cairo'),
+        ),
         backgroundColor: Colors.white,
         centerTitle: true,
       ),
@@ -40,7 +43,13 @@ class _AdminRequestsScreenState extends State<AdminRequestsScreen> {
             final requests = state.requests;
             if (requests.isEmpty) {
               return Center(
-                child: Text('لا توجد طلبات انضمام جديدة', style: TextStyle(fontSize: 18.sp, color: MyColors.myTextSecondary)),
+                child: Text(
+                  'لا توجد طلبات انضمام جديدة',
+                  style: TextStyle(
+                    fontSize: 18.sp,
+                    color: MyColors.myTextSecondary,
+                  ),
+                ),
               );
             }
             return ListView.builder(
@@ -51,39 +60,64 @@ class _AdminRequestsScreenState extends State<AdminRequestsScreen> {
                 return Card(
                   margin: EdgeInsets.only(bottom: 16.h),
                   color: Colors.white,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.r)),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15.r),
+                  ),
                   child: Padding(
                     padding: EdgeInsets.all(16.w),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('الاسم: ${request.userName}', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16.sp)),
+                        Text(
+                          'الاسم: ${request.userName}',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16.sp,
+                          ),
+                        ),
                         SizedBox(height: 8.h),
-                        Text('البريد: ${request.email}', style: TextStyle(fontSize: 14.sp)),
+                        Text(
+                          'البريد: ${request.email}',
+                          style: TextStyle(fontSize: 14.sp),
+                        ),
                         SizedBox(height: 16.h),
                         Row(
                           children: [
                             Expanded(
                               child: ElevatedButton(
-                                style: ElevatedButton.styleFrom(backgroundColor: MyColors.mySuccess),
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: MyColors.mySuccess,
+                                ),
                                 onPressed: () {
-                                  context.read<AdminRequestsCubit>().approveRequest(request.uid);
+                                  context
+                                      .read<AdminRequestsCubit>()
+                                      .approveRequest(request.uid);
                                 },
-                                child: const Text('موافقة', style: TextStyle(color: Colors.white)),
+                                child: const Text(
+                                  'موافقة',
+                                  style: TextStyle(color: Colors.white),
+                                ),
                               ),
                             ),
                             SizedBox(width: 8.w),
                             Expanded(
                               child: ElevatedButton(
-                                style: ElevatedButton.styleFrom(backgroundColor: MyColors.myError),
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: MyColors.myError,
+                                ),
                                 onPressed: () {
-                                  context.read<AdminRequestsCubit>().rejectRequest(request.uid);
+                                  context
+                                      .read<AdminRequestsCubit>()
+                                      .rejectRequest(request.uid);
                                 },
-                                child: const Text('رفض', style: TextStyle(color: Colors.white)),
+                                child: const Text(
+                                  'رفض',
+                                  style: TextStyle(color: Colors.white),
+                                ),
                               ),
                             ),
                           ],
-                        )
+                        ),
                       ],
                     ),
                   ),

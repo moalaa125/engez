@@ -18,10 +18,6 @@ class CustomOfferSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Forced to LTR so this card keeps its original layout (text on the
-    // left, icon on the right) even though the app's global locale is now
-    // Arabic/RTL. Remove this wrapper if you ever want this card to mirror
-    // along with the rest of the app.
     return Directionality(
       textDirection: TextDirection.ltr,
       child: GestureDetector(

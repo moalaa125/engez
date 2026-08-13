@@ -13,7 +13,6 @@ class OwnerDashboardScreen extends StatefulWidget {
   State<OwnerDashboardScreen> createState() => _OwnerDashboardScreenState();
 }
 
-// دالة التنقل إلى إدارة القائمة (خارج الكلاس)
 Future<void> _navigateToManageMenu(BuildContext context) async {
   final user = FirebaseAuth.instance.currentUser;
   if (user == null) return;
@@ -33,27 +32,38 @@ Future<void> _navigateToManageMenu(BuildContext context) async {
       .doc(placeId)
       .get();
   if (!placeDoc.exists) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('المكان غير موجود')),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text('المكان غير موجود')));
     return;
   }
   final place = Place.fromDoc(placeDoc);
-  // ✅ المسار الصحيح الآن موجود تحت /owner-dashboard
-context.push('/owner-dashboard/manage-menu', extra: place); }
+
+  context.push('/owner-dashboard/manage-menu', extra: place);
+}
 
 Future<void> _navigateToOwnerOrders(BuildContext context) async {
   final user = FirebaseAuth.instance.currentUser;
   if (user == null) return;
-  final doc = await FirebaseFirestore.instance.collection('users').doc(user.uid).get();
+  final doc = await FirebaseFirestore.instance
+      .collection('users')
+      .doc(user.uid)
+      .get();
   final placeId = doc.data()?['placeId'] as String?;
   if (placeId == null) {
-    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('لم يتم العثور على مكان مرتبط بحسابك')));
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('لم يتم العثور على مكان مرتبط بحسابك')),
+    );
     return;
   }
-  final placeDoc = await FirebaseFirestore.instance.collection('places').doc(placeId).get();
+  final placeDoc = await FirebaseFirestore.instance
+      .collection('places')
+      .doc(placeId)
+      .get();
   if (!placeDoc.exists) {
-    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('المكان غير موجود')));
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text('المكان غير موجود')));
     return;
   }
   final place = Place.fromDoc(placeDoc);
@@ -173,7 +183,6 @@ class _OwnerDashboardScreenState extends State<OwnerDashboardScreen> {
             ),
             SizedBox(height: 12.h),
 
-            // زر إضافة مكان
             _buildMenuButton(
               icon: Icons.add_location,
               title: 'إضافة مكان',
@@ -184,18 +193,14 @@ class _OwnerDashboardScreenState extends State<OwnerDashboardScreen> {
               },
             ),
 
-            // زر تعديل المكان
             _buildMenuButton(
               icon: Icons.edit_location,
               title: 'تعديل المكان',
               subtitle: 'تحديث معلومات مطعمك',
               color: Colors.blue,
-              onTap: () {
-                // TODO: الانتقال إلى EditPlaceScreen
-              },
+              onTap: () {},
             ),
 
-            // ✅ زر إدارة القائمة (الوحيد)
             _buildMenuButton(
               icon: Icons.menu_book,
               title: 'إدارة القائمة',
@@ -204,7 +209,6 @@ class _OwnerDashboardScreenState extends State<OwnerDashboardScreen> {
               onTap: () => _navigateToManageMenu(context),
             ),
 
-            // زر الطلبات الواردة
             _buildMenuButton(
               icon: Icons.shopping_bag_outlined,
               title: 'الطلبات الواردة',

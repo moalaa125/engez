@@ -9,7 +9,7 @@ class MenuItemCard extends StatelessWidget {
   final String description;
   final String price;
   final VoidCallback onAddTap;
-  
+
   final int quantity;
   final VoidCallback onRemoveTap;
 
@@ -20,7 +20,7 @@ class MenuItemCard extends StatelessWidget {
     required this.description,
     required this.price,
     required this.onAddTap,
-    this.quantity = 0, 
+    this.quantity = 0,
     required this.onRemoveTap,
   });
 
@@ -60,7 +60,7 @@ class MenuItemCard extends StatelessWidget {
             ),
           ),
           SizedBox(width: 12.w),
-          
+
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -102,12 +102,16 @@ class MenuItemCard extends StatelessWidget {
                         ),
                       ),
                     ),
-                    
+
                     AnimatedSwitcher(
                       duration: const Duration(milliseconds: 300),
-                      transitionBuilder: (Widget child, Animation<double> animation) {
-                        return ScaleTransition(scale: animation, child: child);
-                      },
+                      transitionBuilder:
+                          (Widget child, Animation<double> animation) {
+                            return ScaleTransition(
+                              scale: animation,
+                              child: child,
+                            );
+                          },
                       child: quantity == 0
                           ? GestureDetector(
                               key: const ValueKey('add_button_only'),
@@ -134,7 +138,9 @@ class MenuItemCard extends StatelessWidget {
                                     decoration: BoxDecoration(
                                       shape: BoxShape.circle,
                                       color: Colors.transparent,
-                                      border: Border.all(color: MyColors.myOrange),
+                                      border: Border.all(
+                                        color: MyColors.myOrange,
+                                      ),
                                     ),
                                     child: Icon(
                                       Icons.remove,

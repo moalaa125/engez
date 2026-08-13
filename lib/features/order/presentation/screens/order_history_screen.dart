@@ -74,7 +74,13 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
             final orders = state.orders;
             if (orders.isEmpty) {
               return Center(
-                child: Text('لا توجد طلبات سابقة', style: TextStyle(fontSize: 18.sp, color: MyColors.myTextSecondary)),
+                child: Text(
+                  'لا توجد طلبات سابقة',
+                  style: TextStyle(
+                    fontSize: 18.sp,
+                    color: MyColors.myTextSecondary,
+                  ),
+                ),
               );
             }
             return ListView.builder(
@@ -85,7 +91,9 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
                 return Card(
                   margin: EdgeInsets.only(bottom: 16.h),
                   color: MyColors.myWhite,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.r)),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15.r),
+                  ),
                   child: Padding(
                     padding: EdgeInsets.all(16.w),
                     child: Column(
@@ -94,37 +102,75 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text('طلب #${order.id.length > 5 ? order.id.substring(0, 5) : order.id}', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16.sp)),
+                            Text(
+                              'طلب #${order.id.length > 5 ? order.id.substring(0, 5) : order.id}',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16.sp,
+                              ),
+                            ),
                             Container(
-                              padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 10.w,
+                                vertical: 4.h,
+                              ),
                               decoration: BoxDecoration(
-                                color: _getStatusColor(order.status).withValues(alpha: .1),
+                                color: _getStatusColor(
+                                  order.status,
+                                ).withValues(alpha: .1),
                                 borderRadius: BorderRadius.circular(10.r),
                               ),
                               child: Text(
                                 _getStatusText(order.status),
-                                style: TextStyle(color: _getStatusColor(order.status), fontWeight: FontWeight.bold),
+                                style: TextStyle(
+                                  color: _getStatusColor(order.status),
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
-                            )
+                            ),
                           ],
                         ),
                         SizedBox(height: 12.h),
-                        ...order.items.map((item) => Padding(
-                          padding: EdgeInsets.only(bottom: 4.h),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text('${item.quantity}x ${item.title}', style: TextStyle(fontSize: 14.sp)),
-                              Text('ج.م ${item.price * item.quantity}', style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.bold)),
-                            ],
+                        ...order.items.map(
+                          (item) => Padding(
+                            padding: EdgeInsets.only(bottom: 4.h),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  '${item.quantity}x ${item.title}',
+                                  style: TextStyle(fontSize: 14.sp),
+                                ),
+                                Text(
+                                  'ج.م ${item.price * item.quantity}',
+                                  style: TextStyle(
+                                    fontSize: 14.sp,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
-                        )),
+                        ),
                         Divider(height: 24.h),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text('الإجمالي', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16.sp)),
-                            Text('ج.م ${order.totalPrice}', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16.sp, color: MyColors.myOrange)),
+                            Text(
+                              'الإجمالي',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16.sp,
+                              ),
+                            ),
+                            Text(
+                              'ج.م ${order.totalPrice}',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16.sp,
+                                color: MyColors.myOrange,
+                              ),
+                            ),
                           ],
                         ),
                       ],

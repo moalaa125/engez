@@ -6,8 +6,7 @@ class CartState extends Equatable {
 
   const CartState({this.items = const []});
 
-  int get totalItemsCount =>
-      items.fold(0, (sum, item) => sum + item.quantity);
+  int get totalItemsCount => items.fold(0, (sum, item) => sum + item.quantity);
 
   double get totalPrice =>
       items.fold(0.0, (sum, item) => sum + item.totalPrice);

@@ -29,7 +29,6 @@ class PlaceCubit extends Cubit<PlaceState> {
     }
   }
 
-  /// تحديث مكان
   Future<void> updatePlace(Place place) async {
     emit(PlaceAdding());
     try {

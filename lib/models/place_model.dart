@@ -6,9 +6,9 @@ class Place {
   final double rating;
   final String category;
   final String imagePath;
-  final String description; 
-  final String ownerId;     
-  final String location;    
+  final String description;
+  final String ownerId;
+  final String location;
 
   Place({
     required this.id,
@@ -23,8 +23,9 @@ class Place {
 
   factory Place.fromDoc(dynamic doc) {
     final data = doc.data() as Map<String, dynamic>;
-    
-    String imgPath = data['imagePath'] ?? data['image_path'] ?? 'placeholder.png';
+
+    String imgPath =
+        data['imagePath'] ?? data['image_path'] ?? 'placeholder.png';
 
     return Place(
       id: data['id'] ?? doc.id,

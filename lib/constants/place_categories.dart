@@ -2,7 +2,15 @@ import 'package:flutter/material.dart';
 
 class PlaceCategories {
   static const String all = 'الكل';
-  static const List<String> list = [all, 'قهوة', 'فطار', 'مخبز', 'بيتزا', 'آيس كريم', 'مأكولات'];
+  static const List<String> list = [
+    all,
+    'قهوة',
+    'فطار',
+    'مخبز',
+    'بيتزا',
+    'آيس كريم',
+    'مأكولات',
+  ];
   static const Map<String, dynamic> icons = {
     'قهوة': Icons.coffee_outlined,
     'فطار': Icons.breakfast_dining,
