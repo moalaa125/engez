@@ -51,10 +51,8 @@ class DefaultFirebaseOptions {
     messagingSenderId: '717537004014',
     projectId: 'engez-1725b',
     storageBucket: 'engez-1725b.firebasestorage.app',
-    androidClientId:
-        '717537004014-3kjkngj35bjfq5f1qbo5j1h1799hhkt3.apps.googleusercontent.com',
-    iosClientId:
-        '717537004014-itfhl631g67h98dl2r2b45qrjvmaohgv.apps.googleusercontent.com',
+    androidClientId: '717537004014-3kjkngj35bjfq5f1qbo5j1h1799hhkt3.apps.googleusercontent.com',
+    iosClientId: '717537004014-itfhl631g67h98dl2r2b45qrjvmaohgv.apps.googleusercontent.com',
     iosBundleId: 'com.example.engez',
   );
   static const FirebaseOptions macos = FirebaseOptions(
@@ -63,10 +61,8 @@ class DefaultFirebaseOptions {
     messagingSenderId: '717537004014',
     projectId: 'engez-1725b',
     storageBucket: 'engez-1725b.firebasestorage.app',
-    androidClientId:
-        '717537004014-3kjkngj35bjfq5f1qbo5j1h1799hhkt3.apps.googleusercontent.com',
-    iosClientId:
-        '717537004014-itfhl631g67h98dl2r2b45qrjvmaohgv.apps.googleusercontent.com',
+    androidClientId: '717537004014-3kjkngj35bjfq5f1qbo5j1h1799hhkt3.apps.googleusercontent.com',
+    iosClientId: '717537004014-itfhl631g67h98dl2r2b45qrjvmaohgv.apps.googleusercontent.com',
     iosBundleId: 'com.example.engez',
   );
 
