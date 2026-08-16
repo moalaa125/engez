@@ -39,7 +39,7 @@ class _LoginScreenContentState extends State<_LoginScreenContent> {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
               content: Text('تم تسجيل الدخول بنجاح'),
-              backgroundColor: Color(0xFF003527),
+              backgroundColor: MyColors.mySuccess,
             ),
           );
 
@@ -52,7 +52,7 @@ class _LoginScreenContentState extends State<_LoginScreenContent> {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(state.errorMessage),
-              backgroundColor: Colors.redAccent,
+              backgroundColor: MyColors.myError,
             ),
           );
         }
@@ -60,7 +60,7 @@ class _LoginScreenContentState extends State<_LoginScreenContent> {
       builder: (context, state) {
         if (state is AuthLoading) {
           return const Center(
-            child: CircularProgressIndicator(color: Color(0xFF003527)),
+            child: CircularProgressIndicator(color: MyColors.myOrange),
           );
         }
 
@@ -85,7 +85,7 @@ class _LoginScreenContentState extends State<_LoginScreenContent> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   CustomButton(
-                    textColor: Colors.black,
+                    textColor: MyColors.myDarkText,
                     buttonColor: MyColors.myWhite,
                     iconPath: 'assets/images/google.png',
                     text: 'تسجيل الدخول باستخدام Google',
@@ -95,7 +95,7 @@ class _LoginScreenContentState extends State<_LoginScreenContent> {
                   ),
                   CustomButton(
                     textColor: MyColors.myWhite,
-                    buttonColor: Colors.black,
+                    buttonColor: MyColors.myDarkText,
                     iconPath: 'assets/images/apple.png',
                     text: 'تسجيل الدخول باستخدام apple',
                     function: () {
@@ -143,7 +143,7 @@ class _LoginScreenContentState extends State<_LoginScreenContent> {
         Text(
           'الزحمه مش سكتنا',
           style: TextStyle(
-            color: Colors.black,
+            color: MyColors.myDarkText,
             fontSize: 25.sp,
             fontWeight: FontWeight.bold,
             fontFamily: 'cairo',
@@ -153,7 +153,7 @@ class _LoginScreenContentState extends State<_LoginScreenContent> {
         Text(
           'سجل دخول عشان نكمل',
           style: TextStyle(
-            color: const Color(0xFF404944),
+            color: MyColors.myTextSecondary,
             fontSize: 20.sp,
             fontWeight: FontWeight.bold,
           ),

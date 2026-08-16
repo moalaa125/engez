@@ -50,6 +50,7 @@ class EngezApp extends StatelessWidget {
               GlobalWidgetsLocalizations.delegate,
             ],
             theme: ThemeData(
+              fontFamily: 'cairo',
               textSelectionTheme: TextSelectionThemeData(
                 cursorColor: MyColors.myOrange,
                 selectionColor: MyColors.myOrange.withValues(alpha: 0.3),

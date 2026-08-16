@@ -54,6 +54,8 @@ dependencies:
   crypto: ^3.0.7
   image_picker: ^1.2.3
   go_router: ^17.5.0
+  syncfusion_flutter_core: ^34.2.3
+  http: ^1.6.0
 
 dev_dependencies:
   flutter_test:

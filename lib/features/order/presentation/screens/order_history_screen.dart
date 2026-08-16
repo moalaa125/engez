@@ -43,7 +43,7 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
       case 'pending':
         return MyColors.myWarning;
       case 'confirmed':
-        return Colors.blue;
+        return MyColors.myInfo;
       case 'delivered':
         return MyColors.mySuccess;
       case 'cancelled':

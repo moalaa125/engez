@@ -22,7 +22,7 @@ class OffersScreen extends StatelessWidget {
           ),
         ),
         centerTitle: true,
-        backgroundColor: Colors.white,
+        backgroundColor: MyColors.myWhite,
         elevation: 0,
       ),
       body: Padding(
@@ -77,7 +77,7 @@ class OffersScreen extends StatelessWidget {
       margin: EdgeInsets.only(bottom: 16.h),
       padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: MyColors.myWhite,
         borderRadius: BorderRadius.circular(20.r),
         boxShadow: [
           BoxShadow(
@@ -112,7 +112,10 @@ class OffersScreen extends StatelessWidget {
                 ),
                 Text(
                   title,
-                  style: TextStyle(fontSize: 16.sp, color: Colors.grey[700]),
+                  style: TextStyle(
+                    fontSize: 16.sp,
+                    color: MyColors.myTextSecondary,
+                  ),
                 ),
               ],
             ),

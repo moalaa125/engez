@@ -22,12 +22,12 @@ class CustomImage extends StatelessWidget {
     return Container(
       height: height,
       width: width,
-      color: Colors.grey[300],
+      color: MyColors.myBorder,
       child: Center(
         child: Icon(
           Icons.image_not_supported,
           size: 40,
-          color: Colors.grey[600],
+          color: MyColors.myTextSecondary,
         ),
       ),
     );

@@ -57,7 +57,7 @@ class AllPlaces extends StatelessWidget {
             builder: (context, placeState) {
               if (placeState is PlaceLoading) {
                 return Center(
-                  child: CircularProgressIndicator(color: Colors.deepOrange),
+                  child: CircularProgressIndicator(color: MyColors.myOrange),
                 );
               }
               if (placeState is PlaceError) {

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:engez/constants/my_colors.dart';
+import 'package:engez/services/user_service.dart';
 
 class RoleSelectionScreen extends StatefulWidget {
   const RoleSelectionScreen({super.key});
@@ -65,14 +66,7 @@ class _RoleSelectionScreenState extends State<RoleSelectionScreen> {
         }, SetOptions(merge: true));
         if (mounted) context.go('/home');
       } else if (selectedRole == 'owner') {
-        await FirebaseFirestore.instance
-            .collection('ownerRequests')
-            .doc(user.uid)
-            .set({'status': 'pending'}, SetOptions(merge: true));
-
-        await FirebaseFirestore.instance.collection('users').doc(user.uid).set({
-          'role': 'customer',
-        }, SetOptions(merge: true));
+        await UserService().requestOwnerRole(user.uid);
 
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -97,12 +91,12 @@ class _RoleSelectionScreenState extends State<RoleSelectionScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: MyColors.myWhite,
       appBar: AppBar(
         title: const Text('اختر دورك'),
         centerTitle: true,
         elevation: 0,
-        backgroundColor: Colors.white,
+        backgroundColor: MyColors.myWhite,
       ),
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 40.h),
@@ -115,7 +109,10 @@ class _RoleSelectionScreenState extends State<RoleSelectionScreen> {
             SizedBox(height: 8.h),
             Text(
               'اختر الدور المناسب لك لتخصيص التجربة',
-              style: TextStyle(fontSize: 16.sp, color: Colors.grey[600]),
+              style: TextStyle(
+                fontSize: 16.sp,
+                color: MyColors.myTextSecondary,
+              ),
             ),
             SizedBox(height: 40.h),
             ...roles.map((role) => _buildRoleCard(role)),
@@ -132,13 +129,13 @@ class _RoleSelectionScreenState extends State<RoleSelectionScreen> {
                   ),
                 ),
                 child: isLoading
-                    ? const CircularProgressIndicator(color: Colors.white)
+                    ? const CircularProgressIndicator(color: MyColors.myWhite)
                     : Text(
                         'متابعة',
                         style: TextStyle(
                           fontSize: 18.sp,
                           fontWeight: FontWeight.bold,
-                          color: Colors.white,
+                          color: MyColors.myWhite,
                         ),
                       ),
               ),
@@ -160,10 +157,10 @@ class _RoleSelectionScreenState extends State<RoleSelectionScreen> {
         decoration: BoxDecoration(
           color: isSelected
               ? MyColors.myOrange.withValues(alpha: 0.1)
-              : Colors.grey[50],
+              : MyColors.myBackgroundAlt,
           borderRadius: BorderRadius.circular(16.r),
           border: Border.all(
-            color: isSelected ? MyColors.myOrange : Colors.grey[300]!,
+            color: isSelected ? MyColors.myOrange : MyColors.myBorder,
             width: isSelected ? 2 : 1,
           ),
           boxShadow: isSelected
@@ -181,7 +178,7 @@ class _RoleSelectionScreenState extends State<RoleSelectionScreen> {
             Icon(
               role['icon'],
               size: 36.r,
-              color: isSelected ? MyColors.myOrange : Colors.grey,
+              color: isSelected ? MyColors.myOrange : MyColors.myTextSecondary,
             ),
             SizedBox(width: 16.w),
             Expanded(
@@ -193,12 +190,16 @@ class _RoleSelectionScreenState extends State<RoleSelectionScreen> {
                     style: TextStyle(
                       fontSize: 18.sp,
                       fontWeight: FontWeight.bold,
-                      color: isSelected ? MyColors.myOrange : Colors.black87,
+                      color:
+                          isSelected ? MyColors.myOrange : MyColors.myDarkText,
                     ),
                   ),
                   Text(
                     role['description'],
-                    style: TextStyle(fontSize: 14.sp, color: Colors.grey[600]),
+                    style: TextStyle(
+                      fontSize: 14.sp,
+                      color: MyColors.myTextSecondary,
+                    ),
                   ),
                 ],
               ),

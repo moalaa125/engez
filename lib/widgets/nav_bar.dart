@@ -3,15 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 
-class NavBar extends StatefulWidget {
-  const NavBar({super.key});
+class NavBar extends StatelessWidget {
+  const NavBar({
+    super.key,
+    required this.currentIndex,
+    required this.onTap,
+  });
 
-  @override
-  State<NavBar> createState() => _NavBarState();
-}
-
-class _NavBarState extends State<NavBar> {
-  int _currentIndex = 0;
+  final int currentIndex;
+  final ValueChanged<int> onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +39,7 @@ class _NavBarState extends State<NavBar> {
               iconSize: 25.sp,
               duration: const Duration(milliseconds: 350),
               curve: Curves.easeOutExpo,
-              color: Colors.grey[500],
+              color: MyColors.myTextSecondary,
               tabBackgroundColor: MyColors.myOrange.withValues(alpha: 0.1),
               backgroundColor: MyColors.myWhite,
               padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 6.h),
@@ -86,12 +86,8 @@ class _NavBarState extends State<NavBar> {
                   ),
                 ),
               ],
-              selectedIndex: _currentIndex,
-              onTabChange: (index) {
-                setState(() {
-                  _currentIndex = index;
-                });
-              },
+              selectedIndex: currentIndex,
+              onTabChange: onTap,
             ),
           ),
         ),

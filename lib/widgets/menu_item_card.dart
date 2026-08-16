@@ -30,7 +30,7 @@ class MenuItemCard extends StatelessWidget {
       margin: EdgeInsets.only(bottom: 16.h),
       padding: EdgeInsets.all(10.w),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: MyColors.myWhite,
         borderRadius: BorderRadius.circular(20.r),
         boxShadow: [
           BoxShadow(
@@ -121,7 +121,7 @@ class MenuItemCard extends StatelessWidget {
                                 backgroundColor: MyColors.myOrange,
                                 child: Icon(
                                   Icons.add,
-                                  color: Colors.white,
+                                  color: MyColors.myWhite,
                                   size: 20.r,
                                 ),
                               ),
@@ -166,7 +166,7 @@ class MenuItemCard extends StatelessWidget {
                                     backgroundColor: MyColors.myOrange,
                                     child: Icon(
                                       Icons.add,
-                                      color: Colors.white,
+                                      color: MyColors.myWhite,
                                       size: 20.r,
                                     ),
                                   ),

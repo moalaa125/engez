@@ -1,3 +1,4 @@
+import 'package:engez/constants/my_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -6,14 +7,14 @@ class CustomButton extends StatelessWidget {
     super.key,
     required this.text,
     required this.function,
-    required this.iconPath,
+    this.iconPath,
     required this.buttonColor,
     required this.textColor,
   });
 
   final String text;
   final void Function()? function;
-  final String iconPath;
+  final String? iconPath;
   final Color buttonColor;
   final Color textColor;
 
@@ -30,7 +31,7 @@ class CustomButton extends StatelessWidget {
             decoration: BoxDecoration(
               color: buttonColor,
               borderRadius: BorderRadius.circular(20.r),
-              border: Border.all(width: 1, color: Colors.black),
+              border: Border.all(width: 1, color: MyColors.myDarkText),
             ),
             child: Center(
               child: Row(
@@ -40,7 +41,8 @@ class CustomButton extends StatelessWidget {
                     text,
                     style: TextStyle(color: textColor, fontSize: 20.sp),
                   ),
-                  Image.asset(iconPath, height: 28.h),
+                  if (iconPath != null)
+                    Image.asset(iconPath!, height: 28.h),
                 ],
               ),
             ),

@@ -16,6 +16,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 import 'package:syncfusion_flutter_core/theme.dart';
+import 'package:engez/widgets/custom_image.dart';
 
 class PlaceDetailsScreen extends StatelessWidget {
   final Place place;
@@ -32,58 +33,7 @@ class PlaceDetailsScreen extends StatelessWidget {
     'bob_wich': 'ساندوتشات طازجة وصحية',
   };
 
-  Widget _buildPlaceImage(
-    String imagePath, {
-    double? height,
-    double? width,
-    BoxFit fit = BoxFit.cover,
-  }) {
-    if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
-      return Image.network(
-        imagePath,
-        height: height,
-        width: width,
-        fit: fit,
-        errorBuilder: (context, error, stackTrace) {
-          return _buildPlaceholderImage(height: height, width: width);
-        },
-        loadingBuilder: (context, child, loadingProgress) {
-          if (loadingProgress == null) return child;
-          return Center(
-            child: CircularProgressIndicator(
-              color: MyColors.myOrange,
-              strokeWidth: 2,
-            ),
-          );
-        },
-      );
-    } else {
-      return Image.asset(
-        imagePath,
-        height: height,
-        width: width,
-        fit: fit,
-        errorBuilder: (context, error, stackTrace) {
-          return _buildPlaceholderImage(height: height, width: width);
-        },
-      );
-    }
-  }
 
-  Widget _buildPlaceholderImage({double? height, double? width}) {
-    return Container(
-      height: height,
-      width: width,
-      color: MyColors.myBorder,
-      child: Center(
-        child: Icon(
-          Icons.image_not_supported,
-          size: 40,
-          color: MyColors.myTextSecondary,
-        ),
-      ),
-    );
-  }
 
   void _showPdfMenu(BuildContext context) {
     final String? pdfPath = _pdfPaths[place.id];
@@ -113,7 +63,7 @@ class PlaceDetailsScreen extends StatelessWidget {
               width: double.infinity,
               padding: EdgeInsets.all(10.w),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: MyColors.myWhite,
                 borderRadius: BorderRadius.circular(20.r),
                 boxShadow: [
                   BoxShadow(
@@ -133,7 +83,7 @@ class PlaceDetailsScreen extends StatelessWidget {
                           IconButton(
                             icon: const Icon(
                               Icons.zoom_in,
-                              color: Colors.black,
+                              color: MyColors.myDarkText,
                             ),
                             onPressed: () {
                               pdfViewerController.zoomLevel =
@@ -143,7 +93,7 @@ class PlaceDetailsScreen extends StatelessWidget {
                           IconButton(
                             icon: const Icon(
                               Icons.zoom_out,
-                              color: Colors.black,
+                              color: MyColors.myDarkText,
                             ),
                             onPressed: () {
                               pdfViewerController.zoomLevel =
@@ -153,7 +103,7 @@ class PlaceDetailsScreen extends StatelessWidget {
                         ],
                       ),
                       IconButton(
-                        icon: const Icon(Icons.close, color: Colors.black),
+                        icon: const Icon(Icons.close, color: MyColors.myDarkText),
                         onPressed: () => Navigator.pop(context),
                       ),
                     ],
@@ -214,7 +164,7 @@ class PlaceDetailsScreen extends StatelessWidget {
                           ? 'السلة فارغة'
                           : 'عرض السلة (${state.totalItemsCount})',
                       style: TextStyle(
-                        color: Colors.white,
+                        color: MyColors.myWhite,
                         fontSize: 18.sp,
                         fontWeight: FontWeight.bold,
                       ),
@@ -224,7 +174,7 @@ class PlaceDetailsScreen extends StatelessWidget {
                 Text(
                   'ج.م ${state.totalPrice.toStringAsFixed(0)}',
                   style: TextStyle(
-                    color: Colors.white,
+                    color: MyColors.myWhite,
                     fontSize: 18.sp,
                     fontWeight: FontWeight.bold,
                   ),
@@ -328,7 +278,7 @@ class PlaceDetailsScreen extends StatelessWidget {
             height: 330.h,
             child: Hero(
               tag: place.id,
-              child: _buildPlaceImage(place.imagePath),
+              child: CustomImage(imagePath: place.imagePath),
             ),
           ),
           Positioned(
@@ -465,7 +415,7 @@ class PlaceDetailsScreen extends StatelessWidget {
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        const Icon(Icons.star, color: Colors.orange, size: 14),
+                        const Icon(Icons.star, color: MyColors.myOrange, size: 14),
                         SizedBox(width: 4.w),
                         Text(
                           place.rating.toString(),

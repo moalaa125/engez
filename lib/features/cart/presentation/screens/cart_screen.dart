@@ -22,11 +22,11 @@ class CartScreen extends StatelessWidget {
         backgroundColor: Colors.transparent,
         elevation: 0,
         centerTitle: true,
-        iconTheme: const IconThemeData(color: Colors.black),
+        iconTheme: const IconThemeData(color: MyColors.myDarkText),
         title: Text(
           'سلتك',
           style: TextStyle(
-            color: Colors.black,
+            color: MyColors.myDarkText,
             fontSize: 20.sp,
             fontWeight: FontWeight.bold,
           ),
@@ -68,7 +68,7 @@ class CartScreen extends StatelessWidget {
                       ),
                       child: const Text(
                         'تصفح القائمة',
-                        style: TextStyle(color: Colors.white),
+                        style: TextStyle(color: MyColors.myWhite),
                       ),
                     ),
                   ),
@@ -83,13 +83,13 @@ class CartScreen extends StatelessWidget {
                 child: ListView.separated(
                   padding: EdgeInsets.all(16.w),
                   itemCount: state.items.length,
-                  separatorBuilder: (_, __) => SizedBox(height: 12.h),
+                  separatorBuilder: (context, index) => SizedBox(height: 12.h),
                   itemBuilder: (context, index) {
                     final item = state.items[index];
                     return Container(
                       padding: EdgeInsets.all(12.w),
                       decoration: BoxDecoration(
-                        color: Colors.white,
+                        color: MyColors.myWhite,
                         borderRadius: BorderRadius.circular(15.r),
                         boxShadow: [
                           BoxShadow(
@@ -114,7 +114,7 @@ class CartScreen extends StatelessWidget {
                                 color: MyColors.myBorder,
                                 child: const Icon(
                                   Icons.fastfood,
-                                  color: Colors.white,
+                                  color: MyColors.myWhite,
                                 ),
                               ),
                             ),
@@ -186,7 +186,7 @@ class CartScreen extends StatelessWidget {
                                   backgroundColor: MyColors.myOrange,
                                   child: Icon(
                                     Icons.add,
-                                    color: Colors.white,
+                                    color: MyColors.myWhite,
                                     size: 18.r,
                                   ),
                                 ),
@@ -197,7 +197,7 @@ class CartScreen extends StatelessWidget {
                           IconButton(
                             icon: const Icon(
                               Icons.delete_outline,
-                              color: Colors.red,
+                              color: MyColors.myError,
                             ),
                             onPressed: () =>
                                 context.read<CartCubit>().removeItem(item.id),
@@ -212,7 +212,7 @@ class CartScreen extends StatelessWidget {
               Container(
                 padding: EdgeInsets.all(16.w),
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: MyColors.myWhite,
                   borderRadius: BorderRadius.vertical(
                     top: Radius.circular(20.r),
                   ),
@@ -310,7 +310,11 @@ class CartScreen extends StatelessWidget {
                                   break;
                                 }
                               }
-                            } catch (e) {}
+                            } catch (e) {
+                              debugPrint('Error resolving placeId: $e');
+                            }
+
+                            if (!context.mounted) return;
 
                             final order = OrderModel(
                               id: '',
@@ -345,7 +349,7 @@ class CartScreen extends StatelessWidget {
                           child: Text(
                             'إتمام الطلب',
                             style: TextStyle(
-                              color: Colors.white,
+                              color: MyColors.myWhite,
                               fontSize: 16.sp,
                               fontWeight: FontWeight.bold,
                             ),

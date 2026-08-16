@@ -142,7 +142,7 @@ class _ManageMenuScreenContentState extends State<_ManageMenuScreenContent> {
       backgroundColor: MyColors.myBackground,
       appBar: AppBar(
         title: Text('إدارة قائمة ${widget.place.title}'),
-        backgroundColor: Colors.white,
+        backgroundColor: MyColors.myWhite,
         elevation: 0,
         centerTitle: true,
       ),
@@ -163,7 +163,7 @@ class _ManageMenuScreenContentState extends State<_ManageMenuScreenContent> {
                           height: 100.h,
                           width: 100.w,
                           decoration: BoxDecoration(
-                            color: Colors.grey[200],
+                            color: MyColors.myBorder,
                             borderRadius: BorderRadius.circular(12.r),
                             image: _imageUrl != null
                                 ? DecorationImage(
@@ -178,7 +178,7 @@ class _ManageMenuScreenContentState extends State<_ManageMenuScreenContent> {
                                     ? Icon(
                                         Icons.add_photo_alternate,
                                         size: 40,
-                                        color: Colors.grey[600],
+                                        color: MyColors.myTextSecondary,
                                       )
                                     : null),
                         ),
@@ -269,7 +269,7 @@ class _ManageMenuScreenContentState extends State<_ManageMenuScreenContent> {
                               onPressed: () => _editItem(item),
                             ),
                             IconButton(
-                              icon: const Icon(Icons.delete, color: Colors.red),
+                              icon: const Icon(Icons.delete, color: MyColors.myError),
                               onPressed: () {
                                 context.read<MenuItemCubit>().deleteMenuItem(
                                   item.id,

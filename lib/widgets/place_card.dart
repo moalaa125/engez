@@ -68,7 +68,7 @@ class PlaceCard extends StatelessWidget {
                             style: const TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 16,
-                              color: Colors.black,
+                              color: MyColors.myDarkText,
                             ),
                           ),
                           const SizedBox(height: 6),
@@ -76,7 +76,7 @@ class PlaceCard extends StatelessWidget {
                             children: [
                               const Icon(
                                 Icons.star,
-                                color: Colors.orange,
+                                color: MyColors.myOrange,
                                 size: 16,
                               ),
                               const SizedBox(width: 4),
@@ -115,7 +115,7 @@ class PlaceCard extends StatelessWidget {
                           vertical: 6,
                         ),
                         decoration: BoxDecoration(
-                          color: Colors.white.withValues(alpha: .6),
+                          color: MyColors.myWhite.withValues(alpha: .6),
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Column(

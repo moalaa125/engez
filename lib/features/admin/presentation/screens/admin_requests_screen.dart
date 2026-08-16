@@ -28,7 +28,7 @@ class _AdminRequestsScreenState extends State<AdminRequestsScreen> {
           'طلبات الانضمام',
           style: TextStyle(fontFamily: 'cairo'),
         ),
-        backgroundColor: Colors.white,
+        backgroundColor: MyColors.myWhite,
         centerTitle: true,
       ),
       body: BlocBuilder<AdminRequestsCubit, AdminRequestsState>(
@@ -59,7 +59,7 @@ class _AdminRequestsScreenState extends State<AdminRequestsScreen> {
                 final request = requests[index];
                 return Card(
                   margin: EdgeInsets.only(bottom: 16.h),
-                  color: Colors.white,
+                  color: MyColors.myWhite,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(15.r),
                   ),
@@ -95,7 +95,7 @@ class _AdminRequestsScreenState extends State<AdminRequestsScreen> {
                                 },
                                 child: const Text(
                                   'موافقة',
-                                  style: TextStyle(color: Colors.white),
+                                  style: TextStyle(color: MyColors.myWhite),
                                 ),
                               ),
                             ),
@@ -112,7 +112,7 @@ class _AdminRequestsScreenState extends State<AdminRequestsScreen> {
                                 },
                                 child: const Text(
                                   'رفض',
-                                  style: TextStyle(color: Colors.white),
+                                  style: TextStyle(color: MyColors.myWhite),
                                 ),
                               ),
                             ),

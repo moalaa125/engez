@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:engez/widgets/dashboard_menu_tile.dart';
 
 class AdminDashboardScreen extends StatelessWidget {
   const AdminDashboardScreen({super.key});
@@ -20,7 +21,7 @@ class AdminDashboardScreen extends StatelessWidget {
             fontWeight: FontWeight.bold,
           ),
         ),
-        backgroundColor: Colors.white,
+        backgroundColor: MyColors.myWhite,
         centerTitle: true,
         actions: [
           IconButton(
@@ -36,8 +37,7 @@ class AdminDashboardScreen extends StatelessWidget {
         padding: EdgeInsets.all(16.w),
         child: Column(
           children: [
-            _buildAdminMenuButton(
-              context: context,
+            DashboardMenuTile(
               icon: Icons.storefront,
               title: 'طلبات الانضمام (مُلاك المطاعم)',
               subtitle: 'الموافقة أو الرفض على طلبات الملاك الجدد',
@@ -46,8 +46,7 @@ class AdminDashboardScreen extends StatelessWidget {
                 context.push('/admin/requests');
               },
             ),
-            _buildAdminMenuButton(
-              context: context,
+            DashboardMenuTile(
               icon: Icons.local_offer,
               title: 'إدارة العروض',
               subtitle: 'قريباً: إضافة وتعديل العروض الديناميكية',
@@ -101,7 +100,7 @@ class AdminDashboardScreen extends StatelessWidget {
               ),
               child: const Text(
                 'إضافة عروض تجريبية (Seed Offers)',
-                style: TextStyle(color: Colors.white),
+                style: TextStyle(color: MyColors.myWhite),
               ),
             ),
           ],
@@ -110,67 +109,5 @@ class AdminDashboardScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildAdminMenuButton({
-    required BuildContext context,
-    required IconData icon,
-    required String title,
-    required String subtitle,
-    required Color color,
-    required VoidCallback onTap,
-  }) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        margin: EdgeInsets.only(bottom: 12.h),
-        padding: EdgeInsets.all(16.w),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(12.r),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.05),
-              blurRadius: 6,
-              offset: const Offset(0, 2),
-            ),
-          ],
-        ),
-        child: Row(
-          children: [
-            Container(
-              padding: EdgeInsets.all(10.w),
-              decoration: BoxDecoration(
-                color: color.withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(10.r),
-              ),
-              child: Icon(icon, color: color, size: 28.r),
-            ),
-            SizedBox(width: 16.w),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    title,
-                    style: TextStyle(
-                      fontSize: 16.sp,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black87,
-                    ),
-                  ),
-                  Text(
-                    subtitle,
-                    style: TextStyle(
-                      fontSize: 13.sp,
-                      color: MyColors.myTextSecondary,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Icon(Icons.arrow_forward_ios, size: 16.r, color: Colors.grey[400]),
-          ],
-        ),
-      ),
-    );
-  }
+
 }

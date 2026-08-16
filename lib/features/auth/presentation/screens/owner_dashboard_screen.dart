@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:engez/constants/my_colors.dart';
 import 'package:go_router/go_router.dart';
-
+import 'package:engez/widgets/dashboard_menu_tile.dart';
 class OwnerDashboardScreen extends StatefulWidget {
   const OwnerDashboardScreen({super.key});
 
@@ -21,6 +21,7 @@ Future<void> _navigateToManageMenu(BuildContext context) async {
       .doc(user.uid)
       .get();
   final placeId = doc.data()?['placeId'] as String?;
+  if (!context.mounted) return;
   if (placeId == null) {
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('لم يتم العثور على مكان مرتبط بحسابك')),
@@ -38,7 +39,7 @@ Future<void> _navigateToManageMenu(BuildContext context) async {
     return;
   }
   final place = Place.fromDoc(placeDoc);
-
+  if (!context.mounted) return;
   context.push('/owner-dashboard/manage-menu', extra: place);
 }
 
@@ -50,6 +51,7 @@ Future<void> _navigateToOwnerOrders(BuildContext context) async {
       .doc(user.uid)
       .get();
   final placeId = doc.data()?['placeId'] as String?;
+  if (!context.mounted) return;
   if (placeId == null) {
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('لم يتم العثور على مكان مرتبط بحسابك')),
@@ -67,6 +69,7 @@ Future<void> _navigateToOwnerOrders(BuildContext context) async {
     return;
   }
   final place = Place.fromDoc(placeDoc);
+  if (!context.mounted) return;
   context.push('/owner-dashboard/orders', extra: place);
 }
 
@@ -101,7 +104,7 @@ class _OwnerDashboardScreenState extends State<OwnerDashboardScreen> {
     return Scaffold(
       backgroundColor: MyColors.myBackground,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: MyColors.myWhite,
         elevation: 0,
         title: Text(
           'لوحة التحكم',
@@ -133,7 +136,7 @@ class _OwnerDashboardScreenState extends State<OwnerDashboardScreen> {
                   backgroundColor: MyColors.myOrange,
                   child: Icon(
                     Icons.storefront,
-                    color: Colors.white,
+                    color: MyColors.myWhite,
                     size: 30.r,
                   ),
                 ),
@@ -145,7 +148,7 @@ class _OwnerDashboardScreenState extends State<OwnerDashboardScreen> {
                       'مرحباً بك في',
                       style: TextStyle(
                         fontSize: 14.sp,
-                        color: Colors.grey[600],
+                        color: MyColors.myTextSecondary,
                       ),
                     ),
                     Text(
@@ -183,7 +186,7 @@ class _OwnerDashboardScreenState extends State<OwnerDashboardScreen> {
             ),
             SizedBox(height: 12.h),
 
-            _buildMenuButton(
+            DashboardMenuTile(
               icon: Icons.add_location,
               title: 'إضافة مكان',
               subtitle: 'أضف مطعمك أو مقهىك الجديد',
@@ -193,7 +196,7 @@ class _OwnerDashboardScreenState extends State<OwnerDashboardScreen> {
               },
             ),
 
-            _buildMenuButton(
+            DashboardMenuTile(
               icon: Icons.edit_location,
               title: 'تعديل المكان',
               subtitle: 'تحديث معلومات مطعمك',
@@ -201,15 +204,15 @@ class _OwnerDashboardScreenState extends State<OwnerDashboardScreen> {
               onTap: () {},
             ),
 
-            _buildMenuButton(
+            DashboardMenuTile(
               icon: Icons.menu_book,
               title: 'إدارة القائمة',
               subtitle: 'أضف أو عدل عناصر القائمة',
-              color: Colors.green,
+              color: MyColors.mySuccess,
               onTap: () => _navigateToManageMenu(context),
             ),
 
-            _buildMenuButton(
+            DashboardMenuTile(
               icon: Icons.shopping_bag_outlined,
               title: 'الطلبات الواردة',
               subtitle: 'شاهد الطلبات الجديدة',
@@ -227,7 +230,7 @@ class _OwnerDashboardScreenState extends State<OwnerDashboardScreen> {
       child: Container(
         padding: EdgeInsets.symmetric(vertical: 12.h),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: MyColors.myWhite,
           borderRadius: BorderRadius.circular(12.r),
           boxShadow: [
             BoxShadow(
@@ -251,7 +254,7 @@ class _OwnerDashboardScreenState extends State<OwnerDashboardScreen> {
             ),
             Text(
               label,
-              style: TextStyle(fontSize: 12.sp, color: Colors.grey[600]),
+              style: TextStyle(fontSize: 12.sp, color: MyColors.myTextSecondary),
             ),
           ],
         ),
@@ -259,63 +262,5 @@ class _OwnerDashboardScreenState extends State<OwnerDashboardScreen> {
     );
   }
 
-  Widget _buildMenuButton({
-    required IconData icon,
-    required String title,
-    required String subtitle,
-    required Color color,
-    required VoidCallback onTap,
-  }) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        margin: EdgeInsets.only(bottom: 12.h),
-        padding: EdgeInsets.all(16.w),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(12.r),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.05),
-              blurRadius: 6,
-              offset: const Offset(0, 2),
-            ),
-          ],
-        ),
-        child: Row(
-          children: [
-            Container(
-              padding: EdgeInsets.all(10.w),
-              decoration: BoxDecoration(
-                color: color.withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(10.r),
-              ),
-              child: Icon(icon, color: color, size: 28.r),
-            ),
-            SizedBox(width: 16.w),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    title,
-                    style: TextStyle(
-                      fontSize: 16.sp,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black87,
-                    ),
-                  ),
-                  Text(
-                    subtitle,
-                    style: TextStyle(fontSize: 13.sp, color: Colors.grey[600]),
-                  ),
-                ],
-              ),
-            ),
-            Icon(Icons.arrow_forward_ios, size: 16.r, color: Colors.grey[400]),
-          ],
-        ),
-      ),
-    );
-  }
+
 }

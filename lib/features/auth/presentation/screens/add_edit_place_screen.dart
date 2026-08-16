@@ -81,7 +81,7 @@ class _AddEditPlaceScreenState extends State<AddEditPlaceScreen> {
             'فشل رفع الصورة: $e',
             style: const TextStyle(fontFamily: 'Cairo'),
           ),
-          backgroundColor: Colors.red,
+          backgroundColor: MyColors.myError,
         ),
       );
     }
@@ -90,7 +90,7 @@ class _AddEditPlaceScreenState extends State<AddEditPlaceScreen> {
   Widget _buildImagePreview() {
     if (_isUploadingImage) {
       return const Center(
-        child: CircularProgressIndicator(color: Colors.orange),
+        child: CircularProgressIndicator(color: MyColors.myOrange),
       );
     }
     if (_imageUrl != null && _imageUrl!.startsWith('http')) {
@@ -102,7 +102,7 @@ class _AddEditPlaceScreenState extends State<AddEditPlaceScreen> {
           if (loadingProgress == null) return child;
           return const Center(
             child: CircularProgressIndicator(
-              color: Colors.orange,
+              color: MyColors.myOrange,
               strokeWidth: 2,
             ),
           );
@@ -119,13 +119,13 @@ class _AddEditPlaceScreenState extends State<AddEditPlaceScreen> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Icon(Icons.add_photo_alternate, size: 40.r, color: Colors.grey[400]),
+        Icon(Icons.add_photo_alternate, size: 40.r, color: MyColors.myTextSecondary),
         SizedBox(height: 8.h),
         Text(
           'اضغط لإضافة صورة',
           style: TextStyle(
             fontFamily: 'Cairo',
-            color: Colors.grey[600],
+            color: MyColors.myTextSecondary,
             fontSize: 12.sp,
           ),
         ),
@@ -165,7 +165,7 @@ class _AddEditPlaceScreenState extends State<AddEditPlaceScreen> {
             'الرجاء إضافة صورة للمكان',
             style: TextStyle(fontFamily: 'Cairo'),
           ),
-          backgroundColor: Colors.orange,
+          backgroundColor: MyColors.myOrange,
         ),
       );
       return;
@@ -204,7 +204,7 @@ class _AddEditPlaceScreenState extends State<AddEditPlaceScreen> {
                 '✅ تم إضافة المكان بنجاح',
                 style: TextStyle(fontFamily: 'Cairo'),
               ),
-              backgroundColor: Colors.green,
+              backgroundColor: MyColors.mySuccess,
             ),
           );
         }
@@ -217,7 +217,7 @@ class _AddEditPlaceScreenState extends State<AddEditPlaceScreen> {
                 '✅ تم تحديث المكان بنجاح',
                 style: TextStyle(fontFamily: 'Cairo'),
               ),
-              backgroundColor: Colors.green,
+              backgroundColor: MyColors.mySuccess,
             ),
           );
         }
@@ -232,7 +232,7 @@ class _AddEditPlaceScreenState extends State<AddEditPlaceScreen> {
               '❌ حدث خطأ: $e',
               style: const TextStyle(fontFamily: 'Cairo'),
             ),
-            backgroundColor: Colors.red,
+            backgroundColor: MyColors.myError,
           ),
         );
       }
@@ -253,7 +253,7 @@ class _AddEditPlaceScreenState extends State<AddEditPlaceScreen> {
           style: const TextStyle(fontFamily: 'Cairo'),
         ),
         centerTitle: true,
-        backgroundColor: Colors.white,
+        backgroundColor: MyColors.myWhite,
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
@@ -274,9 +274,9 @@ class _AddEditPlaceScreenState extends State<AddEditPlaceScreen> {
                     width: 150.w,
                     height: 150.w,
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: MyColors.myWhite,
                       borderRadius: BorderRadius.circular(16.r),
-                      border: Border.all(color: Colors.grey[300]!),
+                      border: Border.all(color: MyColors.myBorder),
                       image:
                           (_imageUrl != null && _imageUrl!.startsWith('http'))
                           ? DecorationImage(
@@ -297,7 +297,7 @@ class _AddEditPlaceScreenState extends State<AddEditPlaceScreen> {
                   fontFamily: 'Cairo',
                   fontSize: 14.sp,
                   fontWeight: FontWeight.bold,
-                  color: Colors.black87,
+                  color: MyColors.myDarkText,
                 ),
               ),
               SizedBox(height: 8.h),
@@ -308,20 +308,20 @@ class _AddEditPlaceScreenState extends State<AddEditPlaceScreen> {
                 style: TextStyle(
                   fontFamily: 'Cairo',
                   fontSize: 16.sp,
-                  color: Colors.black87,
+                  color: MyColors.myDarkText,
                 ),
                 decoration: InputDecoration(
                   hintText: 'مثال: مطعم كباب باشا',
                   hintStyle: TextStyle(
                     fontFamily: 'Cairo',
-                    color: Colors.grey[500],
+                    color: MyColors.myTextSecondary,
                     fontSize: 14.sp,
                   ),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12.r),
                   ),
                   filled: true,
-                  fillColor: Colors.white,
+                  fillColor: MyColors.myWhite,
                 ),
                 validator: (value) {
                   if (value == null || value.trim().isEmpty) {
@@ -338,7 +338,7 @@ class _AddEditPlaceScreenState extends State<AddEditPlaceScreen> {
                   fontFamily: 'Cairo',
                   fontSize: 14.sp,
                   fontWeight: FontWeight.bold,
-                  color: Colors.black87,
+                  color: MyColors.myDarkText,
                 ),
               ),
               SizedBox(height: 8.h),
@@ -349,20 +349,20 @@ class _AddEditPlaceScreenState extends State<AddEditPlaceScreen> {
                 style: TextStyle(
                   fontFamily: 'Cairo',
                   fontSize: 16.sp,
-                  color: Colors.black87,
+                  color: MyColors.myDarkText,
                 ),
                 decoration: InputDecoration(
                   hintText: 'مثال: مطعم، مقهى، مخبز',
                   hintStyle: TextStyle(
                     fontFamily: 'Cairo',
-                    color: Colors.grey[500],
+                    color: MyColors.myTextSecondary,
                     fontSize: 14.sp,
                   ),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12.r),
                   ),
                   filled: true,
-                  fillColor: Colors.white,
+                  fillColor: MyColors.myWhite,
                 ),
                 validator: (value) {
                   if (value == null || value.trim().isEmpty) {
@@ -379,7 +379,7 @@ class _AddEditPlaceScreenState extends State<AddEditPlaceScreen> {
                   fontFamily: 'Cairo',
                   fontSize: 14.sp,
                   fontWeight: FontWeight.bold,
-                  color: Colors.black87,
+                  color: MyColors.myDarkText,
                 ),
               ),
               SizedBox(height: 8.h),
@@ -391,20 +391,20 @@ class _AddEditPlaceScreenState extends State<AddEditPlaceScreen> {
                 style: TextStyle(
                   fontFamily: 'Cairo',
                   fontSize: 16.sp,
-                  color: Colors.black87,
+                  color: MyColors.myDarkText,
                 ),
                 decoration: InputDecoration(
                   hintText: 'وصف مختصر عن المكان...',
                   hintStyle: TextStyle(
                     fontFamily: 'Cairo',
-                    color: Colors.grey[500],
+                    color: MyColors.myTextSecondary,
                     fontSize: 14.sp,
                   ),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12.r),
                   ),
                   filled: true,
-                  fillColor: Colors.white,
+                  fillColor: MyColors.myWhite,
                 ),
               ),
               SizedBox(height: 16.h),
@@ -415,7 +415,7 @@ class _AddEditPlaceScreenState extends State<AddEditPlaceScreen> {
                   fontFamily: 'Cairo',
                   fontSize: 14.sp,
                   fontWeight: FontWeight.bold,
-                  color: Colors.black87,
+                  color: MyColors.myDarkText,
                 ),
               ),
               SizedBox(height: 8.h),
@@ -426,20 +426,20 @@ class _AddEditPlaceScreenState extends State<AddEditPlaceScreen> {
                 style: TextStyle(
                   fontFamily: 'Cairo',
                   fontSize: 16.sp,
-                  color: Colors.black87,
+                  color: MyColors.myDarkText,
                 ),
                 decoration: InputDecoration(
                   hintText: 'مثال: الزمالك، القاهرة',
                   hintStyle: TextStyle(
                     fontFamily: 'Cairo',
-                    color: Colors.grey[500],
+                    color: MyColors.myTextSecondary,
                     fontSize: 14.sp,
                   ),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12.r),
                   ),
                   filled: true,
-                  fillColor: Colors.white,
+                  fillColor: MyColors.myWhite,
                 ),
               ),
               SizedBox(height: 30.h),
@@ -456,14 +456,14 @@ class _AddEditPlaceScreenState extends State<AddEditPlaceScreen> {
                     ),
                   ),
                   child: _isLoading
-                      ? const CircularProgressIndicator(color: Colors.white)
+                      ? const CircularProgressIndicator(color: MyColors.myWhite)
                       : Text(
                           isEditing ? 'تحديث المكان' : 'إضافة المكان',
                           style: TextStyle(
                             fontFamily: 'Cairo',
                             fontSize: 18.sp,
                             fontWeight: FontWeight.bold,
-                            color: Colors.white,
+                            color: MyColors.myWhite,
                           ),
                         ),
                 ),

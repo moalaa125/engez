@@ -14,7 +14,6 @@ import 'package:engez/widgets/category_list.dart';
 import 'package:engez/widgets/custom_icon_button.dart';
 import 'package:engez/widgets/custom_offer_section.dart';
 import 'package:engez/widgets/custom_text_field.dart';
-import 'package:engez/widgets/nav_bar.dart';
 import 'package:engez/widgets/place_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -118,7 +117,7 @@ class _HomeScreenState extends State<HomeScreen> {
               }
               return GestureDetector(
                 onTap: () {
-                  context.push('/profile');
+                  context.go('/profile');
                 },
                 child: Padding(
                   padding: const EdgeInsets.only(left: 9),
@@ -147,7 +146,7 @@ class _HomeScreenState extends State<HomeScreen> {
         width: 16.w,
         child: const CircularProgressIndicator(
           strokeWidth: 2,
-          color: Colors.deepOrange,
+          color: MyColors.myOrange,
         ),
       );
     }
@@ -165,7 +164,7 @@ class _HomeScreenState extends State<HomeScreen> {
           style: TextStyle(
             fontFamily: 'cairo',
             fontSize: 13.sp,
-            color: Colors.red,
+            color: MyColors.myError,
           ),
         ),
       );
@@ -281,7 +280,7 @@ class _HomeScreenState extends State<HomeScreen> {
             builder: (context, placeState) {
               if (placeState is PlaceLoading) {
                 return Center(
-                  child: CircularProgressIndicator(color: Colors.deepOrange),
+                  child: CircularProgressIndicator(color: MyColors.myOrange),
                 );
               }
               if (placeState is PlaceError) {
@@ -372,10 +371,6 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildBottomNavBar() {
-    return const NavBar();
-  }
-
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
@@ -384,7 +379,7 @@ class _HomeScreenState extends State<HomeScreen> {
         BlocProvider.value(value: _categoryCubit),
       ],
       child: Scaffold(
-        backgroundColor: MyColors.myWhite,
+        backgroundColor: MyColors.myBackground,
         appBar: _buildAppBar(),
         body: SingleChildScrollView(
           child: Column(
@@ -396,7 +391,6 @@ class _HomeScreenState extends State<HomeScreen> {
             ],
           ),
         ),
-        bottomNavigationBar: _buildBottomNavBar(),
       ),
     );
   }

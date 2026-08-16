@@ -1,3 +1,4 @@
+import 'package:engez/constants/my_colors.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
@@ -51,7 +52,7 @@ class OfferModel {
       if (hex.length == 6) hex = 'FF$hex';
       return Color(int.parse(hex, radix: 16));
     } catch (e) {
-      return Colors.orange;
+      return MyColors.myOrange;
     }
   }
 }

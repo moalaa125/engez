@@ -27,7 +27,7 @@ class CustomTextBubble extends StatelessWidget {
         child: Text(
           text,
           style: TextStyle(
-            color: isSelected ? Colors.white : const Color(0xFF572000),
+            color: isSelected ? MyColors.myWhite : const Color(0xFF572000),
             fontSize: 16.sp,
             fontWeight: FontWeight.bold,
           ),

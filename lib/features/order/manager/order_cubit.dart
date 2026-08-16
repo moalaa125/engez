@@ -53,7 +53,9 @@ class OrderCubit extends Cubit<OrderState> {
   Future<void> updateOrderStatus(String orderId, String newStatus) async {
     try {
       await _repository.updateOrderStatus(orderId, newStatus);
-    } catch (e) {}
+    } catch (e) {
+      // ignore
+    }
   }
 
   @override

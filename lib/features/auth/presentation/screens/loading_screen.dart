@@ -74,7 +74,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
             Text(
               'جاري التحميل...',
               style: TextStyle(
-                color: Colors.grey[600],
+                color: MyColors.myTextSecondary,
                 fontSize: 16.sp,
                 fontFamily: 'cairo',
               ),

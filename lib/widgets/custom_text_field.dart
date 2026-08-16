@@ -9,17 +9,20 @@ class CustomTextField extends StatelessWidget {
     required this.suffixIcon,
     this.controller,
     this.onChanged,
+    this.obscureText = false,
   });
   final String hintText;
   final IconData? suffixIcon;
   final TextEditingController? controller;
   final Function(String)? onChanged;
+  final bool obscureText;
 
   @override
   Widget build(BuildContext context) {
     return TextField(
       controller: controller,
       onChanged: onChanged,
+      obscureText: obscureText,
       textAlign: TextAlign.right,
       cursorColor: MyColors.myOrange,
       decoration: InputDecoration(

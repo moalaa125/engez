@@ -1,4 +1,9 @@
-import 'package:engez/constants/my_colors.dart';
+import 'dart:io';
+
+void main() {
+  final file = File(r'c:\flutter\Engez\lib\router\app_router.dart');
+  
+  String content = '''
 import 'package:engez/features/auth/presentation/screens/loading_screen.dart';
 import 'package:engez/features/auth/presentation/screens/login_screen.dart';
 import 'package:engez/features/auth/presentation/screens/manage_menu_screen.dart';
@@ -21,6 +26,7 @@ import 'package:go_router/go_router.dart';
 
 class AppRouter {
   static final _rootNavigatorKey = GlobalKey<NavigatorState>();
+  static final _shellNavigatorKey = GlobalKey<NavigatorState>();
 
   static final GoRouter router = GoRouter(
     navigatorKey: _rootNavigatorKey,
@@ -173,11 +179,11 @@ class AppRouter {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.error_outline, size: 80, color: MyColors.myBorder),
+            Icon(Icons.error_outline, size: 80, color: Colors.grey[400]),
             const SizedBox(height: 16),
             Text(
               'الصفحة التي تبحث عنها غير موجودة',
-              style: TextStyle(fontSize: 18, color: MyColors.myTextSecondary),
+              style: TextStyle(fontSize: 18, color: Colors.grey[600]),
             ),
             const SizedBox(height: 24),
             ElevatedButton(
@@ -189,4 +195,9 @@ class AppRouter {
       ),
     ),
   );
+}
+''';
+
+  file.writeAsStringSync(content);
+  print('Done rewriting app_router.dart');
 }

@@ -41,7 +41,7 @@ class _OwnerOrdersScreenState extends State<OwnerOrdersScreen> {
       case 'pending':
         return MyColors.myWarning;
       case 'confirmed':
-        return Colors.blue;
+        return MyColors.myInfo;
       case 'delivered':
         return MyColors.mySuccess;
       case 'cancelled':
@@ -188,7 +188,7 @@ class _OwnerOrdersScreenState extends State<OwnerOrdersScreen> {
                                       .updateOrderStatus(order.id, 'confirmed'),
                                   child: const Text(
                                     'تأكيد',
-                                    style: TextStyle(color: Colors.white),
+                                    style: TextStyle(color: MyColors.myWhite),
                                   ),
                                 ),
                               ),
@@ -203,7 +203,7 @@ class _OwnerOrdersScreenState extends State<OwnerOrdersScreen> {
                                       .updateOrderStatus(order.id, 'cancelled'),
                                   child: const Text(
                                     'رفض',
-                                    style: TextStyle(color: Colors.white),
+                                    style: TextStyle(color: MyColors.myWhite),
                                   ),
                                 ),
                               ),
