@@ -11,6 +11,8 @@ import 'package:engez/services/user_service.dart';
 import 'package:engez/widgets/custom_image.dart';
 import 'package:engez/widgets/custom_text_field.dart';
 import 'package:engez/widgets/custom_button.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 
 class Profile extends StatefulWidget {
   const Profile({super.key});
@@ -25,11 +27,19 @@ class _ProfileState extends State<Profile> {
   final UserService _userService = UserService();
   bool _isRequestingOwner = false;
   bool _hasPendingRequest = false;
+  late final Stream<DocumentSnapshot>? _userDocStream;
 
   @override
   void initState() {
     super.initState();
     _checkPendingRequest();
+    
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      _userDocStream = FirebaseFirestore.instance.collection('users').doc(user.uid).snapshots();
+    } else {
+      _userDocStream = null;
+    }
   }
 
   Future<void> _checkPendingRequest() async {
@@ -85,101 +95,6 @@ class _ProfileState extends State<Profile> {
     } finally {
       if (mounted) setState(() => _isUploading = false);
     }
-  }
-
-  void _showEditProfileSheet(String currentName) {
-    final nameController = TextEditingController(text: currentName);
-    bool isLoading = false;
-
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      builder: (context) {
-        return StatefulBuilder(
-          builder: (context, setSheetState) {
-            return Padding(
-              padding: EdgeInsets.only(
-                bottom: MediaQuery.of(context).viewInsets.bottom,
-              ),
-              child: Container(
-                padding: EdgeInsets.all(24.w),
-                decoration: BoxDecoration(
-                  color: MyColors.myWhite,
-                  borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
-                ),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      'تعديل الملف الشخصي',
-                      style: TextStyle(
-                        fontSize: 18.sp,
-                        fontWeight: FontWeight.bold,
-                        color: MyColors.myDarkText,
-                      ),
-                    ),
-                    SizedBox(height: 20.h),
-                    CustomTextField(
-                      controller: nameController,
-                      hintText: 'الاسم',
-                      suffixIcon: Icons.person_outline,
-                    ),
-                    SizedBox(height: 20.h),
-                    isLoading
-                        ? const CircularProgressIndicator(color: MyColors.myOrange)
-                        : CustomButton(
-                            text: 'حفظ',
-                            buttonColor: MyColors.myOrange,
-                            textColor: MyColors.myWhite,
-                            function: () async {
-                              final newName = nameController.text.trim();
-                              if (newName.isEmpty) return;
-
-                              setSheetState(() => isLoading = true);
-                              try {
-                                final user = FirebaseAuth.instance.currentUser;
-                                if (user != null) {
-                                  await FirebaseFirestore.instance
-                                      .collection('users')
-                                      .doc(user.uid)
-                                      .set({
-                                    'userName': newName,
-                                  }, SetOptions(merge: true));
-                                }
-                                if (context.mounted) {
-                                  Navigator.pop(context);
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                      content: Text('تم تحديث الاسم بنجاح'),
-                                      backgroundColor: MyColors.mySuccess,
-                                    ),
-                                  );
-                                }
-                              } catch (e) {
-                                if (context.mounted) {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                      content: Text('حدث خطأ: $e'),
-                                      backgroundColor: MyColors.myError,
-                                    ),
-                                  );
-                                }
-                              } finally {
-                                if (mounted) {
-                                  setSheetState(() => isLoading = false);
-                                }
-                              }
-                            },
-                          ),
-                  ],
-                ),
-              ),
-            );
-          },
-        );
-      },
-    );
   }
 
   void _showChangePasswordSheet() {
@@ -295,6 +210,7 @@ class _ProfileState extends State<Profile> {
     setState(() => _isRequestingOwner = true);
     try {
       await _userService.requestOwnerRole(uid);
+      FirebaseAnalytics.instance.logEvent(name: 'owner_request_submitted');
       setState(() => _hasPendingRequest = true);
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -328,10 +244,7 @@ class _ProfileState extends State<Profile> {
     return Scaffold(
       backgroundColor: MyColors.myBackground,
       body: StreamBuilder<DocumentSnapshot>(
-        stream: FirebaseFirestore.instance
-            .collection('users')
-            .doc(user?.uid)
-            .snapshots(),
+        stream: _userDocStream ?? const Stream.empty(),
         builder: (context, snapshot) {
           String userName = user?.displayName ?? 'لا يوجد اسم';
           String? profileImageUrl = user?.photoURL;
@@ -353,19 +266,15 @@ class _ProfileState extends State<Profile> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      _buildSectionTitle('الحساب'),
-                      _buildProfileOption(
-                        Icons.person_outline,
-                        'تعديل الملف الشخصي',
-                        () => _showEditProfileSheet(userName),
-                      ),
-                      if (hasPasswordProvider)
+                      if (hasPasswordProvider) ...[
+                        _buildSectionTitle('الحساب'),
                         _buildProfileOption(
                           Icons.lock_outline,
                           'تغيير كلمة المرور',
                           _showChangePasswordSheet,
                         ),
-                      SizedBox(height: 20.h),
+                        SizedBox(height: 20.h),
+                      ],
                       
                       _buildSectionTitle('الطلبات'),
                       _buildProfileOption(
@@ -382,6 +291,31 @@ class _ProfileState extends State<Profile> {
                         _buildOwnerRequestOption(user?.uid),
                         SizedBox(height: 20.h),
                       ],
+
+                      _buildSectionTitle('حول التطبيق'),
+                      _buildProfileOption(
+                        Icons.privacy_tip_outlined,
+                        'سياسة الخصوصية',
+                        () async {
+                          // TODO: replace with real hosted privacy policy URL before release
+                          final url = Uri.parse('https://engez.app/privacy');
+                          if (await canLaunchUrl(url)) {
+                            await launchUrl(url);
+                          }
+                        },
+                      ),
+                      _buildProfileOption(
+                        Icons.description_outlined,
+                        'شروط الاستخدام',
+                        () async {
+                          // TODO: replace with real hosted terms URL before release
+                          final url = Uri.parse('https://engez.app/terms');
+                          if (await canLaunchUrl(url)) {
+                            await launchUrl(url);
+                          }
+                        },
+                      ),
+                      SizedBox(height: 20.h),
 
                       SizedBox(height: 10.h),
                       _buildLogoutButton(),

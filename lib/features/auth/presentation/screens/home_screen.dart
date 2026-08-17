@@ -33,6 +33,8 @@ class _HomeScreenState extends State<HomeScreen> {
   final TextEditingController _searchController = TextEditingController();
   String _searchQuery = '';
 
+  late final Stream<DocumentSnapshot>? _userDocStream;
+
   @override
   void initState() {
     super.initState();
@@ -41,6 +43,13 @@ class _HomeScreenState extends State<HomeScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<PlaceCubit>().fetchPlaces();
     });
+    
+    final uid = FirebaseAuth.instance.currentUser?.uid;
+    if (uid != null) {
+      _userDocStream = FirebaseFirestore.instance.collection('users').doc(uid).snapshots();
+    } else {
+      _userDocStream = null;
+    }
   }
 
   @override
@@ -105,10 +114,7 @@ class _HomeScreenState extends State<HomeScreen> {
         Padding(
           padding: EdgeInsets.only(right: 10.w),
           child: StreamBuilder<DocumentSnapshot>(
-            stream: FirebaseFirestore.instance
-                .collection('users')
-                .doc(user?.uid)
-                .snapshots(),
+            stream: _userDocStream ?? const Stream.empty(),
             builder: (context, snapshot) {
               String? imageUrl = user?.photoURL;
               if (snapshot.hasData && snapshot.data!.exists) {
@@ -329,8 +335,12 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   );
                 }
-                return Column(
-                  children: filteredPlaces.map((place) {
+                return ListView.builder(
+                  physics: const NeverScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  itemCount: filteredPlaces.length,
+                  itemBuilder: (context, index) {
+                    final place = filteredPlaces[index];
                     return Padding(
                       padding: EdgeInsets.only(bottom: 20.h),
                       child: PlaceCard(
@@ -347,7 +357,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         onFavoriteTap: () {},
                       ),
                     );
-                  }).toList(),
+                  },
                 );
               }
               return const SizedBox.shrink();

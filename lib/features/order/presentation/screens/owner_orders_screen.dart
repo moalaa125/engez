@@ -1,4 +1,5 @@
 import 'package:engez/constants/my_colors.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:engez/features/order/manager/order_cubit.dart';
 import 'package:engez/features/order/manager/order_state.dart';
 import 'package:engez/models/place_model.dart';
@@ -28,7 +29,7 @@ class _OwnerOrdersScreenState extends State<OwnerOrdersScreen> {
       case 'confirmed':
         return 'مؤكد';
       case 'delivered':
-        return 'تم التوصيل';
+        return 'تم الاستلام';
       case 'cancelled':
         return 'ملغي';
       default:
@@ -198,9 +199,19 @@ class _OwnerOrdersScreenState extends State<OwnerOrdersScreen> {
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: MyColors.myError,
                                   ),
-                                  onPressed: () => context
-                                      .read<OrderCubit>()
-                                      .updateOrderStatus(order.id, 'cancelled'),
+                                  onPressed: () {
+                                    context
+                                        .read<OrderCubit>()
+                                        .updateOrderStatus(order.id, 'cancelled');
+                                        
+                                    FirebaseAnalytics.instance.logEvent(
+                                      name: 'order_cancelled',
+                                      parameters: {
+                                        'order_id': order.id,
+                                        'total_price': order.totalPrice,
+                                      },
+                                    );
+                                  },
                                   child: const Text(
                                     'رفض',
                                     style: TextStyle(color: MyColors.myWhite),

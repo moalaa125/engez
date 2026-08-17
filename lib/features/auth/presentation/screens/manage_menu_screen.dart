@@ -7,6 +7,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:engez/constants/my_colors.dart';
 import 'package:engez/features/menu/models/menu_item_model.dart';
+import 'package:engez/widgets/custom_image.dart';
 import 'package:engez/models/place_model.dart';
 import 'package:engez/repositories/menu_item_repository.dart';
 import 'package:engez/services/upload_service.dart';
@@ -253,8 +254,8 @@ class _ManageMenuScreenContentState extends State<_ManageMenuScreenContent> {
                     itemBuilder: (context, index) {
                       final item = state.items[index];
                       return ListTile(
-                        leading: Image.network(
-                          item.imagePath,
+                        leading: CustomImage(
+                          imagePath: item.imagePath,
                           width: 50,
                           height: 50,
                           fit: BoxFit.cover,

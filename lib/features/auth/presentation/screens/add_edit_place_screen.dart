@@ -8,6 +8,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:engez/constants/my_colors.dart';
 import 'package:engez/features/place/place_cubit.dart';
 import 'package:engez/models/place_model.dart';
+import 'package:engez/widgets/custom_image.dart';
 import 'package:engez/services/upload_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -94,19 +95,9 @@ class _AddEditPlaceScreenState extends State<AddEditPlaceScreen> {
       );
     }
     if (_imageUrl != null && _imageUrl!.startsWith('http')) {
-      return Image.network(
-        _imageUrl!,
+      return CustomImage(
+        imagePath: _imageUrl!,
         fit: BoxFit.cover,
-        errorBuilder: (context, error, stackTrace) => _buildPlaceholderImage(),
-        loadingBuilder: (context, child, loadingProgress) {
-          if (loadingProgress == null) return child;
-          return const Center(
-            child: CircularProgressIndicator(
-              color: MyColors.myOrange,
-              strokeWidth: 2,
-            ),
-          );
-        },
       );
     }
     if (_imageFile != null) {

@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:engez/features/order/models/order_model.dart';
 import 'package:engez/features/order/manager/order_cubit.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -336,6 +337,16 @@ class CartScreen extends StatelessWidget {
                             );
 
                             context.read<OrderCubit>().createOrder(order);
+                            
+                            FirebaseAnalytics.instance.logEvent(
+                              name: 'order_placed',
+                              parameters: {
+                                'total_price': state.totalPrice,
+                                'place_id': resolvedPlaceId,
+                                'item_count': state.items.length,
+                              },
+                            );
+
                             context.read<CartCubit>().clearCart();
 
                             ScaffoldMessenger.of(context).showSnackBar(

@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:engez/constants/my_colors.dart';
 import 'package:engez/services/user_service.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 
 class RoleSelectionScreen extends StatefulWidget {
   const RoleSelectionScreen({super.key});
@@ -67,6 +68,7 @@ class _RoleSelectionScreenState extends State<RoleSelectionScreen> {
         if (mounted) context.go('/home');
       } else if (selectedRole == 'owner') {
         await UserService().requestOwnerRole(user.uid);
+        FirebaseAnalytics.instance.logEvent(name: 'owner_request_submitted');
 
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(

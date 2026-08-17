@@ -30,7 +30,7 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
       case 'confirmed':
         return 'مؤكد';
       case 'delivered':
-        return 'تم التوصيل';
+        return 'تم الاستلام';
       case 'cancelled':
         return 'ملغي';
       default:

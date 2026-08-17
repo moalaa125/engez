@@ -3,6 +3,9 @@ import 'package:engez/features/auth/manager/auth_cubit.dart';
 import 'package:engez/features/auth/manager/auth_state.dart';
 import 'package:engez/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/gestures.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
@@ -42,6 +45,8 @@ class _LoginScreenContentState extends State<_LoginScreenContent> {
               backgroundColor: MyColors.mySuccess,
             ),
           );
+
+          FirebaseAnalytics.instance.logEvent(name: 'sign_up');
 
           Future.delayed(const Duration(milliseconds: 500), () {
             if (mounted) {
@@ -116,9 +121,51 @@ class _LoginScreenContentState extends State<_LoginScreenContent> {
   }
 
   Widget _buildEndMessage() {
-    return const Text(
-      'بالمتابعه انت توافق علي\n شروط الاستخدام والخصوصيه',
+    return RichText(
       textAlign: TextAlign.center,
+      text: TextSpan(
+        style: TextStyle(
+          color: MyColors.myDarkText,
+          fontSize: 14.sp,
+          fontFamily: 'cairo',
+        ),
+        children: [
+          const TextSpan(text: 'بالمتابعه انت توافق علي\n'),
+          TextSpan(
+            text: 'شروط الاستخدام',
+            style: const TextStyle(
+              color: MyColors.myOrange,
+              fontWeight: FontWeight.bold,
+              decoration: TextDecoration.underline,
+            ),
+            recognizer: TapGestureRecognizer()
+              ..onTap = () async {
+                // TODO: replace with real hosted privacy policy URL before release
+                final url = Uri.parse('https://engez.app/terms');
+                if (await canLaunchUrl(url)) {
+                  await launchUrl(url);
+                }
+              },
+          ),
+          const TextSpan(text: ' و '),
+          TextSpan(
+            text: 'الخصوصيه',
+            style: const TextStyle(
+              color: MyColors.myOrange,
+              fontWeight: FontWeight.bold,
+              decoration: TextDecoration.underline,
+            ),
+            recognizer: TapGestureRecognizer()
+              ..onTap = () async {
+                // TODO: replace with real hosted privacy policy URL before release
+                final url = Uri.parse('https://engez.app/privacy');
+                if (await canLaunchUrl(url)) {
+                  await launchUrl(url);
+                }
+              },
+          ),
+        ],
+      ),
     );
   }
 

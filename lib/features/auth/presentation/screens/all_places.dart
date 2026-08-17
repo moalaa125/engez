@@ -100,8 +100,12 @@ class AllPlaces extends StatelessWidget {
                   );
                 }
 
-                return Column(
-                  children: filteredPlaces.map((place) {
+                return ListView.builder(
+                  physics: const NeverScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  itemCount: filteredPlaces.length,
+                  itemBuilder: (context, index) {
+                    final place = filteredPlaces[index];
                     return Padding(
                       padding: EdgeInsets.only(bottom: 20.h),
                       child: PlaceCard(
@@ -118,7 +122,7 @@ class AllPlaces extends StatelessWidget {
                         onFavoriteTap: () {},
                       ),
                     );
-                  }).toList(),
+                  },
                 );
               }
               return const SizedBox.shrink();

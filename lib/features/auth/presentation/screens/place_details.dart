@@ -215,11 +215,13 @@ class PlaceDetailsScreen extends StatelessWidget {
                 if (items.isEmpty) {
                   return const Text('لا توجد عناصر في القائمة');
                 }
-                return ListView(
+                return ListView.builder(
                   physics: const NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
                   padding: EdgeInsets.zero,
-                  children: items.map((item) {
+                  itemCount: items.length,
+                  itemBuilder: (context, index) {
+                    final item = items[index];
                     final cartState = context.watch<CartCubit>().state;
                     int currentQuantity =
                         cartState.items
@@ -246,7 +248,7 @@ class PlaceDetailsScreen extends StatelessWidget {
                         context.read<CartCubit>().decrementItem(item.id);
                       },
                     );
-                  }).toList(),
+                  },
                 );
               }
               return const SizedBox.shrink();
@@ -391,7 +393,7 @@ class PlaceDetailsScreen extends StatelessWidget {
                             ),
                             SizedBox(width: 10.w),
                             Text(
-                              'التوصيل متاح',
+                              'استلام من المكان',
                               style: TextStyle(
                                 color: MyColors.myTextSecondary,
                                 fontSize: 13.sp,
