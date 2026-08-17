@@ -1,10 +1,12 @@
 import 'dart:io';
 import 'package:engez/features/menu/manger/menu_item_cubit.dart';
 import 'package:engez/features/menu/manger/menu_item_state.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:engez/widgets/result_feedback.dart';
 import 'package:engez/constants/my_colors.dart';
 import 'package:engez/features/menu/models/menu_item_model.dart';
 import 'package:engez/widgets/custom_image.dart';
@@ -129,12 +131,30 @@ class _ManageMenuScreenContentState extends State<_ManageMenuScreenContent> {
       imagePath: _imageUrl!,
       price: price,
     );
-    if (_isEditing) {
-      await context.read<MenuItemCubit>().updateMenuItem(item);
-    } else {
-      await context.read<MenuItemCubit>().addMenuItem(item);
+    try {
+      if (_isEditing) {
+        await context.read<MenuItemCubit>().updateMenuItem(item);
+      } else {
+        await context.read<MenuItemCubit>().addMenuItem(item);
+      }
+      
+      if (mounted) {
+        showResultFeedback(
+          context,
+          isSuccess: true,
+          message: _isEditing ? 'تم تحديث العنصر بنجاح' : 'تم إضافة العنصر بنجاح',
+        );
+      }
+      _resetForm();
+    } catch (e) {
+      if (mounted) {
+        showResultFeedback(
+          context,
+          isSuccess: false,
+          message: 'حدث خطأ: $e',
+        );
+      }
     }
-    _resetForm();
   }
 
   @override
@@ -237,50 +257,74 @@ class _ManageMenuScreenContentState extends State<_ManageMenuScreenContent> {
           Expanded(
             child: BlocBuilder<MenuItemCubit, MenuItemState>(
               builder: (context, state) {
-                if (state is MenuItemLoading) {
-                  return const Center(child: CircularProgressIndicator());
-                }
+                final isLoading = state is MenuItemLoading;
                 if (state is MenuItemError) {
                   return Center(child: Text('خطأ: ${state.message}'));
                 }
-                if (state is MenuItemLoaded) {
-                  if (state.items.isEmpty) {
+                if (isLoading || state is MenuItemLoaded) {
+                  final items = isLoading ? [] : (state as MenuItemLoaded).items;
+                  if (!isLoading && items.isEmpty) {
                     return const Center(
                       child: Text('لا توجد عناصر في القائمة'),
                     );
                   }
-                  return ListView.builder(
-                    itemCount: state.items.length,
-                    itemBuilder: (context, index) {
-                      final item = state.items[index];
-                      return ListTile(
-                        leading: CustomImage(
-                          imagePath: item.imagePath,
-                          width: 50,
-                          height: 50,
-                          fit: BoxFit.cover,
-                        ),
-                        title: Text(item.title),
-                        subtitle: Text('${item.price} ج.م'),
-                        trailing: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            IconButton(
-                              icon: const Icon(Icons.edit),
-                              onPressed: () => _editItem(item),
+                  
+                  final itemsCount = isLoading ? 5 : items.length;
+                  
+                  return Skeletonizer(
+                    enabled: isLoading,
+                    child: ListView.builder(
+                      itemCount: itemsCount,
+                      itemBuilder: (context, index) {
+                        if (isLoading) {
+                          return ListTile(
+                            leading: Container(
+                              width: 50,
+                              height: 50,
+                              color: Colors.grey.shade300,
                             ),
-                            IconButton(
-                              icon: const Icon(Icons.delete, color: MyColors.myError),
-                              onPressed: () {
-                                context.read<MenuItemCubit>().deleteMenuItem(
-                                  item.id,
-                                );
-                              },
+                            title: const Text('اسم العنصر التجريبي'),
+                            subtitle: const Text('100 ج.م'),
+                            trailing: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                IconButton(icon: const Icon(Icons.edit), onPressed: () {}),
+                                IconButton(icon: const Icon(Icons.delete), onPressed: () {}),
+                              ],
                             ),
-                          ],
-                        ),
-                      );
-                    },
+                          );
+                        }
+                        
+                        final item = items[index];
+                        return ListTile(
+                          leading: CustomImage(
+                            imagePath: item.imagePath,
+                            width: 50,
+                            height: 50,
+                            fit: BoxFit.cover,
+                          ),
+                          title: Text(item.title),
+                          subtitle: Text('${item.price} ج.م'),
+                          trailing: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              IconButton(
+                                icon: const Icon(Icons.edit),
+                                onPressed: () => _editItem(item),
+                              ),
+                              IconButton(
+                                icon: const Icon(Icons.delete, color: MyColors.myError),
+                                onPressed: () {
+                                  context.read<MenuItemCubit>().deleteMenuItem(
+                                    item.id,
+                                  );
+                                },
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    ),
                   );
                 }
                 return const SizedBox.shrink();

@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:engez/features/offer/manager/offer_cubit.dart';
 import 'package:engez/features/offer/manager/offer_state.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 class OffersScreen extends StatelessWidget {
   const OffersScreen({super.key});
@@ -29,14 +30,14 @@ class OffersScreen extends StatelessWidget {
         padding: EdgeInsets.all(16.w),
         child: BlocBuilder<OfferCubit, OfferState>(
           builder: (context, state) {
-            if (state is OfferLoading) {
-              return const Center(child: CircularProgressIndicator());
-            }
+            final isLoading = state is OfferLoading;
             if (state is OfferError) {
               return Center(child: Text('خطأ: ${state.message}'));
             }
-            if (state is OfferLoaded) {
-              if (state.offers.isEmpty) {
+            if (isLoading || state is OfferLoaded) {
+              final offers = isLoading ? [] : (state as OfferLoaded).offers;
+              
+              if (!isLoading && offers.isEmpty) {
                 return Center(
                   child: Text(
                     'لا توجد عروض حالياً',
@@ -47,17 +48,26 @@ class OffersScreen extends StatelessWidget {
                   ),
                 );
               }
-              return ListView.builder(
-                itemCount: state.offers.length,
-                itemBuilder: (context, index) {
-                  final offer = state.offers[index];
-                  return _buildOfferCard(
-                    offer.discount,
-                    offer.title,
-                    offer.iconData,
-                    offer.color,
-                  );
-                },
+              
+              final itemsCount = isLoading ? 4 : offers.length;
+              
+              return Skeletonizer(
+                enabled: isLoading,
+                child: ListView.builder(
+                  itemCount: itemsCount,
+                  itemBuilder: (context, index) {
+                    if (isLoading) {
+                      return _buildOfferCard('20%', 'خصم تجريبي', Icons.local_offer, MyColors.myOrange);
+                    }
+                    final offer = offers[index];
+                    return _buildOfferCard(
+                      offer.discount,
+                      offer.title,
+                      offer.iconData,
+                      offer.color,
+                    );
+                  },
+                ),
               );
             }
             return const SizedBox.shrink();

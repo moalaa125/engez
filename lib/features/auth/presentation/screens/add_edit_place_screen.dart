@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:engez/widgets/result_feedback.dart';
 import 'package:engez/constants/my_colors.dart';
 import 'package:engez/features/place/place_cubit.dart';
 import 'package:engez/models/place_model.dart';
@@ -189,42 +190,34 @@ class _AddEditPlaceScreenState extends State<AddEditPlaceScreen> {
             .doc(user.uid)
             .update({'placeId': placeId, 'placeName': place.title});
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text(
-                '✅ تم إضافة المكان بنجاح',
-                style: TextStyle(fontFamily: 'Cairo'),
-              ),
-              backgroundColor: MyColors.mySuccess,
-            ),
+          showResultFeedback(
+            context,
+            isSuccess: true,
+            message: 'تم إضافة المكان بنجاح',
+            onDone: () {
+              if (mounted) context.pop(true);
+            },
           );
         }
       } else {
         await context.read<PlaceCubit>().updatePlace(place);
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text(
-                '✅ تم تحديث المكان بنجاح',
-                style: TextStyle(fontFamily: 'Cairo'),
-              ),
-              backgroundColor: MyColors.mySuccess,
-            ),
+          showResultFeedback(
+            context,
+            isSuccess: true,
+            message: 'تم تحديث المكان بنجاح',
+            onDone: () {
+              if (mounted) context.pop(true);
+            },
           );
         }
       }
-
-      if (mounted) context.pop(true);
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              '❌ حدث خطأ: $e',
-              style: const TextStyle(fontFamily: 'Cairo'),
-            ),
-            backgroundColor: MyColors.myError,
-          ),
+        showResultFeedback(
+          context,
+          isSuccess: false,
+          message: 'حدث خطأ: $e',
         );
       }
     } finally {

@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:engez/widgets/result_feedback.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:engez/features/order/models/order_model.dart';
 import 'package:engez/features/order/manager/order_cubit.dart';
@@ -349,13 +350,14 @@ class CartScreen extends StatelessWidget {
 
                             context.read<CartCubit>().clearCart();
 
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: const Text('تم إرسال الطلب بنجاح!'),
-                                backgroundColor: MyColors.mySuccess,
-                              ),
+                            showResultFeedback(
+                              context,
+                              isSuccess: true,
+                              message: 'تم إرسال الطلب بنجاح!',
+                              onDone: () {
+                                if (context.mounted) context.pop();
+                              },
                             );
-                            context.pop();
                           },
                           child: Text(
                             'إتمام الطلب',

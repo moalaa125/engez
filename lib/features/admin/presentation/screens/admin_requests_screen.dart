@@ -4,6 +4,8 @@ import 'package:engez/features/admin/manager/admin_requests_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:skeletonizer/skeletonizer.dart';
+import 'package:engez/features/admin/models/admin_request_model.dart';
 
 class AdminRequestsScreen extends StatefulWidget {
   const AdminRequestsScreen({super.key});
@@ -33,15 +35,18 @@ class _AdminRequestsScreenState extends State<AdminRequestsScreen> {
       ),
       body: BlocBuilder<AdminRequestsCubit, AdminRequestsState>(
         builder: (context, state) {
-          if (state is AdminRequestsLoading) {
-            return const Center(child: CircularProgressIndicator());
-          }
+          final isLoading = state is AdminRequestsLoading;
           if (state is AdminRequestsError) {
             return Center(child: Text('حدث خطأ: ${state.message}'));
           }
-          if (state is AdminRequestsLoaded) {
-            final requests = state.requests;
-            if (requests.isEmpty) {
+          if (isLoading || state is AdminRequestsLoaded) {
+            final requests = isLoading ? List.generate(4, (index) => AdminRequestModel(
+              uid: '',
+              status: 'pending',
+              userName: 'اسم تجريبي للمالك',
+              email: 'test@example.com',
+            )) : (state as AdminRequestsLoaded).requests;
+            if (!isLoading && requests.isEmpty) {
               return Center(
                 child: Text(
                   'لا توجد طلبات انضمام جديدة',
@@ -52,10 +57,12 @@ class _AdminRequestsScreenState extends State<AdminRequestsScreen> {
                 ),
               );
             }
-            return ListView.builder(
-              padding: EdgeInsets.all(16.w),
-              itemCount: requests.length,
-              itemBuilder: (context, index) {
+            return Skeletonizer(
+              enabled: isLoading,
+              child: ListView.builder(
+                padding: EdgeInsets.all(16.w),
+                itemCount: requests.length,
+                itemBuilder: (context, index) {
                 final request = requests[index];
                 return Card(
                   margin: EdgeInsets.only(bottom: 16.h),
@@ -123,8 +130,9 @@ class _AdminRequestsScreenState extends State<AdminRequestsScreen> {
                   ),
                 );
               },
-            );
-          }
+            ),
+          );
+        }
           return const SizedBox.shrink();
         },
       ),

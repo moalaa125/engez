@@ -2,6 +2,7 @@ import 'package:engez/constants/my_colors.dart';
 import 'package:engez/features/auth/manager/auth_cubit.dart';
 import 'package:engez/features/auth/manager/auth_state.dart';
 import 'package:engez/widgets/custom_button.dart';
+import 'package:engez/widgets/result_feedback.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -39,26 +40,23 @@ class _LoginScreenContentState extends State<_LoginScreenContent> {
     return BlocConsumer<AuthCubit, AuthState>(
       listener: (context, state) {
         if (state is AuthSuccess) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('تم تسجيل الدخول بنجاح'),
-              backgroundColor: MyColors.mySuccess,
-            ),
-          );
-
           FirebaseAnalytics.instance.logEvent(name: 'sign_up');
 
-          Future.delayed(const Duration(milliseconds: 500), () {
-            if (mounted) {
-              context.go('/loading');
-            }
-          });
+          showResultFeedback(
+            context,
+            isSuccess: true,
+            message: 'تم تسجيل الدخول بنجاح',
+            onDone: () {
+              if (mounted) {
+                context.go('/loading');
+              }
+            },
+          );
         } else if (state is AuthError) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(state.errorMessage),
-              backgroundColor: MyColors.myError,
-            ),
+          showResultFeedback(
+            context,
+            isSuccess: false,
+            message: state.errorMessage,
           );
         }
       },

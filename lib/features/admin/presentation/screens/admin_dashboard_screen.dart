@@ -2,6 +2,7 @@ import 'package:engez/constants/my_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:engez/widgets/result_feedback.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:engez/widgets/dashboard_menu_tile.dart';
@@ -81,17 +82,19 @@ class AdminDashboardScreen extends StatelessWidget {
                     'colorHex': '#FFB74D',
                   });
                   if (context.mounted) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('تمت إضافة العروض التجريبية بنجاح!'),
-                      ),
+                    showResultFeedback(
+                      context,
+                      isSuccess: true,
+                      message: 'تمت إضافة العروض التجريبية بنجاح!',
                     );
                   }
                 } catch (e) {
                   if (context.mounted) {
-                    ScaffoldMessenger.of(
+                    showResultFeedback(
                       context,
-                    ).showSnackBar(SnackBar(content: Text('خطأ: $e')));
+                      isSuccess: false,
+                      message: 'خطأ: $e',
+                    );
                   }
                 }
               },

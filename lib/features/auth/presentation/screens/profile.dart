@@ -13,6 +13,7 @@ import 'package:engez/widgets/custom_text_field.dart';
 import 'package:engez/widgets/custom_button.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:engez/widgets/result_feedback.dart';
 
 class Profile extends StatefulWidget {
   const Profile({super.key});
@@ -76,20 +77,18 @@ class _ProfileState extends State<Profile> {
       }, SetOptions(merge: true));
 
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('تم تحديث الصورة الشخصية بنجاح!'),
-            backgroundColor: MyColors.mySuccess,
-          ),
+        showResultFeedback(
+          context,
+          isSuccess: true,
+          message: 'تم تحديث الصورة الشخصية بنجاح!',
         );
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('فشل رفع الصورة: $e'),
-            backgroundColor: MyColors.myError,
-          ),
+        showResultFeedback(
+          context,
+          isSuccess: false,
+          message: 'فشل رفع الصورة: $e',
         );
       }
     } finally {
@@ -172,21 +171,19 @@ class _ProfileState extends State<Profile> {
 
                                   if (context.mounted) {
                                     Navigator.pop(context);
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(
-                                        content: Text('تم تغيير كلمة المرور بنجاح'),
-                                        backgroundColor: MyColors.mySuccess,
-                                      ),
+                                    showResultFeedback(
+                                      context,
+                                      isSuccess: true,
+                                      message: 'تم تغيير كلمة المرور بنجاح',
                                     );
                                   }
                                 }
                               } catch (e) {
                                 if (context.mounted) {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                      content: Text('كلمة المرور الحالية غير صحيحة أو حدث خطأ'),
-                                      backgroundColor: MyColors.myError,
-                                    ),
+                                  showResultFeedback(
+                                    context,
+                                    isSuccess: false,
+                                    message: 'كلمة المرور الحالية غير صحيحة أو حدث خطأ',
                                   );
                                 }
                               } finally {
@@ -213,20 +210,18 @@ class _ProfileState extends State<Profile> {
       FirebaseAnalytics.instance.logEvent(name: 'owner_request_submitted');
       setState(() => _hasPendingRequest = true);
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('تم إرسال طلبك. ستتم مراجعته من الإدارة.'),
-            backgroundColor: MyColors.mySuccess,
-          ),
+        showResultFeedback(
+          context,
+          isSuccess: true,
+          message: 'تم إرسال طلبك. ستتم مراجعته من الإدارة.',
         );
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('حدث خطأ أثناء تقديم الطلب: $e'),
-            backgroundColor: MyColors.myError,
-          ),
+        showResultFeedback(
+          context,
+          isSuccess: false,
+          message: 'حدث خطأ أثناء تقديم الطلب: $e',
         );
       }
     } finally {

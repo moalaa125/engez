@@ -19,6 +19,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:skeletonizer/skeletonizer.dart';
+import 'package:engez/models/place_model.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -43,10 +45,13 @@ class _HomeScreenState extends State<HomeScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<PlaceCubit>().fetchPlaces();
     });
-    
+
     final uid = FirebaseAuth.instance.currentUser?.uid;
     if (uid != null) {
-      _userDocStream = FirebaseFirestore.instance.collection('users').doc(uid).snapshots();
+      _userDocStream = FirebaseFirestore.instance
+          .collection('users')
+          .doc(uid)
+          .snapshots();
     } else {
       _userDocStream = null;
     }
@@ -284,11 +289,7 @@ class _HomeScreenState extends State<HomeScreen> {
           SizedBox(height: 16.h),
           BlocBuilder<PlaceCubit, PlaceState>(
             builder: (context, placeState) {
-              if (placeState is PlaceLoading) {
-                return Center(
-                  child: CircularProgressIndicator(color: MyColors.myOrange),
-                );
-              }
+              final isLoading = placeState is PlaceLoading;
               if (placeState is PlaceError) {
                 return Center(
                   child: Column(
@@ -303,21 +304,24 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 );
               }
-              if (placeState is PlaceLoaded) {
+
+              if (isLoading || placeState is PlaceLoaded) {
                 final selectedIndex = context
                     .watch<SelectCategoryCubit>()
                     .state
                     .selectedIndex;
                 final selectedCategory = categories[selectedIndex];
 
-                final allPlaces = placeState.places;
+                final allPlaces = isLoading
+                    ? <Place>[]
+                    : (placeState as PlaceLoaded).places;
                 var filteredPlaces = selectedCategory == PlaceCategories.all
                     ? allPlaces
                     : allPlaces
                           .where((p) => p.category == selectedCategory)
                           .toList();
 
-                if (_searchQuery.isNotEmpty) {
+                if (!isLoading && _searchQuery.isNotEmpty) {
                   filteredPlaces = filteredPlaces
                       .where(
                         (p) =>
@@ -327,7 +331,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       .toList();
                 }
 
-                if (filteredPlaces.isEmpty) {
+                if (!isLoading && filteredPlaces.isEmpty) {
                   return Center(
                     child: Text(
                       'لا توجد أماكن في هذا التصنيف',
@@ -335,29 +339,41 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   );
                 }
-                return ListView.builder(
-                  physics: const NeverScrollableScrollPhysics(),
-                  shrinkWrap: true,
-                  itemCount: filteredPlaces.length,
-                  itemBuilder: (context, index) {
-                    final place = filteredPlaces[index];
-                    return Padding(
-                      padding: EdgeInsets.only(bottom: 20.h),
-                      child: PlaceCard(
-                        heroTag: place.id,
-                        onTab: () {
-                          context.push('/place-details', extra: place);
-                        },
-                        imagePath: place.imagePath,
-                        title: place.title,
-                        rating: place.rating.toString(),
-                        reviewsCount: '',
-                        category: place.category,
-                        distanceTime: '20 دقيقة',
-                        onFavoriteTap: () {},
-                      ),
-                    );
-                  },
+
+                final itemsCount = isLoading ? 4 : filteredPlaces.length;
+
+                return Skeletonizer(
+                  enabled: isLoading,
+                  child: ListView.builder(
+                    physics: const NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    itemCount: itemsCount,
+                    itemBuilder: (context, index) {
+                      if (isLoading) {
+                        return Padding(
+                          padding: EdgeInsets.only(bottom: 20.h),
+                          child: const FakePlaceCard(),
+                        );
+                      }
+                      final place = filteredPlaces[index];
+                      return Padding(
+                        padding: EdgeInsets.only(bottom: 20.h),
+                        child: PlaceCard(
+                          heroTag: place.id,
+                          onTab: () {
+                            context.push('/place-details', extra: place);
+                          },
+                          imagePath: place.imagePath,
+                          title: place.title,
+                          rating: place.rating.toString(),
+                          reviewsCount: '',
+                          category: place.category,
+                          distanceTime: '20 دقيقة',
+                          onFavoriteTap: () {},
+                        ),
+                      );
+                    },
+                  ),
                 );
               }
               return const SizedBox.shrink();

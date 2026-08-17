@@ -6,6 +6,8 @@ import 'package:engez/models/place_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:skeletonizer/skeletonizer.dart';
+import 'package:engez/features/order/models/order_model.dart';
 
 class OwnerOrdersScreen extends StatefulWidget {
   final Place place;
@@ -66,15 +68,22 @@ class _OwnerOrdersScreenState extends State<OwnerOrdersScreen> {
       ),
       body: BlocBuilder<OrderCubit, OrderState>(
         builder: (context, state) {
-          if (state is OrderLoading) {
-            return const Center(child: CircularProgressIndicator());
-          }
+          final isLoading = state is OrderLoading;
           if (state is OrderError) {
             return Center(child: Text('حدث خطأ: ${state.message}'));
           }
-          if (state is OrderLoaded) {
-            final orders = state.orders;
-            if (orders.isEmpty) {
+          if (isLoading || state is OrderLoaded) {
+            final orders = isLoading ? List.generate(4, (index) => OrderModel(
+              id: '12345678',
+              customerId: '',
+              placeId: '',
+              items: [OrderItem(menuItemId: '', title: 'عنصر تجريبي', price: 100, quantity: 2)],
+              totalPrice: 200,
+              status: 'pending',
+              createdAt: DateTime.now(),
+            )) : (state as OrderLoaded).orders;
+            
+            if (!isLoading && orders.isEmpty) {
               return Center(
                 child: Text(
                   'لا توجد طلبات',
@@ -85,9 +94,12 @@ class _OwnerOrdersScreenState extends State<OwnerOrdersScreen> {
                 ),
               );
             }
-            return ListView.builder(
-              padding: EdgeInsets.all(16.w),
-              itemCount: orders.length,
+            
+            return Skeletonizer(
+              enabled: isLoading,
+              child: ListView.builder(
+                padding: EdgeInsets.all(16.w),
+                itemCount: orders.length,
               itemBuilder: (context, index) {
                 final order = orders[index];
                 return Card(
@@ -226,8 +238,9 @@ class _OwnerOrdersScreenState extends State<OwnerOrdersScreen> {
                   ),
                 );
               },
-            );
-          }
+            ),
+          );
+        }
           return const SizedBox.shrink();
         },
       ),

@@ -148,3 +148,73 @@ class PlaceCard extends StatelessWidget {
     );
   }
 }
+
+class FakePlaceCard extends StatelessWidget {
+  const FakePlaceCard({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 220,
+      width: 400,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(20),
+        child: Stack(
+          children: [
+            Positioned.fill(
+              child: Container(color: Colors.grey.shade300),
+            ),
+            Positioned(
+              bottom: 10,
+              left: 12,
+              right: 12,
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFEAE8E9).withValues(alpha: .9),
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Text(
+                          'اسم مطعم طويل جدا',
+                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                        ),
+                        const SizedBox(height: 6),
+                        Row(
+                          children: const [
+                            Icon(Icons.star, size: 16),
+                            SizedBox(width: 4),
+                            Text('4.5 (100)'),
+                            SizedBox(width: 12),
+                            Icon(Icons.fastfood, size: 16),
+                            SizedBox(width: 4),
+                            Text('تصنيف'),
+                          ],
+                        ),
+                      ],
+                    ),
+                    Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: const [
+                        Icon(Icons.access_time, size: 18),
+                        SizedBox(height: 4),
+                        Text('15 min'),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
