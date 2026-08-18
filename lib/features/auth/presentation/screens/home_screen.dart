@@ -407,8 +407,17 @@ class _HomeScreenState extends State<HomeScreen> {
       child: Scaffold(
         backgroundColor: MyColors.myBackground,
         appBar: _buildAppBar(),
-        body: SingleChildScrollView(
-          child: Column(
+        body: RefreshIndicator(
+          color: MyColors.myOrange,
+          onRefresh: () async {
+            _locationCubit.fetchCurrentLocation();
+            context.read<PlaceCubit>().fetchPlaces();
+            context.read<OfferCubit>().fetchOffers();
+            await Future.delayed(const Duration(milliseconds: 1000));
+          },
+          child: SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            child: Column(
             children: [
               Padding(padding: EdgeInsets.all(16.w), child: _buidTextField()),
               _buildListOfIcons(),
@@ -416,6 +425,7 @@ class _HomeScreenState extends State<HomeScreen> {
               _buildNearbyPlaces(),
             ],
           ),
+        ),
         ),
       ),
     );
