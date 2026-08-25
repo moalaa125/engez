@@ -45,6 +45,8 @@ class OrderCubit extends Cubit<OrderState> {
       emit(OrderCreateLoading());
       await _repository.createOrder(order);
       emit(OrderCreateSuccess());
+      // Re-fetch to return state back to OrderLoaded so history screen doesn't go blank
+      fetchCustomerOrders(order.customerId);
     } catch (e) {
       emit(OrderCreateError(e.toString()));
     }
