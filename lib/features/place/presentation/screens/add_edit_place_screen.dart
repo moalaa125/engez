@@ -12,10 +12,11 @@ import 'package:engez/models/place_model.dart';
 import 'package:engez/widgets/custom_image.dart';
 import 'package:engez/services/upload_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:geolocator/geolocator.dart';
 
 import 'package:engez/widgets/custom_text_field.dart';
 import 'package:engez/widgets/custom_button.dart';
-import 'package:engez/features/auth/presentation/screens/map_picker_screen.dart';
+import 'package:engez/features/location/presentation/screens/map_picker_screen.dart';
 
 
 class AddEditPlaceScreen extends StatefulWidget {
@@ -160,7 +161,96 @@ class _AddEditPlaceScreenState extends State<AddEditPlaceScreen> {
   }
 
   
+  Future<void> _showAddBranchDialog() async {
+    final nameController = TextEditingController();
+    double? lat;
+    double? lng;
+    bool isFetchingLocation = false;
 
+    await showDialog(
+      context: context,
+      builder: (ctx) {
+        return StatefulBuilder(
+          builder: (context, setStateDialog) {
+            return AlertDialog(
+              backgroundColor: MyColors.myBackground,
+              title: Text('إضافة فرع جديد', style: TextStyle(fontFamily: 'Cairo', fontWeight: FontWeight.bold, fontSize: 16.sp)),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  TextField(
+                    controller: nameController,
+                    decoration: InputDecoration(
+                      hintText: 'اسم الفرع (مثل: فرع الدقي)',
+                      hintStyle: const TextStyle(fontFamily: 'Cairo'),
+                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(10.r)),
+                    ),
+                  ),
+                  SizedBox(height: 16.h),
+                  isFetchingLocation 
+                    ? const CircularProgressIndicator(color: MyColors.myOrange)
+                    : ElevatedButton.icon(
+                        onPressed: () async {
+                          setStateDialog(() => isFetchingLocation = true);
+                          try {
+                            LocationPermission permission = await Geolocator.checkPermission();
+                            if (permission == LocationPermission.denied) {
+                              permission = await Geolocator.requestPermission();
+                            }
+                            if (permission == LocationPermission.whileInUse || permission == LocationPermission.always) {
+                              Position position = await Geolocator.getCurrentPosition(
+                                locationSettings: const LocationSettings(accuracy: LocationAccuracy.high)
+                              );
+                              lat = position.latitude;
+                              lng = position.longitude;
+                            }
+                          } catch (e) {
+                            ScaffoldMessenger.of(ctx).showSnackBar(
+                              SnackBar(content: Text('خطأ: $e')),
+                            );
+                          } finally {
+                            setStateDialog(() => isFetchingLocation = false);
+                          }
+                        },
+                        icon: const Icon(Icons.my_location),
+                        label: Text(lat == null ? 'تحديد موقع الفرع (GPS)' : 'تم تحديد الموقع ✅', style: const TextStyle(fontFamily: 'Cairo')),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: lat == null ? MyColors.myTextSecondary : MyColors.mySuccess,
+                          foregroundColor: Colors.white,
+                        ),
+                      )
+                ],
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(ctx),
+                  child: const Text('إلغاء', style: TextStyle(fontFamily: 'Cairo', color: MyColors.myDarkText)),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    if (nameController.text.trim().isEmpty || lat == null || lng == null) {
+                      return;
+                    }
+                    setState(() {
+                      _branches.add(Branch(
+                        id: DateTime.now().millisecondsSinceEpoch.toString(),
+                        name: nameController.text.trim(),
+                        latitude: lat!,
+                        longitude: lng!,
+                      ));
+                    });
+                    Navigator.pop(ctx);
+                  },
+                  style: ElevatedButton.styleFrom(backgroundColor: MyColors.myOrange, foregroundColor: Colors.white),
+                  child: const Text('إضافة', style: TextStyle(fontFamily: 'Cairo')),
+                ),
+              ],
+            );
+          },
+        );
+      }
+    );
+  }
 
 Future<void> _savePlace() async {
     if (_titleController.text.trim().isEmpty) {

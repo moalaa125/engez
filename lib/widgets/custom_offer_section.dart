@@ -1,4 +1,4 @@
-import 'package:engez/features/auth/presentation/screens/offers_screen.dart';
+import 'package:engez/features/offer/presentation/screens/offers_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
