@@ -10,6 +10,7 @@ import 'package:engez/features/order/repositories/order_repository.dart';
 import 'package:engez/features/offer/manager/offer_cubit.dart';
 import 'package:engez/features/offer/repositories/offer_repository.dart';
 import 'package:engez/features/admin/manager/admin_requests_cubit.dart';
+import 'package:engez/features/location/manger/location_cubit.dart';
 import 'package:engez/router/app_router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -39,6 +40,7 @@ class EngezApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
+        BlocProvider(create: (_) => LocationCubit()..fetchCurrentLocation()),
         BlocProvider(create: (_) => CartCubit()),
         BlocProvider(create: (_) => PlaceCubit(PlaceRepository())),
         BlocProvider(create: (_) => OrderCubit(OrderRepository())),

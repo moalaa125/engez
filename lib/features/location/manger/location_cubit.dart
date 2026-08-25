@@ -47,24 +47,42 @@ class LocationCubit extends Cubit<LocationState> {
       }
 
       final address = _extractAddress(placemarks.first);
-      emit(LocationLoaded(address: address));
+      emit(LocationLoaded(
+        address: address,
+        latitude: position.latitude,
+        longitude: position.longitude,
+      ));
     } catch (e) {
       emit(const LocationError(errorMessage: 'فشل جلب العنوان'));
     }
   }
 
   String _extractAddress(Placemark place) {
-    final candidates = [
-      place.subLocality,
-      place.locality,
-      place.administrativeArea,
-      place.country,
-    ];
+    final List<String> parts = [];
 
-    for (final candidate in candidates) {
-      if (candidate != null && candidate.trim().isNotEmpty) {
-        return candidate;
-      }
+    // Prioritize specific street or thoroughfare
+    if (place.street != null && place.street!.trim().isNotEmpty && !place.street!.contains('Unnamed')) {
+      parts.add(place.street!.trim());
+    } else if (place.thoroughfare != null && place.thoroughfare!.trim().isNotEmpty) {
+      parts.add(place.thoroughfare!.trim());
+    }
+
+    // Add neighborhood or sub-locality
+    if (place.subLocality != null && place.subLocality!.trim().isNotEmpty) {
+      parts.add(place.subLocality!.trim());
+    } else if (place.locality != null && place.locality!.trim().isNotEmpty) {
+      parts.add(place.locality!.trim());
+    }
+
+    // If we found specific details, return them
+    if (parts.isNotEmpty) {
+      // Use Set to remove duplicates in case street is the same as subLocality
+      return parts.toSet().toList().join('، ');
+    }
+
+    // Fallback to governorate/state
+    if (place.administrativeArea != null && place.administrativeArea!.trim().isNotEmpty) {
+      return place.administrativeArea!.trim();
     }
 
     return 'موقع غير معروف';

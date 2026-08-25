@@ -21,6 +21,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:engez/models/place_model.dart';
+import 'package:engez/core/utils/distance_utils.dart';
+import 'package:geolocator/geolocator.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -30,7 +32,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  late final LocationCubit _locationCubit;
   late final SelectCategoryCubit _categoryCubit;
   final TextEditingController _searchController = TextEditingController();
   String _searchQuery = '';
@@ -40,7 +41,6 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    _locationCubit = LocationCubit()..fetchCurrentLocation();
     _categoryCubit = SelectCategoryCubit();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<PlaceCubit>().fetchPlaces();
@@ -59,7 +59,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void dispose() {
-    _locationCubit.close();
     _categoryCubit.close();
     _searchController.dispose();
     super.dispose();
@@ -87,22 +86,23 @@ class _HomeScreenState extends State<HomeScreen> {
               size: 24.r,
             ),
             SizedBox(width: 4.w),
-            BlocBuilder<LocationCubit, LocationState>(
-              builder: (context, state) {
-                return Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text(
-                      'موقعك هو',
-                      style: TextStyle(fontFamily: 'cairo', fontSize: 15.sp),
-                    ),
-                    _buildLocationText(state),
-                  ],
-                );
-              },
+            Expanded(
+              child: BlocBuilder<LocationCubit, LocationState>(
+                builder: (context, state) {
+                  return Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'موقعك هو',
+                        style: TextStyle(fontFamily: 'cairo', fontSize: 15.sp),
+                      ),
+                      _buildLocationText(state),
+                    ],
+                  );
+                },
+              ),
             ),
-            const Spacer(),
             Text(
               'إنجز',
               style: TextStyle(
@@ -165,11 +165,13 @@ class _HomeScreenState extends State<HomeScreen> {
       return Text(
         state.address,
         style: TextStyle(fontFamily: 'cairo', fontSize: 18.sp),
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
       );
     }
     if (state is LocationError) {
       return GestureDetector(
-        onTap: () => _locationCubit.fetchCurrentLocation(),
+        onTap: () => context.read<LocationCubit>().fetchCurrentLocation(),
         child: Text(
           'اضغط لإعادة المحاولة',
           style: TextStyle(
@@ -331,6 +333,30 @@ class _HomeScreenState extends State<HomeScreen> {
                       .toList();
                 }
 
+                if (!isLoading) {
+                  final locationState = context.read<LocationCubit>().state;
+                  if (locationState is LocationLoaded) {
+                    final userLat = locationState.latitude;
+                    final userLng = locationState.longitude;
+                    
+                    filteredPlaces = filteredPlaces.where((place) {
+                      if (place.branches.isEmpty) return true; // keep for backward compatibility
+                      
+                      bool isNear = false;
+                      for (var branch in place.branches) {
+                        double distance = Geolocator.distanceBetween(
+                          userLat, userLng, branch.latitude, branch.longitude
+                        );
+                        if (distance <= 30000) { // 30 km radius
+                          isNear = true;
+                          break;
+                        }
+                      }
+                      return isNear;
+                    }).toList();
+                  }
+                }
+
                 if (!isLoading && filteredPlaces.isEmpty) {
                   return Center(
                     child: Text(
@@ -338,6 +364,13 @@ class _HomeScreenState extends State<HomeScreen> {
                       style: TextStyle(color: MyColors.myTextSecondary),
                     ),
                   );
+                }
+
+                final locationState = context.read<LocationCubit>().state;
+                double? uLat, uLng;
+                if (locationState is LocationLoaded) {
+                  uLat = locationState.latitude;
+                  uLng = locationState.longitude;
                 }
 
                 final itemsCount = isLoading ? 4 : filteredPlaces.length;
@@ -368,7 +401,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           rating: place.rating.toString(),
                           reviewsCount: '',
                           category: place.category,
-                          distanceTime: '20 دقيقة',
+                          distanceTime: DistanceUtils.calculateETA(uLat, uLng, place),
                           onFavoriteTap: () {},
                         ),
                       );
@@ -401,7 +434,6 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider.value(value: _locationCubit),
         BlocProvider.value(value: _categoryCubit),
       ],
       child: Scaffold(
@@ -410,7 +442,7 @@ class _HomeScreenState extends State<HomeScreen> {
         body: RefreshIndicator(
           color: MyColors.myOrange,
           onRefresh: () async {
-            _locationCubit.fetchCurrentLocation();
+            context.read<LocationCubit>().fetchCurrentLocation();
             context.read<PlaceCubit>().fetchPlaces();
             context.read<OfferCubit>().fetchOffers();
             await Future.delayed(const Duration(milliseconds: 1000));

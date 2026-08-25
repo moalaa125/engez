@@ -13,11 +13,17 @@ class LocationLoading extends LocationState {}
 
 class LocationLoaded extends LocationState {
   final String address;
+  final double latitude;
+  final double longitude;
 
-  const LocationLoaded({required this.address});
+  const LocationLoaded({
+    required this.address,
+    required this.latitude,
+    required this.longitude,
+  });
 
   @override
-  List<Object> get props => [address];
+  List<Object> get props => [address, latitude, longitude];
 }
 
 class LocationError extends LocationState {

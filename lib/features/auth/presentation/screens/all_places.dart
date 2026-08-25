@@ -10,6 +10,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:engez/models/place_model.dart';
+import 'package:engez/features/location/manger/location_cubit.dart';
+import 'package:engez/features/location/manger/location_state.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:engez/core/utils/distance_utils.dart';
 
 class AllPlaces extends StatelessWidget {
   const AllPlaces({super.key});
@@ -80,11 +84,35 @@ class AllPlaces extends StatelessWidget {
                 final selectedCategory = categories[selectedIndex];
 
                 final allPlaces = isLoading ? <Place>[] : (placeState as PlaceLoaded).places;
-                final filteredPlaces = selectedCategory == 'الكل'
+                var filteredPlaces = selectedCategory == 'الكل'
                     ? allPlaces
                     : allPlaces
                           .where((p) => p.category == selectedCategory)
                           .toList();
+
+                if (!isLoading) {
+                  final locationState = context.read<LocationCubit>().state;
+                  if (locationState is LocationLoaded) {
+                    final userLat = locationState.latitude;
+                    final userLng = locationState.longitude;
+                    
+                    filteredPlaces = filteredPlaces.where((place) {
+                      if (place.branches.isEmpty) return true; // keep for backward compatibility
+                      
+                      bool isNear = false;
+                      for (var branch in place.branches) {
+                        double distance = Geolocator.distanceBetween(
+                          userLat, userLng, branch.latitude, branch.longitude
+                        );
+                        if (distance <= 30000) { // 30 km radius
+                          isNear = true;
+                          break;
+                        }
+                      }
+                      return isNear;
+                    }).toList();
+                  }
+                }
 
                 if (!isLoading && filteredPlaces.isEmpty) {
                   return Center(
@@ -99,6 +127,13 @@ class AllPlaces extends StatelessWidget {
                 }
 
                 final itemsCount = isLoading ? 6 : filteredPlaces.length;
+
+                final locationState = context.read<LocationCubit>().state;
+                double? uLat, uLng;
+                if (locationState is LocationLoaded) {
+                  uLat = locationState.latitude;
+                  uLng = locationState.longitude;
+                }
 
                 return Skeletonizer(
                   enabled: isLoading,
@@ -126,7 +161,7 @@ class AllPlaces extends StatelessWidget {
                           rating: place.rating.toString(),
                           reviewsCount: '',
                           category: place.category,
-                          distanceTime: '20 دقيقة',
+                          distanceTime: DistanceUtils.calculateETA(uLat, uLng, place),
                           onFavoriteTap: () {},
                         ),
                       );

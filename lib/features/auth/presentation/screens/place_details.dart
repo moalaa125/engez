@@ -17,6 +17,9 @@ import 'package:go_router/go_router.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 import 'package:syncfusion_flutter_core/theme.dart';
 import 'package:engez/widgets/custom_image.dart';
+import 'package:engez/features/location/manger/location_cubit.dart';
+import 'package:engez/features/location/manger/location_state.dart';
+import 'package:engez/core/utils/distance_utils.dart';
 
 class PlaceDetailsScreen extends StatelessWidget {
   final Place place;
@@ -269,6 +272,13 @@ class PlaceDetailsScreen extends StatelessWidget {
   }
 
   Widget _buildImageAndDetailsBar(BuildContext context) {
+    final locationState = context.read<LocationCubit>().state;
+    double? uLat, uLng;
+    if (locationState is LocationLoaded) {
+      uLat = locationState.latitude;
+      uLng = locationState.longitude;
+    }
+
     return SizedBox(
       height: 400.h,
       child: Stack(
@@ -380,7 +390,7 @@ class PlaceDetailsScreen extends StatelessWidget {
                             ),
                             SizedBox(width: 6.w),
                             Text(
-                              '30 دقيقة',
+                              DistanceUtils.calculateETA(uLat, uLng, place),
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 13.sp,
@@ -440,9 +450,12 @@ class PlaceDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) =>
-          MenuItemCubit(MenuItemRepository(), place.id)..fetchMenuItems(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (_) => MenuItemCubit(MenuItemRepository(), place.id)..fetchMenuItems(),
+        ),
+      ],
       child: Scaffold(
         resizeToAvoidBottomInset: false,
         backgroundColor: MyColors.myWhite,

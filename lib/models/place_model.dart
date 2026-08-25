@@ -1,5 +1,37 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+class Branch {
+  final String id;
+  final String name;
+  final double latitude;
+  final double longitude;
+
+  Branch({
+    required this.id,
+    required this.name,
+    required this.latitude,
+    required this.longitude,
+  });
+
+  factory Branch.fromMap(Map<String, dynamic> data) {
+    return Branch(
+      id: data['id'] ?? '',
+      name: data['name'] ?? '',
+      latitude: (data['latitude'] ?? 0.0).toDouble(),
+      longitude: (data['longitude'] ?? 0.0).toDouble(),
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'name': name,
+      'latitude': latitude,
+      'longitude': longitude,
+    };
+  }
+}
+
 class Place {
   final String id;
   final String title;
@@ -8,7 +40,8 @@ class Place {
   final String imagePath;
   final String description;
   final String ownerId;
-  final String location;
+  final String location; // Keeping for backward compatibility
+  final List<Branch> branches;
 
   Place({
     required this.id,
@@ -19,6 +52,7 @@ class Place {
     this.description = '',
     this.ownerId = '',
     this.location = '',
+    this.branches = const [],
   });
 
   factory Place.fromDoc(dynamic doc) {
@@ -26,6 +60,12 @@ class Place {
 
     String imgPath =
         data['imagePath'] ?? data['image_path'] ?? 'placeholder.png';
+
+    List<Branch> branchesList = [];
+    if (data['branches'] != null) {
+      branchesList = List<Branch>.from(
+          (data['branches'] as List).map((x) => Branch.fromMap(x)));
+    }
 
     return Place(
       id: data['id'] ?? doc.id,
@@ -36,6 +76,7 @@ class Place {
       description: data['description'] ?? '',
       ownerId: data['ownerId'] ?? '',
       location: data['location'] ?? '',
+      branches: branchesList,
     );
   }
 
@@ -49,6 +90,7 @@ class Place {
       'description': description,
       'ownerId': ownerId,
       'location': location,
+      'branches': branches.map((x) => x.toMap()).toList(),
       'createdAt': FieldValue.serverTimestamp(),
     };
   }
