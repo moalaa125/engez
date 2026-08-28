@@ -40,6 +40,8 @@ class OrderModel {
   final double totalPrice;
   final String status;
   final DateTime createdAt;
+  final int? estimatedPreparationTime;
+  final DateTime? acceptedAt;
 
   OrderModel({
     required this.id,
@@ -49,6 +51,8 @@ class OrderModel {
     required this.totalPrice,
     required this.status,
     required this.createdAt,
+    this.estimatedPreparationTime,
+    this.acceptedAt,
   });
 
   Map<String, dynamic> toMap() {
@@ -59,6 +63,8 @@ class OrderModel {
       'totalPrice': totalPrice,
       'status': status,
       'createdAt': createdAt,
+      'estimatedPreparationTime': estimatedPreparationTime,
+      'acceptedAt': acceptedAt,
     };
   }
 
@@ -74,6 +80,8 @@ class OrderModel {
       totalPrice: (map['totalPrice'] ?? 0.0).toDouble(),
       status: map['status'] ?? 'pending',
       createdAt: (map['createdAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
+      estimatedPreparationTime: map['estimatedPreparationTime'] as int?,
+      acceptedAt: (map['acceptedAt'] as Timestamp?)?.toDate(),
     );
   }
 }

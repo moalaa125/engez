@@ -28,8 +28,10 @@ class OrderTrackingScreen extends StatelessWidget {
     }
   }
 
-  String _formatExpectedTime(DateTime createdAt) {
-    final expected = createdAt.add(const Duration(minutes: 15));
+  String _formatExpectedTime(DateTime? acceptedAt, int? estimatedMinutes) {
+    if (acceptedAt == null || estimatedMinutes == null) return 'في انتظار المطعم...';
+    
+    final expected = acceptedAt.add(Duration(minutes: estimatedMinutes));
     int hour = expected.hour;
     int minute = expected.minute;
     String period = hour >= 12 ? 'مساءً' : 'صباحاً';
@@ -99,7 +101,10 @@ class OrderTrackingScreen extends StatelessWidget {
             ),
             title: (order.status == 'delivered' || order.status == 'cancelled')
                 ? const SizedBox()
-                : _OrderCountdownTimer(createdAt: order.createdAt),
+                : _OrderCountdownTimer(
+                    acceptedAt: order.acceptedAt,
+                    estimatedMinutes: order.estimatedPreparationTime,
+                  ),
           ),
           body: SingleChildScrollView(
             padding: EdgeInsets.only(right: 20.w, left: 20.w, top: 0, bottom: 0),
@@ -202,7 +207,7 @@ class OrderTrackingScreen extends StatelessWidget {
                                 borderRadius: BorderRadius.circular(12.r),
                               ),
                               child: Text(
-                                'الاستلام المتوقع: ${_formatExpectedTime(order.createdAt)}',
+                                'الاستلام المتوقع: ${_formatExpectedTime(order.acceptedAt, order.estimatedPreparationTime)}',
                                 style: TextStyle(
                                   fontSize: 13.sp,
                                   fontWeight: FontWeight.w700,
@@ -453,8 +458,14 @@ class OrderTrackingScreen extends StatelessWidget {
 }
 
 class _OrderCountdownTimer extends StatefulWidget {
-  final DateTime createdAt;
-  const _OrderCountdownTimer({Key? key, required this.createdAt}) : super(key: key);
+  final DateTime? acceptedAt;
+  final int? estimatedMinutes;
+  
+  const _OrderCountdownTimer({
+    Key? key,
+    required this.acceptedAt,
+    required this.estimatedMinutes,
+  }) : super(key: key);
 
   @override
   State<_OrderCountdownTimer> createState() => _OrderCountdownTimerState();
@@ -474,7 +485,16 @@ class _OrderCountdownTimerState extends State<_OrderCountdownTimer> {
   }
   
   void _calculateRemainingTime() {
-    final expectedTime = widget.createdAt.add(const Duration(minutes: 15));
+    if (widget.acceptedAt == null || widget.estimatedMinutes == null) {
+      if (mounted) {
+        setState(() {
+          _secondsRemaining = -1;
+        });
+      }
+      return;
+    }
+    
+    final expectedTime = widget.acceptedAt!.add(Duration(minutes: widget.estimatedMinutes!));
     final remaining = expectedTime.difference(DateTime.now()).inSeconds;
     if (mounted) {
       setState(() {
@@ -491,6 +511,17 @@ class _OrderCountdownTimerState extends State<_OrderCountdownTimer> {
 
   @override
   Widget build(BuildContext context) {
+    if (_secondsRemaining == -1) {
+      return Text(
+        'في الانتظار...',
+        style: TextStyle(
+          color: MyColors.myOrange,
+          fontSize: 18.sp,
+          fontWeight: FontWeight.bold,
+        ),
+      );
+    }
+    
     if (_secondsRemaining <= 0) {
       return Text(
         '00:00',

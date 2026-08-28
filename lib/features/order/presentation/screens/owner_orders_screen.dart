@@ -196,9 +196,7 @@ class _OwnerOrdersScreenState extends State<OwnerOrdersScreen> {
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: MyColors.mySuccess,
                                   ),
-                                  onPressed: () => context
-                                      .read<OrderCubit>()
-                                      .updateOrderStatus(order.id, 'confirmed'),
+                                  onPressed: () => _showAcceptOrderBottomSheet(context, order.id),
                                   child: const Text(
                                     'تأكيد',
                                     style: TextStyle(color: MyColors.myWhite),
@@ -232,6 +230,38 @@ class _OwnerOrdersScreenState extends State<OwnerOrdersScreen> {
                               ),
                             ],
                           ),
+                        ] else if (order.status == 'confirmed') ...[
+                          SizedBox(
+                            width: double.infinity,
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: MyColors.myOrange,
+                              ),
+                              onPressed: () => context
+                                  .read<OrderCubit>()
+                                  .updateOrderStatus(order.id, 'ready'),
+                              child: const Text(
+                                'جاهز للاستلام',
+                                style: TextStyle(color: MyColors.myWhite, fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                          ),
+                        ] else if (order.status == 'ready') ...[
+                          SizedBox(
+                            width: double.infinity,
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: MyColors.mySuccess,
+                              ),
+                              onPressed: () => context
+                                  .read<OrderCubit>()
+                                  .updateOrderStatus(order.id, 'delivered'),
+                              child: const Text(
+                                'تم التسليم بنجاح',
+                                style: TextStyle(color: MyColors.myWhite, fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                          ),
                         ],
                       ],
                     ),
@@ -244,6 +274,133 @@ class _OwnerOrdersScreenState extends State<OwnerOrdersScreen> {
           return const SizedBox.shrink();
         },
       ),
+    );
+  }
+  
+  void _showAcceptOrderBottomSheet(BuildContext context, String orderId) {
+    int selectedMinutes = 15;
+    final customTimeController = TextEditingController();
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: MyColors.myWhite,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24.r)),
+      ),
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return Padding(
+              padding: EdgeInsets.only(
+                left: 24.w,
+                right: 24.w,
+                top: 24.h,
+                bottom: MediaQuery.of(context).viewInsets.bottom + 24.h,
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Container(
+                    width: 40.w,
+                    height: 4.h,
+                    margin: EdgeInsets.symmetric(horizontal: 140.w),
+                    decoration: BoxDecoration(
+                      color: MyColors.myBorder,
+                      borderRadius: BorderRadius.circular(10.r),
+                    ),
+                  ),
+                  SizedBox(height: 24.h),
+                  Text(
+                    'وقت التجهيز المتوقع',
+                    style: TextStyle(
+                      fontSize: 20.sp,
+                      fontWeight: FontWeight.bold,
+                      color: MyColors.myDarkText,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  SizedBox(height: 24.h),
+                  Wrap(
+                    spacing: 12.w,
+                    runSpacing: 12.h,
+                    alignment: WrapAlignment.center,
+                    children: [5, 10, 15, 20, 30].map((mins) {
+                      final isSelected = selectedMinutes == mins;
+                      return ChoiceChip(
+                        label: Text('$mins دقيقة', style: TextStyle(
+                          color: isSelected ? MyColors.myWhite : MyColors.myDarkText,
+                          fontWeight: FontWeight.bold,
+                        )),
+                        selected: isSelected,
+                        selectedColor: MyColors.myOrange,
+                        backgroundColor: MyColors.myBackground,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10.r),
+                          side: BorderSide.none,
+                        ),
+                        showCheckmark: false,
+                        onSelected: (selected) {
+                          if (selected) {
+                            setState(() {
+                              selectedMinutes = mins;
+                              customTimeController.clear();
+                            });
+                          }
+                        },
+                      );
+                    }).toList(),
+                  ),
+                  SizedBox(height: 16.h),
+                  TextField(
+                    controller: customTimeController,
+                    keyboardType: TextInputType.number,
+                    decoration: InputDecoration(
+                      hintText: 'وقت مخصص (بالدقائق)',
+                      filled: true,
+                      fillColor: MyColors.myBackground,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12.r),
+                        borderSide: BorderSide.none,
+                      ),
+                    ),
+                    onChanged: (value) {
+                      if (value.isNotEmpty) {
+                        setState(() {
+                          selectedMinutes = int.tryParse(value) ?? 15;
+                        });
+                      }
+                    },
+                  ),
+                  SizedBox(height: 24.h),
+                  ElevatedButton(
+                    onPressed: () {
+                      context.read<OrderCubit>().acceptOrder(orderId, selectedMinutes);
+                      Navigator.pop(context);
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: MyColors.myOrange,
+                      padding: EdgeInsets.symmetric(vertical: 16.h),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16.r),
+                      ),
+                    ),
+                    child: Text(
+                      'تأكيد واستلام الطلب',
+                      style: TextStyle(
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.bold,
+                        color: MyColors.myWhite,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      },
     );
   }
 }

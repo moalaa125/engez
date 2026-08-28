@@ -62,6 +62,14 @@ class OrderCubit extends Cubit<OrderState> {
     }
   }
 
+  Future<void> acceptOrder(String orderId, int estimatedMinutes) async {
+    try {
+      await _repository.acceptOrder(orderId, estimatedMinutes);
+    } catch (e) {
+      // ignore
+    }
+  }
+
   @override
   Future<void> close() {
     _ordersSubscription?.cancel();

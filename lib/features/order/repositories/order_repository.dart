@@ -38,4 +38,12 @@ class OrderRepository {
       'status': newStatus,
     });
   }
+
+  Future<void> acceptOrder(String orderId, int estimatedMinutes) async {
+    await _firestore.collection('orders').doc(orderId).update({
+      'status': 'confirmed',
+      'estimatedPreparationTime': estimatedMinutes,
+      'acceptedAt': DateTime.now(),
+    });
+  }
 }
