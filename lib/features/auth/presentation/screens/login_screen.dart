@@ -99,7 +99,7 @@ class _LoginScreenContentState extends State<_LoginScreenContent> {
                   CustomButton(
                     textColor: MyColors.myWhite,
                     buttonColor: MyColors.myDarkText,
-                    iconPath: 'assets/images/apple.png',
+                    iconPath: 'assets/images/apple.jpg',
                     text: 'تسجيل الدخول باستخدام apple',
                     function: () {
                       Future.delayed(const Duration(milliseconds: 500), () {

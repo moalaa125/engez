@@ -200,18 +200,26 @@ class OrderTrackingScreen extends StatelessWidget {
                                 color: MyColors.myTextSecondary,
                               ),
                             ),
-                            Container(
-                              padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 8.h),
-                              decoration: BoxDecoration(
-                                color: MyColors.myBackground,
-                                borderRadius: BorderRadius.circular(12.r),
-                              ),
-                              child: Text(
-                                'الاستلام المتوقع: ${_formatExpectedTime(order.acceptedAt, order.estimatedPreparationTime)}',
-                                style: TextStyle(
-                                  fontSize: 13.sp,
-                                  fontWeight: FontWeight.w700,
-                                  color: MyColors.myDarkText,
+                            SizedBox(width: 8.w),
+                            Expanded(
+                              child: Container(
+                                padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.h),
+                                decoration: BoxDecoration(
+                                  color: MyColors.myBackground,
+                                  borderRadius: BorderRadius.circular(12.r),
+                                ),
+                                child: Text(
+                                  order.acceptedAt == null 
+                                      ? 'في انتظار المطعم...'
+                                      : 'الاستلام المتوقع: ${_formatExpectedTime(order.acceptedAt, order.estimatedPreparationTime)}',
+                                  style: TextStyle(
+                                    fontSize: 11.sp,
+                                    fontWeight: FontWeight.w700,
+                                    color: MyColors.myDarkText,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 1,
                                 ),
                               ),
                             ),
