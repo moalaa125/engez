@@ -12,7 +12,6 @@ import 'package:engez/models/place_model.dart';
 import 'package:engez/widgets/custom_image.dart';
 import 'package:engez/services/upload_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:geolocator/geolocator.dart';
 
 import 'package:engez/widgets/custom_text_field.dart';
 import 'package:engez/widgets/custom_button.dart';
@@ -158,8 +157,10 @@ class _AddEditPlaceScreenState extends State<AddEditPlaceScreen> {
           .substring(8, 13);
       return '${title}_$uniqueSuffix';
     }
-  } 
+  }
 
+  
+  
 
 Future<void> _savePlace() async {
     if (_titleController.text.trim().isEmpty) {

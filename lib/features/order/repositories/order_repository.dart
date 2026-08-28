@@ -4,8 +4,9 @@ import 'package:engez/features/order/models/order_model.dart';
 class OrderRepository {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  Future<void> createOrder(OrderModel order) async {
-    await _firestore.collection('orders').add(order.toMap());
+  Future<String> createOrder(OrderModel order) async {
+    final docRef = await _firestore.collection('orders').add(order.toMap());
+    return docRef.id;
   }
 
   Stream<List<OrderModel>> getCustomerOrders(String customerId) {

@@ -13,11 +13,14 @@ import 'package:engez/features/admin/presentation/screens/admin_dashboard_screen
 import 'package:engez/features/admin/presentation/screens/admin_requests_screen.dart';
 import 'package:engez/features/place/presentation/screens/add_edit_place_screen.dart';
 import 'package:engez/features/order/presentation/screens/order_history_screen.dart';
+import 'package:engez/features/order/presentation/screens/order_tracking_screen.dart';
 import 'package:engez/features/order/presentation/screens/owner_orders_screen.dart';
 import 'package:engez/models/place_model.dart';
 import 'package:engez/widgets/nav_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+
+import 'package:engez/core/managers/auth_manager.dart';
 
 class AppRouter {
   static final _rootNavigatorKey = GlobalKey<NavigatorState>();
@@ -25,8 +28,48 @@ class AppRouter {
   static final GoRouter router = GoRouter(
     navigatorKey: _rootNavigatorKey,
     initialLocation: '/loading',
-    redirect: (context, state) async {
-      return null;
+    refreshListenable: authManager,
+    redirect: (context, state) {
+      final authStatus = authManager.status;
+      final role = authManager.role;
+      final path = state.matchedLocation;
+
+      // Allow loading screen to resolve without redirecting elsewhere
+      if (authStatus == AuthStatus.loading || authStatus == AuthStatus.initial) {
+        if (path == '/loading') return null; // already on loading
+        return '/loading';
+      }
+
+      // If user is totally unauthenticated
+      if (authStatus == AuthStatus.unauthenticated) {
+        if (path == '/login') return null; // let them login
+        return '/login'; // kick them to login
+      }
+
+      // At this point, user IS authenticated.
+      // If role is null, force role selection unless they are already there or logging out
+      if (role == null || role.isEmpty) {
+        if (path == '/role-selection' || path == '/login') return null;
+        return '/role-selection';
+      }
+
+      // Check role-based guards
+      if (path.startsWith('/owner-dashboard')) {
+        if (role != 'owner') return '/home'; // unauthorized
+      }
+
+      if (path.startsWith('/admin-dashboard') || path.startsWith('/admin-requests')) {
+        if (role != 'admin') return '/home'; // unauthorized
+      }
+
+      // If authenticated and tries to go to login or loading, send them to their dashboard
+      if (path == '/login' || path == '/loading') {
+        if (role == 'owner') return '/owner-dashboard';
+        if (role == 'admin') return '/admin-dashboard';
+        return '/home'; // default for customer
+      }
+
+      return null; // All good, proceed
     },
     routes: [
       GoRoute(
@@ -37,6 +80,13 @@ class AppRouter {
       GoRoute(
         path: '/role-selection',
         builder: (context, state) => const RoleSelectionScreen(),
+      ),
+      GoRoute(
+        path: '/order-tracking/:id',
+        builder: (context, state) {
+          final id = state.pathParameters['id']!;
+          return OrderTrackingScreen(orderId: id);
+        },
       ),
       
       // The StatefulShellRoute for the bottom navigation bar

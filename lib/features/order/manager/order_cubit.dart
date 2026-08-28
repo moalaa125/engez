@@ -40,15 +40,17 @@ class OrderCubit extends Cubit<OrderState> {
         );
   }
 
-  Future<void> createOrder(OrderModel order) async {
+  Future<String?> createOrder(OrderModel order) async {
     try {
       emit(OrderCreateLoading());
-      await _repository.createOrder(order);
+      final orderId = await _repository.createOrder(order);
       emit(OrderCreateSuccess());
       // Re-fetch to return state back to OrderLoaded so history screen doesn't go blank
       fetchCustomerOrders(order.customerId);
+      return orderId;
     } catch (e) {
       emit(OrderCreateError(e.toString()));
+      return null;
     }
   }
 

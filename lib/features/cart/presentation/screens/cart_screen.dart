@@ -13,8 +13,15 @@ import 'package:engez/features/order/manager/order_cubit.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:engez/widgets/custom_image.dart';
 
-class CartScreen extends StatelessWidget {
+class CartScreen extends StatefulWidget {
   const CartScreen({super.key});
+
+  @override
+  State<CartScreen> createState() => _CartScreenState();
+}
+
+class _CartScreenState extends State<CartScreen> {
+  bool _isSubmitting = false;
 
   @override
   Widget build(BuildContext context) {
@@ -281,92 +288,129 @@ class CartScreen extends StatelessWidget {
                               borderRadius: BorderRadius.circular(15.r),
                             ),
                           ),
-                          onPressed: () async {
-                            final user = FirebaseAuth.instance.currentUser;
-                            if (user == null) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text(
-                                    'يجب تسجيل الدخول لإتمام الطلب',
+                          onPressed: _isSubmitting
+                              ? null
+                              : () async {
+                                  setState(() {
+                                    _isSubmitting = true;
+                                  });
+
+                                  final user = FirebaseAuth.instance.currentUser;
+                                  if (user == null) {
+                                    if (mounted) {
+                                      ScaffoldMessenger.of(context).showSnackBar(
+                                        const SnackBar(
+                                          content: Text(
+                                            'يجب تسجيل الدخول لإتمام الطلب',
+                                          ),
+                                        ),
+                                      );
+                                      setState(() {
+                                        _isSubmitting = false;
+                                      });
+                                    }
+                                    return;
+                                  }
+                                  if (state.isEmpty) {
+                                    if (mounted) {
+                                      setState(() {
+                                        _isSubmitting = false;
+                                      });
+                                    }
+                                    return;
+                                  }
+
+                                  String resolvedPlaceId = '';
+                                  try {
+                                    final firstItem = state.items.first;
+                                    final placesSnapshot = await FirebaseFirestore
+                                        .instance
+                                        .collection('places')
+                                        .get();
+                                    for (var doc in placesSnapshot.docs) {
+                                      final menuDoc = await doc.reference
+                                          .collection('menuItems')
+                                          .doc(firstItem.id)
+                                          .get();
+                                      if (menuDoc.exists) {
+                                        resolvedPlaceId = doc.id;
+                                        break;
+                                      }
+                                    }
+                                  } catch (e) {
+                                    debugPrint('Error resolving placeId: $e');
+                                  }
+
+                                  if (!mounted) return;
+
+                                  final order = OrderModel(
+                                    id: '',
+                                    customerId: user.uid,
+                                    placeId: resolvedPlaceId,
+                                    items: state.items
+                                        .map(
+                                          (cartItem) => OrderItem(
+                                            menuItemId: cartItem.id,
+                                            title: cartItem.title,
+                                            price: cartItem.price,
+                                            quantity: cartItem.quantity,
+                                          ),
+                                        )
+                                        .toList(),
+                                    totalPrice: state.totalPrice,
+                                    status: 'pending',
+                                    createdAt: DateTime.now(),
+                                  );
+
+                                  final orderId = await context.read<OrderCubit>().createOrder(order);
+
+                                  FirebaseAnalytics.instance.logEvent(
+                                    name: 'order_placed',
+                                    parameters: {
+                                      'total_price': state.totalPrice,
+                                      'place_id': resolvedPlaceId,
+                                      'item_count': state.items.length,
+                                    },
+                                  );
+
+                                  context.read<CartCubit>().clearCart();
+
+                                  showResultFeedback(
+                                    context,
+                                    isSuccess: true,
+                                    message: 'تم إرسال الطلب بنجاح!',
+                                    onDone: () {
+                                      if (mounted && orderId != null) {
+                                        context.go('/order-tracking/$orderId');
+                                      } else if (mounted) {
+                                        context.go('/order-history');
+                                      }
+                                    },
+                                  );
+
+                                  if (mounted) {
+                                    setState(() {
+                                      _isSubmitting = false;
+                                    });
+                                  }
+                                },
+                          child: _isSubmitting
+                              ? SizedBox(
+                                  height: 24.h,
+                                  width: 24.h,
+                                  child: const CircularProgressIndicator(
+                                    color: MyColors.myWhite,
+                                    strokeWidth: 3,
+                                  ),
+                                )
+                              : Text(
+                                  'إتمام الطلب',
+                                  style: TextStyle(
+                                    color: MyColors.myWhite,
+                                    fontSize: 16.sp,
+                                    fontWeight: FontWeight.bold,
                                   ),
                                 ),
-                              );
-                              return;
-                            }
-                            if (state.isEmpty) return;
-
-                            String resolvedPlaceId = '';
-                            try {
-                              final firstItem = state.items.first;
-                              final placesSnapshot = await FirebaseFirestore
-                                  .instance
-                                  .collection('places')
-                                  .get();
-                              for (var doc in placesSnapshot.docs) {
-                                final menuDoc = await doc.reference
-                                    .collection('menuItems')
-                                    .doc(firstItem.id)
-                                    .get();
-                                if (menuDoc.exists) {
-                                  resolvedPlaceId = doc.id;
-                                  break;
-                                }
-                              }
-                            } catch (e) {
-                              debugPrint('Error resolving placeId: $e');
-                            }
-
-                            if (!context.mounted) return;
-
-                            final order = OrderModel(
-                              id: '',
-                              customerId: user.uid,
-                              placeId: resolvedPlaceId,
-                              items: state.items
-                                  .map(
-                                    (cartItem) => OrderItem(
-                                      menuItemId: cartItem.id,
-                                      title: cartItem.title,
-                                      price: cartItem.price,
-                                      quantity: cartItem.quantity,
-                                    ),
-                                  )
-                                  .toList(),
-                              totalPrice: state.totalPrice,
-                              status: 'pending',
-                              createdAt: DateTime.now(),
-                            );
-
-                            context.read<OrderCubit>().createOrder(order);
-                            
-                            FirebaseAnalytics.instance.logEvent(
-                              name: 'order_placed',
-                              parameters: {
-                                'total_price': state.totalPrice,
-                                'place_id': resolvedPlaceId,
-                                'item_count': state.items.length,
-                              },
-                            );
-
-                            context.read<CartCubit>().clearCart();
-
-                            showResultFeedback(
-                              context,
-                              isSuccess: true,
-                              message: 'تم إرسال الطلب بنجاح!',
-                              onDone: () {
-                                if (context.mounted) context.pop();
-                              },
-                            );
-                          },
-                          child: Text(
-                            'إتمام الطلب',
-                            style: TextStyle(
-                              color: MyColors.myWhite,
-                              fontSize: 16.sp,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
                         ),
                       ),
                     ],
