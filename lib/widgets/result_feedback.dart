@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter/services.dart';
+import 'package:lottie/lottie.dart';
 import 'package:engez/constants/my_colors.dart';
 
 class ResultFeedbackScreen extends StatefulWidget {
@@ -45,6 +47,10 @@ class _ResultFeedbackScreenState extends State<ResultFeedbackScreen>
     _controller.forward();
 
     if (widget.isSuccess) {
+      HapticFeedback.heavyImpact();
+      Future.delayed(const Duration(milliseconds: 300), () {
+        HapticFeedback.mediumImpact();
+      });
       Future.delayed(const Duration(seconds: 2), () {
         if (mounted) {
           Navigator.of(context).pop(); // dismiss bottom sheet
@@ -85,7 +91,13 @@ class _ResultFeedbackScreenState extends State<ResultFeedbackScreen>
             scale: _scaleAnimation,
             child: FadeTransition(
               opacity: _fadeAnimation,
-              child: Icon(icon, color: color, size: 80.r),
+              child: widget.isSuccess
+                  ? Lottie.asset(
+                      'assets/animations/Success.lottie',
+                      height: 120.r,
+                      repeat: false,
+                    )
+                  : Icon(icon, color: color, size: 80.r),
             ),
           ),
           SizedBox(height: 24.h),

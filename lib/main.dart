@@ -1,4 +1,5 @@
 import 'dart:ui';
+import 'package:flutter/services.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:engez/constants/my_colors.dart';
@@ -64,6 +65,9 @@ class EngezApp extends StatelessWidget {
             ],
             theme: ThemeData(
               fontFamily: 'cairo',
+              appBarTheme: const AppBarTheme(
+                systemOverlayStyle: SystemUiOverlayStyle.dark,
+              ),
               textSelectionTheme: TextSelectionThemeData(
                 cursorColor: MyColors.myOrange,
                 selectionColor: MyColors.myOrange.withValues(alpha: 0.3),

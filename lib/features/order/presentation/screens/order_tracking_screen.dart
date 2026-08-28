@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:engez/constants/my_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter/services.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:lottie/lottie.dart';
 import 'package:engez/features/order/models/order_model.dart';
@@ -42,33 +43,34 @@ class OrderTrackingScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: MyColors.myWhite,
-      appBar: AppBar(
-        scrolledUnderElevation: 0,
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        centerTitle: true,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: MyColors.myDarkText),
-          onPressed: () => context.go('/home'),
-        ),
-        title: const _FakeCountdownTimer(),
-      ),
-      body: StreamBuilder<DocumentSnapshot>(
-        stream: FirebaseFirestore.instance
-            .collection('orders')
-            .doc(orderId)
-            .snapshots(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(
+    return StreamBuilder<DocumentSnapshot>(
+      stream: FirebaseFirestore.instance
+          .collection('orders')
+          .doc(orderId)
+          .snapshots(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Scaffold(
+            backgroundColor: MyColors.myWhite,
+            body: Center(
               child: CircularProgressIndicator(color: MyColors.myOrange),
-            );
-          }
+            ),
+          );
+        }
 
-          if (!snapshot.hasData || !snapshot.data!.exists) {
-            return Center(
+        if (!snapshot.hasData || !snapshot.data!.exists) {
+          return Scaffold(
+            backgroundColor: MyColors.myWhite,
+            appBar: AppBar(
+              systemOverlayStyle: SystemUiOverlayStyle.dark,
+              backgroundColor: Colors.transparent,
+              elevation: 0,
+              leading: IconButton(
+                icon: const Icon(Icons.arrow_back, color: MyColors.myDarkText),
+                onPressed: () => context.go('/home'),
+              ),
+            ),
+            body: Center(
               child: Text(
                 'الطلب غير موجود',
                 style: TextStyle(
@@ -76,13 +78,30 @@ class OrderTrackingScreen extends StatelessWidget {
                   color: MyColors.myTextSecondary,
                 ),
               ),
-            );
-          }
+            ),
+          );
+        }
 
-          final order = OrderModel.fromDocument(snapshot.data!);
-          final statusIndex = _getStatusIndex(order.status);
+        final order = OrderModel.fromDocument(snapshot.data!);
+        final statusIndex = _getStatusIndex(order.status);
 
-          return SingleChildScrollView(
+        return Scaffold(
+          backgroundColor: MyColors.myWhite,
+          appBar: AppBar(
+            systemOverlayStyle: SystemUiOverlayStyle.dark,
+            scrolledUnderElevation: 0,
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+            centerTitle: true,
+            leading: IconButton(
+              icon: const Icon(Icons.arrow_back, color: MyColors.myDarkText),
+              onPressed: () => context.go('/home'),
+            ),
+            title: (order.status == 'delivered' || order.status == 'cancelled')
+                ? const SizedBox()
+                : _OrderCountdownTimer(createdAt: order.createdAt),
+          ),
+          body: SingleChildScrollView(
             padding: EdgeInsets.only(right: 20.w, left: 20.w, top: 0, bottom: 0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -260,9 +279,9 @@ class OrderTrackingScreen extends StatelessWidget {
                 ],
               ],
             ),
-          );
-        },
-      ),
+          ),
+        );
+      },
     );
   }
 
@@ -433,39 +452,57 @@ class OrderTrackingScreen extends StatelessWidget {
   }
 }
 
-class _FakeCountdownTimer extends StatefulWidget {
-  const _FakeCountdownTimer({Key? key}) : super(key: key);
+class _OrderCountdownTimer extends StatefulWidget {
+  final DateTime createdAt;
+  const _OrderCountdownTimer({Key? key, required this.createdAt}) : super(key: key);
 
   @override
-  State<_FakeCountdownTimer> createState() => _FakeCountdownTimerState();
+  State<_OrderCountdownTimer> createState() => _OrderCountdownTimerState();
 }
 
-class _FakeCountdownTimerState extends State<_FakeCountdownTimer> {
-  int _secondsRemaining = 15 * 60;
-  late final Timer _timer;
+class _OrderCountdownTimerState extends State<_OrderCountdownTimer> {
+  int _secondsRemaining = 0;
+  Timer? _timer;
 
   @override
   void initState() {
     super.initState();
+    _calculateRemainingTime();
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      if (_secondsRemaining > 0) {
-        setState(() {
-          _secondsRemaining--;
-        });
-      } else {
-        timer.cancel();
-      }
+      _calculateRemainingTime();
     });
+  }
+  
+  void _calculateRemainingTime() {
+    final expectedTime = widget.createdAt.add(const Duration(minutes: 15));
+    final remaining = expectedTime.difference(DateTime.now()).inSeconds;
+    if (mounted) {
+      setState(() {
+        _secondsRemaining = remaining > 0 ? remaining : 0;
+      });
+    }
   }
 
   @override
   void dispose() {
-    _timer.cancel();
+    _timer?.cancel();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    if (_secondsRemaining <= 0) {
+      return Text(
+        '00:00',
+        style: TextStyle(
+          color: MyColors.myError,
+          fontSize: 22.sp,
+          fontWeight: FontWeight.bold,
+          letterSpacing: 2,
+        ),
+      );
+    }
+    
     final minutes = (_secondsRemaining ~/ 60).toString().padLeft(2, '0');
     final seconds = (_secondsRemaining % 60).toString().padLeft(2, '0');
     

@@ -10,6 +10,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:engez/features/order/models/order_model.dart';
+import 'package:go_router/go_router.dart';
 
 class OrderHistoryScreen extends StatefulWidget {
   const OrderHistoryScreen({super.key});
@@ -254,14 +255,20 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
                             itemCount: orders.length,
                             itemBuilder: (context, index) {
                               final order = orders[index];
-                              return Card(
-                                margin: EdgeInsets.only(bottom: 16.h),
-                                color: MyColors.myWhite,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(15.r),
-                                ),
-                                child: Padding(
-                                  padding: EdgeInsets.all(16.w),
+                              return GestureDetector(
+                                onTap: () {
+                                  if (!isLoading) {
+                                    context.push('/order-tracking/${order.id}');
+                                  }
+                                },
+                                child: Card(
+                                  margin: EdgeInsets.only(bottom: 16.h),
+                                  color: MyColors.myWhite,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(15.r),
+                                  ),
+                                  child: Padding(
+                                    padding: EdgeInsets.all(16.w),
                                   child: Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
@@ -350,6 +357,7 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
                                       ),
                                     ],
                                   ),
+                                ),
                                 ),
                               );
                             },
