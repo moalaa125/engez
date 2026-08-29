@@ -333,6 +333,7 @@ class _CartScreenState extends State<CartScreen> {
                                   }
 
                                   String resolvedPlaceId = '';
+                                  bool isPlaceOpen = true;
                                   try {
                                     final firstItem = state.items.first;
                                     final placesSnapshot = await FirebaseFirestore
@@ -346,11 +347,27 @@ class _CartScreenState extends State<CartScreen> {
                                           .get();
                                       if (menuDoc.exists) {
                                         resolvedPlaceId = doc.id;
+                                        isPlaceOpen = doc.data()['isOpen'] ?? true;
                                         break;
                                       }
                                     }
                                   } catch (e) {
                                     debugPrint('Error resolving placeId: $e');
+                                  }
+
+                                  if (!mounted) return;
+
+                                  if (!isPlaceOpen) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                        content: Text('عذراً، المطعم مغلق حالياً ولا يمكنه استقبال طلبات جديدة'),
+                                        backgroundColor: MyColors.myError,
+                                      ),
+                                    );
+                                    setState(() {
+                                      _isSubmitting = false;
+                                    });
+                                    return;
                                   }
 
                                   if (!mounted) return;

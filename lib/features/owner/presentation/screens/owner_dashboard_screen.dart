@@ -73,8 +73,40 @@ Future<void> _navigateToOwnerOrders(BuildContext context) async {
   context.push('/owner-dashboard/orders', extra: place);
 }
 
+Future<void> _navigateToEditPlace(BuildContext context) async {
+  final user = FirebaseAuth.instance.currentUser;
+  if (user == null) return;
+  final doc = await FirebaseFirestore.instance
+      .collection('users')
+      .doc(user.uid)
+      .get();
+  final placeId = doc.data()?['placeId'] as String?;
+  if (!context.mounted) return;
+  if (placeId == null) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('لم يتم العثور على مكان مرتبط بحسابك')),
+    );
+    return;
+  }
+  final placeDoc = await FirebaseFirestore.instance
+      .collection('places')
+      .doc(placeId)
+      .get();
+  if (!placeDoc.exists) {
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text('المكان غير موجود')));
+    return;
+  }
+  final place = Place.fromDoc(placeDoc);
+  if (!context.mounted) return;
+  context.push('/owner-dashboard/edit-place', extra: place);
+}
+
 class _OwnerDashboardScreenState extends State<OwnerDashboardScreen> {
   String? _placeName;
+  String? _placeId;
+  bool _isOpen = true;
 
   @override
   void initState() {
@@ -93,10 +125,33 @@ class _OwnerDashboardScreenState extends State<OwnerDashboardScreen> {
 
     if (doc.exists) {
       final data = doc.data();
+      final pId = data?['placeId'] as String?;
+      
+      bool placeIsOpen = true;
+      if (pId != null) {
+        final placeDoc = await FirebaseFirestore.instance.collection('places').doc(pId).get();
+        if (placeDoc.exists) {
+          placeIsOpen = placeDoc.data()?['isOpen'] ?? true;
+        }
+      }
+
       setState(() {
+        _placeId = pId;
         _placeName = data?['placeName'] ?? 'مطعمي';
+        _isOpen = placeIsOpen;
       });
     }
+  }
+
+  Future<void> _toggleOpenStatus(bool value) async {
+    if (_placeId == null) return;
+    setState(() {
+      _isOpen = value;
+    });
+    await FirebaseFirestore.instance
+        .collection('places')
+        .doc(_placeId)
+        .update({'isOpen': value});
   }
 
   @override
@@ -163,7 +218,32 @@ class _OwnerDashboardScreenState extends State<OwnerDashboardScreen> {
                 ),
               ],
             ),
-            SizedBox(height: 24.h),
+            SizedBox(height: 16.h),
+            Card(
+              color: MyColors.myWhite,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.r)),
+              child: SwitchListTile(
+                title: Text(
+                  'حالة المطعم',
+                  style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold),
+                ),
+                subtitle: Text(
+                  _isOpen ? 'مفتوح ويستقبل الطلبات' : 'مغلق حالياً',
+                  style: TextStyle(
+                    color: _isOpen ? MyColors.mySuccess : MyColors.myError,
+                    fontSize: 12.sp,
+                  ),
+                ),
+                value: _isOpen,
+                activeColor: MyColors.mySuccess,
+                onChanged: _toggleOpenStatus,
+                secondary: Icon(
+                  _isOpen ? Icons.door_front_door : Icons.door_front_door_outlined,
+                  color: _isOpen ? MyColors.mySuccess : MyColors.myError,
+                ),
+              ),
+            ),
+            SizedBox(height: 16.h),
 
             Row(
               children: [
@@ -201,7 +281,7 @@ class _OwnerDashboardScreenState extends State<OwnerDashboardScreen> {
               title: 'تعديل المكان',
               subtitle: 'تحديث معلومات مطعمك',
               color: Colors.blue,
-              onTap: () {},
+              onTap: () => _navigateToEditPlace(context),
             ),
 
             DashboardMenuTile(

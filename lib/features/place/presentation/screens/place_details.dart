@@ -468,6 +468,33 @@ class PlaceDetailsScreen extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               _buildImageAndDetailsBar(context),
+              if (!place.isOpen)
+                Container(
+                  width: double.infinity,
+                  padding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 16.w),
+                  margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+                  decoration: BoxDecoration(
+                    color: MyColors.myError.withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(10.r),
+                    border: Border.all(color: MyColors.myError),
+                  ),
+                  child: Row(
+                    children: [
+                      Icon(Icons.lock_clock, color: MyColors.myError, size: 24.r),
+                      SizedBox(width: 12.w),
+                      Expanded(
+                        child: Text(
+                          'عذراً، المطعم مغلق حالياً ولا يمكنه استقبال طلبات جديدة',
+                          style: TextStyle(
+                            color: MyColors.myError,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 14.sp,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               SizedBox(height: 16.h),
               _buildListOfTextButtons(),
               SizedBox(height: 16.h),

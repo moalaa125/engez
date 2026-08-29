@@ -42,6 +42,7 @@ class Place {
   final String ownerId;
   final String location; // Keeping for backward compatibility
   final List<Branch> branches;
+  final bool isOpen;
 
   Place({
     required this.id,
@@ -53,6 +54,7 @@ class Place {
     this.ownerId = '',
     this.location = '',
     this.branches = const [],
+    this.isOpen = true,
   });
 
   factory Place.fromDoc(dynamic doc) {
@@ -77,6 +79,7 @@ class Place {
       ownerId: data['ownerId'] ?? '',
       location: data['location'] ?? '',
       branches: branchesList,
+      isOpen: data['isOpen'] ?? true,
     );
   }
 
@@ -91,6 +94,7 @@ class Place {
       'ownerId': ownerId,
       'location': location,
       'branches': branches.map((x) => x.toMap()).toList(),
+      'isOpen': isOpen,
       'createdAt': FieldValue.serverTimestamp(),
     };
   }
