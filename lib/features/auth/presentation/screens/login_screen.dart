@@ -98,7 +98,7 @@ class _LoginScreenContentState extends State<_LoginScreenContent> {
                   ),
                   CustomButton(
                     textColor: MyColors.myWhite,
-                    buttonColor: MyColors.myDarkText,
+                    buttonColor: Colors.black,
                     iconPath: 'assets/images/apple.jpg',
                     text: 'تسجيل الدخول باستخدام apple',
                     function: () {

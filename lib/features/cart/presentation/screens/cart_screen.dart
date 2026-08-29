@@ -12,6 +12,7 @@ import 'package:engez/features/order/models/order_model.dart';
 import 'package:engez/features/order/manager/order_cubit.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:engez/widgets/custom_image.dart';
+import 'package:engez/widgets/custom_text_field.dart';
 
 class CartScreen extends StatefulWidget {
   const CartScreen({super.key});
@@ -22,6 +23,13 @@ class CartScreen extends StatefulWidget {
 
 class _CartScreenState extends State<CartScreen> {
   bool _isSubmitting = false;
+  final TextEditingController _notesController = TextEditingController();
+
+  @override
+  void dispose() {
+    _notesController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -278,6 +286,12 @@ class _CartScreenState extends State<CartScreen> {
                         ],
                       ),
                       SizedBox(height: 16.h),
+                      CustomTextField(
+                        controller: _notesController,
+                        hintText: 'ملاحظات (اختياري، مثلاً: بدون طماطم)',
+                        suffixIcon: Icons.note_alt_outlined,
+                      ),
+                      SizedBox(height: 16.h),
                       SizedBox(
                         width: double.infinity,
                         height: 50.h,
@@ -300,9 +314,7 @@ class _CartScreenState extends State<CartScreen> {
                                     if (mounted) {
                                       ScaffoldMessenger.of(context).showSnackBar(
                                         const SnackBar(
-                                          content: Text(
-                                            'يجب تسجيل الدخول لإتمام الطلب',
-                                          ),
+                                          content: Text('الرجاء تسجيل الدخول أولاً'),
                                         ),
                                       );
                                       setState(() {
@@ -360,6 +372,7 @@ class _CartScreenState extends State<CartScreen> {
                                     totalPrice: state.totalPrice,
                                     status: 'pending',
                                     createdAt: DateTime.now(),
+                                    notes: _notesController.text.trim().isEmpty ? null : _notesController.text.trim(),
                                   );
 
                                   final orderId = await context.read<OrderCubit>().createOrder(order);

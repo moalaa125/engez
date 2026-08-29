@@ -42,6 +42,7 @@ class OrderModel {
   final DateTime createdAt;
   final int? estimatedPreparationTime;
   final DateTime? acceptedAt;
+  final String? notes;
 
   OrderModel({
     required this.id,
@@ -53,6 +54,7 @@ class OrderModel {
     required this.createdAt,
     this.estimatedPreparationTime,
     this.acceptedAt,
+    this.notes,
   });
 
   Map<String, dynamic> toMap() {
@@ -65,6 +67,7 @@ class OrderModel {
       'createdAt': createdAt,
       'estimatedPreparationTime': estimatedPreparationTime,
       'acceptedAt': acceptedAt,
+      'notes': notes,
     };
   }
 
@@ -82,6 +85,8 @@ class OrderModel {
       createdAt: (map['createdAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
       estimatedPreparationTime: map['estimatedPreparationTime'] as int?,
       acceptedAt: (map['acceptedAt'] as Timestamp?)?.toDate(),
+      notes: map['notes'] as String?,
     );
   }
 }
+

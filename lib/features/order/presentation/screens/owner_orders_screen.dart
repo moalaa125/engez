@@ -216,6 +216,45 @@ class _OwnerOrdersScreenState extends State<OwnerOrdersScreen> {
                             ),
                           ],
                         ),
+                        if (order.notes != null && order.notes!.isNotEmpty) ...[
+                          SizedBox(height: 12.h),
+                          Container(
+                            width: double.infinity,
+                            padding: EdgeInsets.all(12.w),
+                            decoration: BoxDecoration(
+                              color: MyColors.myWarning.withValues(alpha: 0.1),
+                              borderRadius: BorderRadius.circular(10.r),
+                              border: Border.all(color: MyColors.myWarning.withValues(alpha: 0.5)),
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  children: [
+                                    Icon(Icons.note_alt_outlined, size: 16.r, color: MyColors.myWarning),
+                                    SizedBox(width: 8.w),
+                                    Text(
+                                      'ملاحظات العميل:',
+                                      style: TextStyle(
+                                        fontSize: 14.sp,
+                                        fontWeight: FontWeight.bold,
+                                        color: MyColors.myWarning,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(height: 4.h),
+                                Text(
+                                  order.notes!,
+                                  style: TextStyle(
+                                    fontSize: 14.sp,
+                                    color: MyColors.myDarkText,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
                         SizedBox(height: 16.h),
                         if (order.status == 'pending') ...[
                           Row(
