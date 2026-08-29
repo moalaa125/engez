@@ -80,9 +80,18 @@ class _OwnerOrdersScreenState extends State<OwnerOrdersScreen> {
         listener: (context, state) {
           if (state is OrderLoaded) {
             final pendingCount = state.orders.where((o) => o.status == 'pending').length;
-            if (_previousPendingCount != -1 && pendingCount > _previousPendingCount) {
-              _audioPlayer.play(AssetSource('audio/alarm.mp3'));
+            
+            if (pendingCount > 0) {
+              // Start looping if it wasn't playing before
+              if (_previousPendingCount == 0 || _previousPendingCount == -1) {
+                _audioPlayer.setReleaseMode(ReleaseMode.loop);
+                _audioPlayer.play(AssetSource('audio/alarm.mp3'));
+              }
+            } else {
+              // Stop if there are no pending orders
+              _audioPlayer.stop();
             }
+            
             _previousPendingCount = pendingCount;
           }
         },
