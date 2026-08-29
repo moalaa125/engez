@@ -118,7 +118,7 @@ class _OwnerDashboardScreenState extends State<OwnerDashboardScreen> {
         actions: [
           IconButton(
             onPressed: () {
-              context.push('/profile');
+              context.push('/owner-profile');
             },
             icon: Icon(Icons.person_outline, color: MyColors.myDarkOrange),
           ),

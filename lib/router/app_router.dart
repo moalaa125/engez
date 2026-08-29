@@ -202,6 +202,10 @@ class AppRouter {
         ],
       ),
       GoRoute(
+        path: '/owner-profile',
+        builder: (context, state) => const Profile(),
+      ),
+      GoRoute(
         path: '/add-edit-place',
         builder: (context, state) {
           final place = state.extra as Place?;

@@ -3,6 +3,7 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:engez/features/order/manager/order_cubit.dart';
 import 'package:engez/features/order/manager/order_state.dart';
 import 'package:engez/models/place_model.dart';
+import 'package:lottie/lottie.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -86,10 +87,11 @@ class _OwnerOrdersScreenState extends State<OwnerOrdersScreen> {
             if (!isLoading && orders.isEmpty) {
               return Center(
                 child: Text(
-                  'لا توجد طلبات',
+                  'لا توجد طلبات واردة حالياً',
                   style: TextStyle(
                     fontSize: 18.sp,
                     color: MyColors.myTextSecondary,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
               );

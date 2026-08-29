@@ -10,6 +10,8 @@ import 'package:engez/widgets/result_feedback.dart';
 import 'package:engez/constants/my_colors.dart';
 import 'package:engez/features/menu/models/menu_item_model.dart';
 import 'package:engez/widgets/custom_image.dart';
+import 'package:engez/widgets/custom_text_field.dart';
+import 'package:engez/widgets/custom_button.dart';
 import 'package:engez/models/place_model.dart';
 import 'package:engez/repositories/menu_item_repository.dart';
 import 'package:engez/services/upload_service.dart';
@@ -110,7 +112,10 @@ class _ManageMenuScreenContentState extends State<_ManageMenuScreenContent> {
   }
 
   Future<void> _saveItem() async {
-    if (!_formKey.currentState!.validate()) return;
+    if (_titleController.text.trim().isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('الرجاء إدخال اسم العنصر')));
+      return;
+    }
     if (_imageUrl == null && _imageFile == null) {
       ScaffoldMessenger.of(
         context,
@@ -205,49 +210,40 @@ class _ManageMenuScreenContentState extends State<_ManageMenuScreenContent> {
                         ),
                       ),
                       SizedBox(height: 12.h),
-                      TextFormField(
+                      CustomTextField(
                         controller: _titleController,
-                        decoration: const InputDecoration(
-                          labelText: 'اسم العنصر',
-                        ),
-                        validator: (v) =>
-                            v?.trim().isEmpty ?? true ? 'مطلوب' : null,
-                      ),
-                      TextFormField(
-                        controller: _descriptionController,
-                        decoration: const InputDecoration(labelText: 'الوصف'),
-                      ),
-                      TextFormField(
-                        controller: _priceController,
-                        decoration: const InputDecoration(
-                          labelText: 'السعر (ج.م)',
-                        ),
-                        keyboardType: TextInputType.number,
-                        validator: (v) {
-                          if (v == null || v.trim().isEmpty) return 'مطلوب';
-                          if (double.tryParse(v) == null) return 'رقم غير صحيح';
-                          return null;
-                        },
+                        hintText: 'اسم العنصر',
+                        suffixIcon: null,
                       ),
                       SizedBox(height: 12.h),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: ElevatedButton(
-                              onPressed: _saveItem,
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: MyColors.myOrange,
-                              ),
-                              child: Text(_isEditing ? 'تحديث' : 'إضافة'),
-                            ),
-                          ),
-                          if (_isEditing)
-                            TextButton(
-                              onPressed: _resetForm,
-                              child: const Text('إلغاء'),
-                            ),
-                        ],
+                      CustomTextField(
+                        controller: _descriptionController,
+                        hintText: 'الوصف',
+                        suffixIcon: null,
                       ),
+                      SizedBox(height: 12.h),
+                      CustomTextField(
+                        controller: _priceController,
+                        hintText: 'السعر (ج.م)',
+                        keyboardType: TextInputType.number,
+                        suffixIcon: null,
+                      ),
+                      SizedBox(height: 12.h),
+                      CustomButton(
+                        text: _isEditing ? 'تحديث' : 'إضافة',
+                        function: _saveItem,
+                        buttonColor: MyColors.myOrange,
+                        textColor: MyColors.myWhite,
+                      ),
+                      if (_isEditing) ...[
+                        SizedBox(height: 12.h),
+                        CustomButton(
+                          text: 'إلغاء',
+                          function: _resetForm,
+                          buttonColor: MyColors.myBackground,
+                          textColor: MyColors.myError,
+                        ),
+                      ],
                     ],
                   ),
                 ),
