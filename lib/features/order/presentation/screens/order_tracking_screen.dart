@@ -19,8 +19,10 @@ class OrderTrackingScreen extends StatelessWidget {
         return 0;
       case 'confirmed':
         return 1;
-      case 'delivered':
+      case 'ready':
         return 2;
+      case 'delivered':
+        return 3;
       case 'cancelled':
         return -1;
       default:
@@ -252,13 +254,13 @@ class OrderTrackingScreen extends StatelessWidget {
                         _buildStep(
                           title: 'جاهز الان',
                           subtitle: 'يمكنك الاستلام الان',
-                          isActive: statusIndex >= 1,
+                          isActive: statusIndex >= 2,
                           isLast: false,
                         ),
                         _buildStep(
                           title: 'تم التسليم',
                           subtitle: 'تم استلام طلبك بنجاح',
-                          isActive: statusIndex >= 2,
+                          isActive: statusIndex >= 3,
                           isLast: true,
                         ),
                       ],
