@@ -9,6 +9,7 @@ import 'package:engez/features/place/presentation/screens/place_details.dart';
 import 'package:engez/features/cart/presentation/screens/cart_screen.dart';
 import 'package:engez/features/profile/presentation/screens/profile.dart';
 import 'package:engez/features/owner/presentation/screens/owner_dashboard_screen.dart';
+import 'package:engez/features/owner/presentation/screens/owner_sales_report_screen.dart';
 import 'package:engez/features/admin/presentation/screens/admin_dashboard_screen.dart';
 import 'package:engez/features/admin/presentation/screens/admin_requests_screen.dart';
 import 'package:engez/features/place/presentation/screens/add_edit_place_screen.dart';
@@ -197,6 +198,18 @@ class AppRouter {
                 );
               }
               return OwnerOrdersScreen(place: place);
+            },
+          ),
+          GoRoute(
+            path: 'sales-report',
+            builder: (context, state) {
+              final place = state.extra as Place?;
+              if (place == null) {
+                return const Scaffold(
+                  body: Center(child: Text('المكان غير موجود')),
+                );
+              }
+              return OwnerSalesReportScreen(place: place);
             },
           ),
         ],

@@ -103,6 +103,36 @@ Future<void> _navigateToEditPlace(BuildContext context) async {
   context.push('/owner-dashboard/edit-place', extra: place);
 }
 
+Future<void> _navigateToSalesReport(BuildContext context) async {
+  final user = FirebaseAuth.instance.currentUser;
+  if (user == null) return;
+  final doc = await FirebaseFirestore.instance
+      .collection('users')
+      .doc(user.uid)
+      .get();
+  final placeId = doc.data()?['placeId'] as String?;
+  if (!context.mounted) return;
+  if (placeId == null) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('لم يتم العثور على مكان مرتبط بحسابك')),
+    );
+    return;
+  }
+  final placeDoc = await FirebaseFirestore.instance
+      .collection('places')
+      .doc(placeId)
+      .get();
+  if (!placeDoc.exists) {
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text('المكان غير موجود')));
+    return;
+  }
+  final place = Place.fromDoc(placeDoc);
+  if (!context.mounted) return;
+  context.push('/owner-dashboard/sales-report', extra: place);
+}
+
 class _OwnerDashboardScreenState extends State<OwnerDashboardScreen> {
   String? _placeName;
   String? _placeId;
@@ -179,11 +209,12 @@ class _OwnerDashboardScreenState extends State<OwnerDashboardScreen> {
           ),
         ],
       ),
-      body: Padding(
-        padding: EdgeInsets.all(16.w),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: EdgeInsets.all(16.w),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
             Row(
               children: [
                 CircleAvatar(
@@ -293,6 +324,14 @@ class _OwnerDashboardScreenState extends State<OwnerDashboardScreen> {
             ),
 
             DashboardMenuTile(
+              icon: Icons.bar_chart,
+              title: 'تقارير المبيعات',
+              subtitle: 'راجع مبيعاتك اليومية والشهرية',
+              color: MyColors.myDarkOrange,
+              onTap: () => _navigateToSalesReport(context),
+            ),
+
+            DashboardMenuTile(
               icon: Icons.shopping_bag_outlined,
               title: 'الطلبات الواردة',
               subtitle: 'شاهد الطلبات الجديدة',
@@ -301,6 +340,7 @@ class _OwnerDashboardScreenState extends State<OwnerDashboardScreen> {
             ),
           ],
         ),
+      ),
       ),
     );
   }

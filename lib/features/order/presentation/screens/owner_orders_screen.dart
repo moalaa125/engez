@@ -109,7 +109,7 @@ class _OwnerOrdersScreenState extends State<OwnerOrdersScreen> {
               totalPrice: 200,
               status: 'pending',
               createdAt: DateTime.now(),
-            )) : (state as OrderLoaded).orders;
+            )) : (state as OrderLoaded).orders.where((o) => o.status != 'delivered' && o.status != 'cancelled').toList();
             
             if (!isLoading && orders.isEmpty) {
               return Center(
