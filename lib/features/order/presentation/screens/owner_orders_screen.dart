@@ -66,16 +66,28 @@ class _OwnerOrdersScreenState extends State<OwnerOrdersScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: MyColors.myBackground,
-      appBar: AppBar(
-        title: const Text(
-          'الطلبات الواردة',
-          style: TextStyle(fontFamily: 'cairo'),
+    return DefaultTabController(
+      length: 3,
+      child: Scaffold(
+        backgroundColor: MyColors.myBackground,
+        appBar: AppBar(
+          title: const Text(
+            'الطلبات الواردة',
+            style: TextStyle(fontFamily: 'cairo'),
+          ),
+          backgroundColor: MyColors.myWhite,
+          centerTitle: true,
+          bottom: TabBar(
+            labelColor: MyColors.myDarkOrange,
+            unselectedLabelColor: MyColors.myTextSecondary,
+            indicatorColor: MyColors.myOrange,
+            tabs: const [
+              Tab(text: 'جديدة'),
+              Tab(text: 'جاري التجهيز'),
+              Tab(text: 'جاهزة'),
+            ],
+          ),
         ),
-        backgroundColor: MyColors.myWhite,
-        centerTitle: true,
-      ),
       body: BlocConsumer<OrderCubit, OrderState>(
         listener: (context, state) {
           if (state is OrderLoaded) {
@@ -111,26 +123,45 @@ class _OwnerOrdersScreenState extends State<OwnerOrdersScreen> {
               createdAt: DateTime.now(),
             )) : (state as OrderLoaded).orders.where((o) => o.status != 'delivered' && o.status != 'cancelled').toList();
             
-            if (!isLoading && orders.isEmpty) {
-              return Center(
-                child: Text(
-                  'لا توجد طلبات واردة حالياً',
-                  style: TextStyle(
-                    fontSize: 18.sp,
-                    color: MyColors.myTextSecondary,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              );
-            }
-            
-            return Skeletonizer(
-              enabled: isLoading,
-              child: ListView.builder(
-                padding: EdgeInsets.all(16.w),
-                itemCount: orders.length,
-              itemBuilder: (context, index) {
-                final order = orders[index];
+            final pendingOrders = orders.where((o) => o.status == 'pending').toList();
+            final preparingOrders = orders.where((o) => o.status == 'confirmed').toList();
+            final readyOrders = orders.where((o) => o.status == 'ready').toList();
+
+            return TabBarView(
+              children: [
+                _buildOrdersList(pendingOrders, isLoading, 'لا توجد طلبات جديدة حالياً'),
+                _buildOrdersList(preparingOrders, isLoading, 'لا توجد طلبات قيد التجهيز'),
+                _buildOrdersList(readyOrders, isLoading, 'لا توجد طلبات جاهزة'),
+              ],
+            );
+          }
+          return const SizedBox();
+        },
+      ),
+      ),
+    );
+  }
+
+  Widget _buildOrdersList(List<OrderModel> orders, bool isLoading, String emptyMessage) {
+    if (!isLoading && orders.isEmpty) {
+      return Center(
+        child: Text(
+          emptyMessage,
+          style: TextStyle(
+            fontSize: 18.sp,
+            color: MyColors.myTextSecondary,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      );
+    }
+    return Skeletonizer(
+      enabled: isLoading,
+      child: ListView.builder(
+        padding: EdgeInsets.all(16.w),
+        itemCount: orders.length,
+        itemBuilder: (context, index) {
+          final order = orders[index];
                 return Card(
                   margin: EdgeInsets.only(bottom: 16.h),
                   color: MyColors.myWhite,
@@ -338,11 +369,6 @@ class _OwnerOrdersScreenState extends State<OwnerOrdersScreen> {
               },
             ),
           );
-        }
-          return const SizedBox.shrink();
-        },
-      ),
-    );
   }
   
   void _showAcceptOrderBottomSheet(BuildContext context, String orderId) {

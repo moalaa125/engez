@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:engez/constants/my_colors.dart';
 import 'package:go_router/go_router.dart';
-import 'package:engez/widgets/dashboard_menu_tile.dart';
 class OwnerDashboardScreen extends StatefulWidget {
   const OwnerDashboardScreen({super.key});
 
@@ -297,46 +296,47 @@ class _OwnerDashboardScreenState extends State<OwnerDashboardScreen> {
             ),
             SizedBox(height: 12.h),
 
-            DashboardMenuTile(
-              icon: Icons.add_location,
-              title: 'إضافة مكان',
-              subtitle: 'أضف مطعمك أو مقهىك الجديد',
-              color: MyColors.myOrange,
-              onTap: () {
-                context.push('/owner-dashboard/add-place');
-              },
-            ),
-
-            DashboardMenuTile(
-              icon: Icons.edit_location,
-              title: 'تعديل المكان',
-              subtitle: 'تحديث معلومات مطعمك',
-              color: Colors.blue,
-              onTap: () => _navigateToEditPlace(context),
-            ),
-
-            DashboardMenuTile(
-              icon: Icons.menu_book,
-              title: 'إدارة القائمة',
-              subtitle: 'أضف أو عدل عناصر القائمة',
-              color: MyColors.mySuccess,
-              onTap: () => _navigateToManageMenu(context),
-            ),
-
-            DashboardMenuTile(
-              icon: Icons.bar_chart,
-              title: 'تقارير المبيعات',
-              subtitle: 'راجع مبيعاتك اليومية والشهرية',
-              color: MyColors.myDarkOrange,
-              onTap: () => _navigateToSalesReport(context),
-            ),
-
-            DashboardMenuTile(
-              icon: Icons.shopping_bag_outlined,
-              title: 'الطلبات الواردة',
-              subtitle: 'شاهد الطلبات الجديدة',
-              color: Colors.purple,
-              onTap: () => _navigateToOwnerOrders(context),
+            GridView.count(
+              crossAxisCount: 2,
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              crossAxisSpacing: 16.w,
+              mainAxisSpacing: 16.h,
+              childAspectRatio: 1.1,
+              children: [
+                DashboardGridTile(
+                  icon: Icons.add_location,
+                  title: 'إضافة مكان',
+                  color: MyColors.myOrange,
+                  onTap: () {
+                    context.push('/owner-dashboard/add-place');
+                  },
+                ),
+                DashboardGridTile(
+                  icon: Icons.edit_location,
+                  title: 'تعديل المكان',
+                  color: Colors.blue,
+                  onTap: () => _navigateToEditPlace(context),
+                ),
+                DashboardGridTile(
+                  icon: Icons.menu_book,
+                  title: 'إدارة القائمة',
+                  color: MyColors.mySuccess,
+                  onTap: () => _navigateToManageMenu(context),
+                ),
+                DashboardGridTile(
+                  icon: Icons.bar_chart,
+                  title: 'تقارير المبيعات',
+                  color: MyColors.myDarkOrange,
+                  onTap: () => _navigateToSalesReport(context),
+                ),
+                DashboardGridTile(
+                  icon: Icons.shopping_bag_outlined,
+                  title: 'الطلبات الواردة',
+                  color: Colors.purple,
+                  onTap: () => _navigateToOwnerOrders(context),
+                ),
+              ],
             ),
           ],
         ),
@@ -382,5 +382,62 @@ class _OwnerDashboardScreenState extends State<OwnerDashboardScreen> {
     );
   }
 
+}
 
+class DashboardGridTile extends StatelessWidget {
+  final IconData icon;
+  final String title;
+  final Color color;
+  final VoidCallback onTap;
+
+  const DashboardGridTile({
+    super.key,
+    required this.icon,
+    required this.title,
+    required this.color,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        decoration: BoxDecoration(
+          color: MyColors.myWhite,
+          borderRadius: BorderRadius.circular(20.r),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.05),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              padding: EdgeInsets.all(12.w),
+              decoration: BoxDecoration(
+                color: color.withValues(alpha: 0.1),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(icon, color: color, size: 32.r),
+            ),
+            SizedBox(height: 12.h),
+            Text(
+              title,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 14.sp,
+                fontWeight: FontWeight.bold,
+                color: MyColors.myDarkText,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 }
