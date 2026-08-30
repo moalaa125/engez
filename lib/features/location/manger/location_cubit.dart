@@ -36,6 +36,7 @@ class LocationCubit extends Cubit<LocationState> {
         ),
       );
 
+      await setLocaleIdentifier('ar_EG');
       List<Placemark> placemarks = await placemarkFromCoordinates(
         position.latitude,
         position.longitude,
@@ -60,29 +61,39 @@ class LocationCubit extends Cubit<LocationState> {
   String _extractAddress(Placemark place) {
     final List<String> parts = [];
 
-    // Prioritize specific street or thoroughfare
-    if (place.street != null && place.street!.trim().isNotEmpty && !place.street!.contains('Unnamed')) {
-      parts.add(place.street!.trim());
-    } else if (place.thoroughfare != null && place.thoroughfare!.trim().isNotEmpty) {
-      parts.add(place.thoroughfare!.trim());
+    String cleanText(String? text) {
+      if (text == null) return '';
+      // Remove Google Plus Codes like "Q2P2+R65" or "Q2P2+R65, "
+      return text.replaceAll(RegExp(r'[A-Z0-9]{2,}\+[A-Z0-9]+\s*,?\s*'), '').trim();
     }
 
-    // Add neighborhood or sub-locality
-    if (place.subLocality != null && place.subLocality!.trim().isNotEmpty) {
-      parts.add(place.subLocality!.trim());
-    } else if (place.locality != null && place.locality!.trim().isNotEmpty) {
-      parts.add(place.locality!.trim());
+    final street = cleanText(place.street);
+    if (street.isNotEmpty && !street.toLowerCase().contains('unnamed')) {
+      parts.add(street);
+    } else {
+      final thoroughfare = cleanText(place.thoroughfare);
+      if (thoroughfare.isNotEmpty && !thoroughfare.toLowerCase().contains('unnamed')) {
+        parts.add(thoroughfare);
+      }
     }
 
-    // If we found specific details, return them
+    final subLocality = cleanText(place.subLocality);
+    if (subLocality.isNotEmpty) {
+      parts.add(subLocality);
+    } else {
+      final locality = cleanText(place.locality);
+      if (locality.isNotEmpty) {
+        parts.add(locality);
+      }
+    }
+
     if (parts.isNotEmpty) {
-      // Use Set to remove duplicates in case street is the same as subLocality
       return parts.toSet().toList().join('، ');
     }
 
-    // Fallback to governorate/state
-    if (place.administrativeArea != null && place.administrativeArea!.trim().isNotEmpty) {
-      return place.administrativeArea!.trim();
+    final adminArea = cleanText(place.administrativeArea);
+    if (adminArea.isNotEmpty) {
+      return adminArea;
     }
 
     return 'موقع غير معروف';

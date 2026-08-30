@@ -11,6 +11,7 @@ import 'package:engez/features/location/manger/location_state.dart';
 import 'package:engez/features/place/place_cubit.dart';
 import 'package:engez/features/place/place_state.dart';
 import 'package:engez/widgets/category_list.dart';
+import 'package:engez/widgets/result_feedback.dart';
 import 'package:engez/widgets/custom_icon_button.dart';
 import 'package:engez/widgets/custom_offer_section.dart';
 import 'package:engez/widgets/custom_text_field.dart';
@@ -162,11 +163,67 @@ class _HomeScreenState extends State<HomeScreen> {
       );
     }
     if (state is LocationLoaded) {
-      return Text(
-        state.address,
-        style: TextStyle(fontFamily: 'cairo', fontSize: 18.sp),
-        maxLines: 1,
-        overflow: TextOverflow.ellipsis,
+      String getShortAddress(String address) {
+        List<String> words = address.split(RegExp(r'[\s،]+')).where((w) => w.trim().isNotEmpty).toList();
+        if (words.length <= 2) return address;
+        return '${words[0]}، ${words[1]}..';
+      }
+
+      return GestureDetector(
+        onTap: () {
+          showModalBottomSheet(
+            context: context,
+            backgroundColor: MyColors.myWhite,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.vertical(top: Radius.circular(24.r)),
+            ),
+            builder: (context) {
+              return Padding(
+                padding: EdgeInsets.all(24.w),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(
+                      width: 40.w,
+                      height: 4.h,
+                      decoration: BoxDecoration(
+                        color: Colors.grey.withValues(alpha: 0.3),
+                        borderRadius: BorderRadius.circular(2.r),
+                      ),
+                    ),
+                    SizedBox(height: 24.h),
+                    Container(
+                      padding: EdgeInsets.all(16.r),
+                      decoration: BoxDecoration(
+                        color: MyColors.myOrange.withValues(alpha: 0.1),
+                        shape: BoxShape.circle,
+                      ),
+                      child: Icon(Icons.location_on, color: MyColors.myOrange, size: 60.r),
+                    ),
+                    SizedBox(height: 16.h),
+                    Text(
+                      'موقعك الحالي',
+                      style: TextStyle(fontFamily: 'cairo', fontSize: 20.sp, fontWeight: FontWeight.bold, color: MyColors.myDarkText),
+                    ),
+                    SizedBox(height: 8.h),
+                    Text(
+                      state.address,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontFamily: 'cairo', fontSize: 16.sp, color: MyColors.myTextSecondary),
+                    ),
+                    SizedBox(height: 24.h),
+                  ],
+                ),
+              );
+            },
+          );
+        },
+        child: Text(
+          getShortAddress(state.address),
+          style: TextStyle(fontFamily: 'cairo', fontSize: 16.sp, fontWeight: FontWeight.bold),
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+        ),
       );
     }
     if (state is LocationError) {

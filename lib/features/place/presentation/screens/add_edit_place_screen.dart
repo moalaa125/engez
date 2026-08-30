@@ -234,6 +234,12 @@ Future<void> _savePlace() async {
         }
       } else {
         await context.read<PlaceCubit>().updatePlace(place);
+        
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(user.uid)
+            .update({'placeName': place.title});
+
         if (mounted) {
           showResultFeedback(
             context,

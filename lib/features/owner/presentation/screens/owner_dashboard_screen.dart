@@ -5,6 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:engez/constants/my_colors.dart';
 import 'package:go_router/go_router.dart';
+import 'package:audioplayers/audioplayers.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:engez/features/order/manager/order_cubit.dart';
+import 'package:engez/features/order/manager/order_state.dart';
 class OwnerDashboardScreen extends StatefulWidget {
   const OwnerDashboardScreen({super.key});
 
@@ -136,11 +140,19 @@ class _OwnerDashboardScreenState extends State<OwnerDashboardScreen> {
   String? _placeName;
   String? _placeId;
   bool _isOpen = true;
+  final AudioPlayer _audioPlayer = AudioPlayer();
+  int _previousPendingCount = -1;
 
   @override
   void initState() {
     super.initState();
     _loadPlaceData();
+  }
+
+  @override
+  void dispose() {
+    _audioPlayer.dispose();
+    super.dispose();
   }
 
   Future<void> _loadPlaceData() async {
@@ -157,18 +169,24 @@ class _OwnerDashboardScreenState extends State<OwnerDashboardScreen> {
       final pId = data?['placeId'] as String?;
       
       bool placeIsOpen = true;
+      String? actualPlaceName;
       if (pId != null) {
         final placeDoc = await FirebaseFirestore.instance.collection('places').doc(pId).get();
         if (placeDoc.exists) {
           placeIsOpen = placeDoc.data()?['isOpen'] ?? true;
+          actualPlaceName = placeDoc.data()?['title'] ?? placeDoc.data()?['name']; // Fallback to name just in case
         }
       }
 
       setState(() {
         _placeId = pId;
-        _placeName = data?['placeName'] ?? 'مطعمي';
+        _placeName = actualPlaceName ?? data?['placeName'] ?? 'مطعمي';
         _isOpen = placeIsOpen;
       });
+      
+      if (pId != null && mounted) {
+        context.read<OrderCubit>().fetchPlaceOrders(pId);
+      }
     }
   }
 
@@ -185,9 +203,25 @@ class _OwnerDashboardScreenState extends State<OwnerDashboardScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: MyColors.myBackground,
-      appBar: AppBar(
+    return BlocListener<OrderCubit, OrderState>(
+      listener: (context, state) {
+        if (state is OrderLoaded) {
+          final pendingCount = state.orders.where((o) => o.status == 'pending').length;
+          
+          if (pendingCount > 0) {
+            if (_previousPendingCount == 0 || _previousPendingCount == -1) {
+              _audioPlayer.setReleaseMode(ReleaseMode.loop);
+              _audioPlayer.play(AssetSource('audio/alarm.mp3'));
+            }
+          } else {
+            _audioPlayer.stop();
+          }
+          _previousPendingCount = pendingCount;
+        }
+      },
+      child: Scaffold(
+        backgroundColor: MyColors.myBackground,
+        appBar: AppBar(
         backgroundColor: MyColors.myWhite,
         elevation: 0,
         title: Text(
@@ -340,6 +374,7 @@ class _OwnerDashboardScreenState extends State<OwnerDashboardScreen> {
             ),
           ],
         ),
+      ),
       ),
       ),
     );

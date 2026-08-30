@@ -8,7 +8,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:engez/features/order/models/order_model.dart';
-import 'package:audioplayers/audioplayers.dart';
 
 class OwnerOrdersScreen extends StatefulWidget {
   final Place place;
@@ -19,19 +18,10 @@ class OwnerOrdersScreen extends StatefulWidget {
 }
 
 class _OwnerOrdersScreenState extends State<OwnerOrdersScreen> {
-  final AudioPlayer _audioPlayer = AudioPlayer();
-  int _previousPendingCount = -1;
-
   @override
   void initState() {
     super.initState();
     context.read<OrderCubit>().fetchPlaceOrders(widget.place.id);
-  }
-
-  @override
-  void dispose() {
-    _audioPlayer.dispose();
-    super.dispose();
   }
 
   String _getStatusText(String status) {
@@ -88,25 +78,7 @@ class _OwnerOrdersScreenState extends State<OwnerOrdersScreen> {
             ],
           ),
         ),
-      body: BlocConsumer<OrderCubit, OrderState>(
-        listener: (context, state) {
-          if (state is OrderLoaded) {
-            final pendingCount = state.orders.where((o) => o.status == 'pending').length;
-            
-            if (pendingCount > 0) {
-              // Start looping if it wasn't playing before
-              if (_previousPendingCount == 0 || _previousPendingCount == -1) {
-                _audioPlayer.setReleaseMode(ReleaseMode.loop);
-                _audioPlayer.play(AssetSource('audio/alarm.mp3'));
-              }
-            } else {
-              // Stop if there are no pending orders
-              _audioPlayer.stop();
-            }
-            
-            _previousPendingCount = pendingCount;
-          }
-        },
+      body: BlocBuilder<OrderCubit, OrderState>(
         builder: (context, state) {
           final isLoading = state is OrderLoading;
           if (state is OrderError) {
