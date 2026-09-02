@@ -92,6 +92,7 @@ flutter:
     - assets/images/
     - assets/animations/
     - assets/audio/
+    - assets/icon/web/icon-512.png
     - menu/menukbab.pdf
   #   - images/a_dot_ham.jpeg
 

@@ -23,8 +23,9 @@ import 'package:engez/core/utils/distance_utils.dart';
 
 class PlaceDetailsScreen extends StatelessWidget {
   final Place place;
+  final String? heroTag;
 
-  PlaceDetailsScreen({super.key, required this.place});
+  PlaceDetailsScreen({super.key, required this.place, this.heroTag});
 
   final Map<String, String> _pdfPaths = {
     'kbab_basha': 'menu/menukbab.pdf',
@@ -312,7 +313,7 @@ class PlaceDetailsScreen extends StatelessWidget {
             right: 0,
             height: 330.h,
             child: Hero(
-              tag: place.id,
+              tag: heroTag ?? place.id,
               child: CustomImage(imagePath: place.imagePath),
             ),
           ),

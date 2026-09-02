@@ -148,13 +148,22 @@ class AppRouter {
       GoRoute(
         path: '/place-details',
         builder: (context, state) {
-          final place = state.extra as Place?;
+          final extra = state.extra;
+          Place? place;
+          String? heroTag;
+          if (extra is Place) {
+            place = extra;
+          } else if (extra is Map<String, dynamic>) {
+            place = extra['place'] as Place?;
+            heroTag = extra['heroTag'] as String?;
+          }
+          
           if (place == null) {
             return const Scaffold(
               body: Center(child: Text('لم يتم العثور على المكان')),
             );
           }
-          return PlaceDetailsScreen(place: place);
+          return PlaceDetailsScreen(place: place, heroTag: heroTag);
         },
       ),
       GoRoute(

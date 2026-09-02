@@ -13,6 +13,12 @@ class LoadingScreen extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            Image.asset(
+              'assets/icon/web/icon-512.png',
+              width: 150.w,
+              height: 150.h,
+            ),
+            SizedBox(height: 16.h),
             Text(
               'إنجز',
               style: TextStyle(
@@ -23,16 +29,8 @@ class LoadingScreen extends StatelessWidget {
               ),
             ),
             SizedBox(height: 30.h),
+            // TODO: أضف كود الأنيميشن (Lottie) الخاص بك هنا لاحقاً
             CircularProgressIndicator(color: MyColors.myOrange, strokeWidth: 4),
-            SizedBox(height: 20.h),
-            Text(
-              'جاري التحميل...',
-              style: TextStyle(
-                color: MyColors.myTextSecondary,
-                fontSize: 16.sp,
-                fontFamily: 'cairo',
-              ),
-            ),
           ],
         ),
       ),

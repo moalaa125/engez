@@ -152,9 +152,12 @@ class AllPlaces extends StatelessWidget {
                       return Padding(
                         padding: EdgeInsets.only(bottom: 20.h),
                         child: PlaceCard(
-                          heroTag: place.id,
+                          heroTag: 'all_${place.id}',
                           onTab: () {
-                            context.push('/place-details', extra: place);
+                            context.push('/place-details', extra: {
+                              'place': place,
+                              'heroTag': 'all_${place.id}',
+                            });
                           },
                           imagePath: place.imagePath,
                           title: place.title,
