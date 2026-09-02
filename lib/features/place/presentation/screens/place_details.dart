@@ -244,7 +244,7 @@ class PlaceDetailsScreen extends StatelessWidget {
                           title: item.title,
                           imagePath: item.imagePath,
                           price: item.price,
-                          placeId: widget.place.id,
+                          placeId: place.id,
                         );
                         final success = context.read<CartCubit>().addItem(cartItem);
                         if (!success) {
