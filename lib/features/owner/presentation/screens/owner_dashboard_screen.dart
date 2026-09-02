@@ -180,7 +180,7 @@ class _OwnerDashboardScreenState extends State<OwnerDashboardScreen> {
 
       setState(() {
         _placeId = pId;
-        _placeName = actualPlaceName ?? data?['placeName'] ?? 'مطعمي';
+        _placeName = actualPlaceName ?? data?['placeName'] ?? 'مكاني';
         _isOpen = placeIsOpen;
       });
       
@@ -271,7 +271,7 @@ class _OwnerDashboardScreenState extends State<OwnerDashboardScreen> {
                       ),
                     ),
                     Text(
-                      _placeName ?? 'مطعمي',
+                      _placeName ?? 'مكاني',
                       style: TextStyle(
                         fontSize: 20.sp,
                         fontWeight: FontWeight.bold,
@@ -288,7 +288,7 @@ class _OwnerDashboardScreenState extends State<OwnerDashboardScreen> {
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.r)),
               child: SwitchListTile(
                 title: Text(
-                  'حالة المطعم',
+                  'حالة المكان',
                   style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold),
                 ),
                 subtitle: Text(
@@ -321,7 +321,7 @@ class _OwnerDashboardScreenState extends State<OwnerDashboardScreen> {
             SizedBox(height: 24.h),
 
             Text(
-              'إدارة المطعم',
+              'إدارة المكان',
               style: TextStyle(
                 fontSize: 18.sp,
                 fontWeight: FontWeight.bold,

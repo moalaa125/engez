@@ -332,27 +332,18 @@ class _CartScreenState extends State<CartScreen> {
                                     return;
                                   }
 
-                                  String resolvedPlaceId = '';
+                                  final resolvedPlaceId = state.items.first.placeId;
                                   bool isPlaceOpen = true;
                                   try {
-                                    final firstItem = state.items.first;
-                                    final placesSnapshot = await FirebaseFirestore
-                                        .instance
+                                    final placeDoc = await FirebaseFirestore.instance
                                         .collection('places')
+                                        .doc(resolvedPlaceId)
                                         .get();
-                                    for (var doc in placesSnapshot.docs) {
-                                      final menuDoc = await doc.reference
-                                          .collection('menuItems')
-                                          .doc(firstItem.id)
-                                          .get();
-                                      if (menuDoc.exists) {
-                                        resolvedPlaceId = doc.id;
-                                        isPlaceOpen = doc.data()['isOpen'] ?? true;
-                                        break;
-                                      }
+                                    if (placeDoc.exists) {
+                                      isPlaceOpen = placeDoc.data()?['isOpen'] ?? true;
                                     }
                                   } catch (e) {
-                                    debugPrint('Error resolving placeId: $e');
+                                    debugPrint('Error checking place status: $e');
                                   }
 
                                   if (!mounted) return;
@@ -369,8 +360,6 @@ class _CartScreenState extends State<CartScreen> {
                                     });
                                     return;
                                   }
-
-                                  if (!mounted) return;
 
                                   final order = OrderModel(
                                     id: '',

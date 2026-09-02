@@ -55,11 +55,11 @@ class AppRouter {
       }
 
       // Check role-based guards
-      if (path.startsWith('/owner-dashboard')) {
+      if (path.startsWith('/owner-dashboard') || path.startsWith('/owner-profile')) {
         if (role != 'owner') return '/home'; // unauthorized
       }
 
-      if (path.startsWith('/admin-dashboard') || path.startsWith('/admin-requests')) {
+      if (path.startsWith('/admin')) {
         if (role != 'admin') return '/home'; // unauthorized
       }
 
@@ -217,13 +217,6 @@ class AppRouter {
       GoRoute(
         path: '/owner-profile',
         builder: (context, state) => const Profile(),
-      ),
-      GoRoute(
-        path: '/add-edit-place',
-        builder: (context, state) {
-          final place = state.extra as Place?;
-          return AddEditPlaceScreen(place: place);
-        },
       ),
       GoRoute(
         path: '/admin-dashboard',

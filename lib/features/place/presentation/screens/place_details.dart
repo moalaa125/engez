@@ -244,8 +244,31 @@ class PlaceDetailsScreen extends StatelessWidget {
                           title: item.title,
                           imagePath: item.imagePath,
                           price: item.price,
+                          placeId: widget.place.id,
                         );
-                        context.read<CartCubit>().addItem(cartItem);
+                        final success = context.read<CartCubit>().addItem(cartItem);
+                        if (!success) {
+                          showDialog(
+                            context: context,
+                            builder: (ctx) => AlertDialog(
+                              title: const Text('سلتك تحتوي على طلبات من مكان آخر', style: TextStyle(fontFamily: 'cairo')),
+                              content: const Text('هل تفضل تفريغ السلة وإضافة هذا الصنف؟', style: TextStyle(fontFamily: 'cairo')),
+                              actions: [
+                                TextButton(
+                                  onPressed: () => Navigator.pop(ctx),
+                                  child: const Text('إلغاء', style: TextStyle(fontFamily: 'cairo', color: Colors.grey)),
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.pop(ctx);
+                                    context.read<CartCubit>().clearAndAddItem(cartItem);
+                                  },
+                                  child: const Text('تفريغ وإضافة', style: TextStyle(fontFamily: 'cairo', color: Colors.red)),
+                                ),
+                              ],
+                            ),
+                          );
+                        }
                       },
                       onRemoveTap: () {
                         context.read<CartCubit>().decrementItem(item.id);

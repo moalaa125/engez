@@ -11,7 +11,6 @@ import 'package:engez/features/location/manger/location_state.dart';
 import 'package:engez/features/place/place_cubit.dart';
 import 'package:engez/features/place/place_state.dart';
 import 'package:engez/widgets/category_list.dart';
-import 'package:engez/widgets/result_feedback.dart';
 import 'package:engez/widgets/custom_icon_button.dart';
 import 'package:engez/widgets/custom_offer_section.dart';
 import 'package:engez/widgets/custom_text_field.dart';

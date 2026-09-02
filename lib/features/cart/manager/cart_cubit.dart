@@ -5,7 +5,11 @@ import 'cart_state.dart';
 class CartCubit extends Cubit<CartState> {
   CartCubit() : super(const CartState());
 
-  void addItem(CartItem newItem) {
+  bool addItem(CartItem newItem) {
+    if (state.items.isNotEmpty && state.items.first.placeId != newItem.placeId) {
+      return false;
+    }
+
     final items = List<CartItem>.from(state.items);
     final index = items.indexWhere((item) => item.id == newItem.id);
 
@@ -18,6 +22,11 @@ class CartCubit extends Cubit<CartState> {
     }
 
     emit(CartState(items: items));
+    return true;
+  }
+
+  void clearAndAddItem(CartItem newItem) {
+    emit(CartState(items: [newItem]));
   }
 
   void incrementItem(String id) {
