@@ -1,103 +1,103 @@
-# Engez (إنجز)
+# Engez (إنجز) 🚀
 
-A Flutter app for pre-ordering food and drinks from nearby cafes and restaurants, paying online, and getting notified when the order is ready for pickup — no more waiting in line.
+![Flutter](https://img.shields.io/badge/Flutter-%2302569B.svg?style=for-the-badge&logo=Flutter&logoColor=white)
+![Firebase](https://img.shields.io/badge/firebase-%23039BE5.svg?style=for-the-badge&logo=firebase)
+![Dart](https://img.shields.io/badge/dart-%230175C2.svg?style=for-the-badge&logo=dart&logoColor=white)
 
-##  Concept
+**Engez** is a modern, high-performance Flutter application designed to eliminate waiting lines in restaurants and cafes through an efficient **Order Ahead & Pick-up** system. Users can order their food or coffee while on the go, and simply pick it up upon arrival—saving valuable time!
 
-The user opens the app, sees nearby cafes/restaurants based on their location, places and pays for an order online, then gets notified once the order is ready for pickup.
+## 🎥 App Demo Video
 
-## 📱 Screens
+> **Watch the full app experience in action:**
+> *(Place your video link here, e.g., YouTube or LinkedIn)*
+> 
+> `<a href="YOUR_VIDEO_LINK_HERE" target="_blank"><img src="https://img.youtube.com/vi/YOUR_VIDEO_ID/0.jpg" alt="Watch the video" width="400" /></a>`
 
-| Login | Home | Place Details |
-|---|---|---|
-| <img src="screenshots/login.PNG" width="250" /> | <img src="screenshots/home.PNG" width="250" /> | <img src="screenshots/placeDetails.PNG" width="250" /> |
+---
 
-##  Current Features
+## 🌟 Key Features
 
-- **Auth**
-  - Login with Egyptian phone number + OTP via Firebase Phone Auth
-  - Google Sign-In
-- **Location**
-  - Fetches the user's current location and resolves it to a readable address (Geocoding)
-  - Handles all location permission states (denied, disabled, permanently denied)
-- **Categories**
-  - Select a category from a list of place/item categories
-- **UI**
-  - Responsive design across all screen sizes (flutter_screenutil)
-  - Custom color theme with Arabic font support (Google Fonts - Cairo)
-  - Reusable UI components (buttons, cards, input fields, bottom nav bar, offers carousel...)
+* **Order Ahead & Save Time:** Seamless, real-time connection between the customer and the restaurant to prepare orders before arrival, completely eliminating crowds and wait times.
+* **Smart Cart:** A dynamic, advanced cart system that allows users to easily add items, adjust quantities, and calculate totals in real-time.
+* **Interactive PDF Menus:** Integrated an advanced PDF viewer within a sleek Glass Blur pop-up design for a premium, interactive menu browsing experience.
+* **Lightning-Fast Performance:** Instantaneous UI updates and flawless interactions powered by robust state management (BLoC/Cubit) with zero lag.
+* **Dedicated Owner Dashboard:** A completely separate flow for restaurant owners to manage incoming orders, track statuses, and seamlessly add/edit their menu items with a beautiful Grid and Bottom Sheet UI.
 
-##  Tech Stack
+---
 
-| Technology | Purpose |
-|---|---|
-| Flutter | Core framework |
-| Firebase Core / Firebase Auth | Login and authentication |
-| Google Sign-In | Google login |
-| flutter_bloc (Cubit) | State management |
-| equatable | Efficient state comparison |
-| flutter_screenutil | Responsive UI |
-| google_fonts | Custom fonts (Cairo) |
-| geolocator / geocoding | Geolocation and reverse geocoding |
-| google_nav_bar | Bottom navigation bar |
-| carousel_slider | Offers/slider display |
+## 📱 Screenshots
 
-## 📁 Project Structure
+### Customer Flow
 
-```
+| Home | Search & Filter | Place Details |
+| :---: | :---: | :---: |
+| <img src="screenshots/home.PNG" width="250" /> | <img src="screenshots/search.png" width="250" /> | <img src="screenshots/placeDetails.PNG" width="250" /> |
+
+| Offers & Categories | Smart Cart / Add Note | My Orders |
+| :---: | :---: | :---: |
+| <img src="screenshots/offers.png" width="250" /> | <img src="screenshots/addNote.png" width="250" /> | <img src="screenshots/myOrders.png" width="250" /> |
+
+| Order In Progress | Order Done | Profile |
+| :---: | :---: | :---: |
+| <img src="screenshots/inProgress.png" width="250" /> | <img src="screenshots/done.png" width="250" /> | <img src="screenshots/profile.png" width="250" /> |
+
+---
+
+## 🛠️ Tech Stack & Architecture
+
+* **State Management:** Fully relies on **BLoC (Cubit)** to handle business logic, completely decoupled from the UI for optimal **Clean Code** architecture.
+* **Backend Integration:** Deeply integrated with **Firebase** ecosystem:
+  * **Firebase Authentication:** Phone Number (OTP) and Google Sign-in.
+  * **Cloud Firestore:** Real-time NoSQL database for managing users, places, menus, and syncing order statuses instantly across devices.
+  * **Firebase Storage:** Handling image uploads for users and restaurant menu items.
+* **Routing:** `go_router` for advanced, declarative navigation.
+* **UI/UX:** `flutter_screenutil` for extreme responsiveness, `skeletonizer` for modern shimmer loading effects, and custom `Google Fonts` (Cairo) for Arabic typography.
+
+## 📁 Project Structure (Feature-First)
+
+```text
 lib/
-├── main.dart                      # App entry point and Firebase initialization
-├── firebase_options.dart          # Firebase config (auto-generated)
-├── constants/
-│   └── my_colors.dart             # Core app colors
+├── main.dart
+├── router/
+│   └── app_router.dart            # GoRouter configuration
 ├── core/
-│   └── theme/
-│       └── app_theme.dart         # Global theme (colors, fonts, buttons, input fields)
+│   └── theme/                     # Global theming & styles
+├── constants/
+│   └── my_colors.dart             # Unified color palette
 ├── features/
-│   ├── auth/
-│   │   ├── manager/                       # AuthCubit + AuthState
-│   │   └── presentation/screens/          # Login and home screens
-│   ├── category/                          # SelectCategoryCubit + State
-│   └── location/
-│       └── manger/                        # LocationCubit + State
-└── widgets/                        # Reusable UI components
-    ├── custom_button.dart
-    ├── custom_icon_button.dart
-    ├── custom_image.dart
-    ├── custom_offer_section.dart
-    ├── custom_text_bubble.dart
-    ├── custom_text_field.dart
-    ├── category_list.dart
-    ├── menu_item_card.dart
-    ├── nav_bar.dart
-    └── place_card.dart
+│   ├── auth/                      # Authentication & Role Selection
+│   ├── home/                      # Main customer feed & Discovery
+│   ├── place/                     # Restaurant details & menus
+│   ├── menu/                      # Menu items & PDF viewer
+│   ├── cart/                      # Smart Cart management
+│   ├── order/                     # Order history, tracking, & owner management
+│   ├── owner/                     # Owner dashboard & sales reports
+│   └── profile/                   # User profiles & settings
+└── widgets/                       # Highly reusable global UI components
 ```
 
-## ⚙️ Setup & Run
+## 🚀 Setup & Installation
 
 ### Requirements
-- Flutter SDK installed on your machine
-- A Firebase project linked to the app (the `firebase_options.dart` file must be configured for your own Firebase project)
-- **Phone Authentication** and **Google Sign-In** enabled in the Firebase Authentication console
+- Flutter SDK (`>=3.0.0`)
+- A Firebase project linked to your package name.
 
 ### Run Steps
 
-```bash
-# Install dependencies
-flutter pub get
-
-# Run the app
-flutter run
-```
-
-> Note: Make sure `firebase_options.dart` is generated from your own Firebase project (via `flutterfire configure`), not used as-is from the repo, since it's tied to a specific Firebase project.
-
-## 🗺️ Suggested Next Steps
-
-- Screens: menu view, cart & checkout, order tracking, order history
-- Integrate online payment (Visa)
-- Connect a real places list instead of the current placeholder data
-- Push notifications when the order is ready
+1. **Clone the repository**
+2. **Install dependencies:**
+   ```bash
+   flutter pub get
+   ```
+3. **Configure Firebase:**
+   Ensure `firebase_options.dart` is correctly generated for your project using FlutterFire CLI:
+   ```bash
+   flutterfire configure
+   ```
+4. **Run the app:**
+   ```bash
+   flutter run
+   ```
 
 ---
-This file was auto-generated based on the current project code.
+*Built with ❤️ to redefine the dining experience.*
