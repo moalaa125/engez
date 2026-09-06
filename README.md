@@ -6,13 +6,6 @@
 
 **Engez** is a modern, high-performance Flutter application designed to eliminate waiting lines in restaurants and cafes through an efficient **Order Ahead & Pick-up** system. Users can order their food or coffee while on the go, and simply pick it up upon arrival—saving valuable time!
 
-## 🎥 App Demo Video
-
-> **Watch the full app experience in action:**
-> *(Place your video link here, e.g., YouTube or LinkedIn)*
-> 
-> `<a href="YOUR_VIDEO_LINK_HERE" target="_blank"><img src="https://img.youtube.com/vi/YOUR_VIDEO_ID/0.jpg" alt="Watch the video" width="400" /></a>`
-
 ---
 
 ## 🌟 Key Features
