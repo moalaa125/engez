@@ -59,7 +59,7 @@ class _OwnerOrdersScreenState extends State<OwnerOrdersScreen> {
     return DefaultTabController(
       length: 3,
       child: Scaffold(
-        backgroundColor: MyColors.myBackground,
+        backgroundColor: MyColors.myWhite,
         appBar: AppBar(
           title: const Text(
             'الطلبات الواردة',

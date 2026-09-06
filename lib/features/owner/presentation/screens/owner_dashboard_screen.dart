@@ -139,6 +139,7 @@ Future<void> _navigateToSalesReport(BuildContext context) async {
 class _OwnerDashboardScreenState extends State<OwnerDashboardScreen> {
   String? _placeName;
   String? _placeId;
+  String? _placeImagePath;
   bool _isOpen = true;
   final AudioPlayer _audioPlayer = AudioPlayer();
   int _previousPendingCount = -1;
@@ -170,17 +171,20 @@ class _OwnerDashboardScreenState extends State<OwnerDashboardScreen> {
       
       bool placeIsOpen = true;
       String? actualPlaceName;
+      String? actualImagePath;
       if (pId != null) {
         final placeDoc = await FirebaseFirestore.instance.collection('places').doc(pId).get();
         if (placeDoc.exists) {
           placeIsOpen = placeDoc.data()?['isOpen'] ?? true;
           actualPlaceName = placeDoc.data()?['title'] ?? placeDoc.data()?['name']; // Fallback to name just in case
+          actualImagePath = placeDoc.data()?['imagePath'] ?? placeDoc.data()?['image_path'];
         }
       }
 
       setState(() {
         _placeId = pId;
         _placeName = actualPlaceName ?? data?['placeName'] ?? 'مكاني';
+        _placeImagePath = actualImagePath;
         _isOpen = placeIsOpen;
       });
       
@@ -220,7 +224,7 @@ class _OwnerDashboardScreenState extends State<OwnerDashboardScreen> {
         }
       },
       child: Scaffold(
-        backgroundColor: MyColors.myBackground,
+        backgroundColor: MyColors.myWhite,
         appBar: AppBar(
         backgroundColor: MyColors.myWhite,
         elevation: 0,
@@ -250,15 +254,30 @@ class _OwnerDashboardScreenState extends State<OwnerDashboardScreen> {
             children: [
             Row(
               children: [
-                CircleAvatar(
-                  radius: 30.r,
-                  backgroundColor: MyColors.myOrange,
-                  child: Icon(
-                    Icons.storefront,
-                    color: MyColors.myWhite,
-                    size: 30.r,
+                if (_placeImagePath != null && _placeImagePath!.isNotEmpty)
+                  ClipOval(
+                    child: Image.network(
+                      _placeImagePath!,
+                      width: 60.r,
+                      height: 60.r,
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) => CircleAvatar(
+                        radius: 30.r,
+                        backgroundColor: MyColors.myOrange,
+                        child: Icon(Icons.storefront, color: MyColors.myWhite, size: 30.r),
+                      ),
+                    ),
+                  )
+                else
+                  CircleAvatar(
+                    radius: 30.r,
+                    backgroundColor: MyColors.myOrange,
+                    child: Icon(
+                      Icons.storefront,
+                      color: MyColors.myWhite,
+                      size: 30.r,
+                    ),
                   ),
-                ),
                 SizedBox(width: 16.w),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,

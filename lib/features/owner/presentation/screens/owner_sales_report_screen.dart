@@ -74,7 +74,7 @@ class _OwnerSalesReportScreenState extends State<OwnerSalesReportScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: MyColors.myBackground,
+      backgroundColor: MyColors.myWhite,
       appBar: AppBar(
         title: const Text(
           'تقارير المبيعات',
