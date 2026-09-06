@@ -29,17 +29,21 @@
 
 ### Customer Flow
 
-| Home | Search & Filter | Place Details |
+| Login & Auth | Home & Feed | Search & Filter |
 | :---: | :---: | :---: |
-| <img src="screenshots/home.PNG" width="250" /> | <img src="screenshots/search.png" width="250" /> | <img src="screenshots/placeDetails.PNG" width="250" /> |
+| <img src="screenshots/login.PNG" width="250" /> | <img src="screenshots/home.PNG" width="250" /> | <img src="screenshots/search.png" width="250" /> |
 
-| Offers & Categories | Smart Cart / Add Note | My Orders |
+| Place Details & Menu | Offers & Categories | Smart Cart / Add Note |
 | :---: | :---: | :---: |
-| <img src="screenshots/offers.png" width="250" /> | <img src="screenshots/addNote.png" width="250" /> | <img src="screenshots/myOrders.png" width="250" /> |
+| <img src="screenshots/placeDetails.PNG" width="250" /> | <img src="screenshots/offers.png" width="250" /> | <img src="screenshots/addNote.png" width="250" /> |
 
-| Order In Progress | Order Done | Profile |
+| My Orders | Order In Progress | Order Done |
 | :---: | :---: | :---: |
-| <img src="screenshots/inProgress.png" width="250" /> | <img src="screenshots/done.png" width="250" /> | <img src="screenshots/profile.png" width="250" /> |
+| <img src="screenshots/myOrders.png" width="250" /> | <img src="screenshots/inProgress.png" width="250" /> | <img src="screenshots/done.png" width="250" /> |
+
+| Profile & Settings | | |
+| :---: | :---: | :---: |
+| <img src="screenshots/profile.png" width="250" /> | | |
 
 ---
 
