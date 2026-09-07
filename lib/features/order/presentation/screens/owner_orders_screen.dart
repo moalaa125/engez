@@ -30,6 +30,8 @@ class _OwnerOrdersScreenState extends State<OwnerOrdersScreen> {
         return 'قيد الانتظار';
       case 'confirmed':
         return 'مؤكد';
+      case 'ready':
+        return 'جاهز للاستلام';
       case 'delivered':
         return 'تم الاستلام';
       case 'cancelled':
@@ -44,6 +46,8 @@ class _OwnerOrdersScreenState extends State<OwnerOrdersScreen> {
       case 'pending':
         return MyColors.myWarning;
       case 'confirmed':
+        return MyColors.myInfo;
+      case 'ready':
         return MyColors.myInfo;
       case 'delivered':
         return MyColors.mySuccess;
@@ -60,7 +64,7 @@ class _OwnerOrdersScreenState extends State<OwnerOrdersScreen> {
       length: 3,
       child: Scaffold(
         backgroundColor: MyColors.myWhite,
-        appBar: AppBar(
+        appBar: AppBar(scrolledUnderElevation: 0, elevation: 0, 
           title: const Text(
             'الطلبات الواردة',
             style: TextStyle(fontFamily: 'cairo'),

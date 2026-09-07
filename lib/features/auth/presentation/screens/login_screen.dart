@@ -102,11 +102,15 @@ class _LoginScreenContentState extends State<_LoginScreenContent> {
                     iconPath: 'assets/images/apple.jpg',
                     text: 'تسجيل الدخول باستخدام apple',
                     function: () {
-                      Future.delayed(const Duration(milliseconds: 500), () {
-                        if (mounted) {
-                          context.go('/role-selection');
-                        }
-                      });
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text(
+                            'تسجيل الدخول بـ Apple غير متاح حاليًا',
+                            style: TextStyle(fontFamily: 'cairo'),
+                          ),
+                          backgroundColor: MyColors.myTextSecondary,
+                        ),
+                      );
                     },
                   ),
                 ],

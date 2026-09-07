@@ -225,9 +225,8 @@ class _OwnerDashboardScreenState extends State<OwnerDashboardScreen> {
       },
       child: Scaffold(
         backgroundColor: MyColors.myWhite,
-        appBar: AppBar(
+        appBar: AppBar(scrolledUnderElevation: 0, elevation: 0, 
         backgroundColor: MyColors.myWhite,
-        elevation: 0,
         title: Text(
           'لوحة التحكم',
           style: TextStyle(

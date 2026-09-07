@@ -35,9 +35,8 @@ class _CartScreenState extends State<CartScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: MyColors.myBackground,
-      appBar: AppBar(
+      appBar: AppBar(scrolledUnderElevation: 0, elevation: 0, 
         backgroundColor: Colors.transparent,
-        elevation: 0,
         centerTitle: true,
         iconTheme: const IconThemeData(color: MyColors.myDarkText),
         title: Text(

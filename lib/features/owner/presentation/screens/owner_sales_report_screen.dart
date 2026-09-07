@@ -75,7 +75,7 @@ class _OwnerSalesReportScreenState extends State<OwnerSalesReportScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: MyColors.myWhite,
-      appBar: AppBar(
+      appBar: AppBar(scrolledUnderElevation: 0, elevation: 0, 
         title: const Text(
           'تقارير المبيعات',
           style: TextStyle(fontFamily: 'cairo', fontWeight: FontWeight.bold),

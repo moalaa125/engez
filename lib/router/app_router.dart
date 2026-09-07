@@ -237,7 +237,7 @@ class AppRouter {
       ),
     ],
     errorBuilder: (context, state) => Scaffold(
-      appBar: AppBar(title: const Text('صفحة غير موجودة')),
+      appBar: AppBar(scrolledUnderElevation: 0, elevation: 0, title: const Text('صفحة غير موجودة')),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,

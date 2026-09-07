@@ -77,6 +77,7 @@ class _ManageMenuScreenContentState extends State<_ManageMenuScreenContent> {
         ),
         backgroundColor: MyColors.myWhite,
         elevation: 0,
+        scrolledUnderElevation: 0,
         centerTitle: true,
         iconTheme: const IconThemeData(color: MyColors.myDarkText),
       ),

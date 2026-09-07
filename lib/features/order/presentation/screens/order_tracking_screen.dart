@@ -65,10 +65,9 @@ class OrderTrackingScreen extends StatelessWidget {
         if (!snapshot.hasData || !snapshot.data!.exists) {
           return Scaffold(
             backgroundColor: MyColors.myWhite,
-            appBar: AppBar(
+            appBar: AppBar(scrolledUnderElevation: 0, elevation: 0, 
               systemOverlayStyle: SystemUiOverlayStyle.dark,
               backgroundColor: Colors.transparent,
-              elevation: 0,
               leading: IconButton(
                 icon: const Icon(Icons.arrow_back, color: MyColors.myDarkText),
                 onPressed: () => context.go('/home'),
@@ -91,11 +90,9 @@ class OrderTrackingScreen extends StatelessWidget {
 
         return Scaffold(
           backgroundColor: MyColors.myWhite,
-          appBar: AppBar(
+          appBar: AppBar(scrolledUnderElevation: 0, elevation: 0, 
             systemOverlayStyle: SystemUiOverlayStyle.dark,
-            scrolledUnderElevation: 0,
             backgroundColor: Colors.transparent,
-            elevation: 0,
             centerTitle: true,
             leading: IconButton(
               icon: const Icon(Icons.arrow_back, color: MyColors.myDarkText),

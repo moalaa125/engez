@@ -24,8 +24,7 @@ class AllPlaces extends StatelessWidget {
       providers: [BlocProvider(create: (_) => SelectCategoryCubit())],
       child: Scaffold(
         backgroundColor: MyColors.myWhite,
-        appBar: AppBar(
-          scrolledUnderElevation: 0,
+        appBar: AppBar(scrolledUnderElevation: 0, elevation: 0, 
           backgroundColor: MyColors.myWhite,
           title: Text(
             'جميع الأماكن',

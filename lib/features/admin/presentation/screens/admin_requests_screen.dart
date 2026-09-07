@@ -25,7 +25,7 @@ class _AdminRequestsScreenState extends State<AdminRequestsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: MyColors.myBackground,
-      appBar: AppBar(
+      appBar: AppBar(scrolledUnderElevation: 0, elevation: 0, 
         title: const Text(
           'طلبات الانضمام',
           style: TextStyle(fontFamily: 'cairo'),

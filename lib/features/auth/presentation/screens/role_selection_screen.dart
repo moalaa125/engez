@@ -94,10 +94,9 @@ class _RoleSelectionScreenState extends State<RoleSelectionScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: MyColors.myWhite,
-      appBar: AppBar(
+      appBar: AppBar(scrolledUnderElevation: 0, elevation: 0, 
         title: const Text('اختر دورك'),
         centerTitle: true,
-        elevation: 0,
         backgroundColor: MyColors.myWhite,
       ),
       body: Padding(

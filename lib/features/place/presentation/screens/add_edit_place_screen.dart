@@ -270,14 +270,13 @@ Future<void> _savePlace() async {
 
     return Scaffold(
       backgroundColor: MyColors.myBackground,
-      appBar: AppBar(
+      appBar: AppBar(scrolledUnderElevation: 0, elevation: 0, 
         title: Text(
           isEditing ? 'تعديل المكان' : 'إضافة مكان جديد',
           style: const TextStyle(fontFamily: 'Cairo'),
         ),
         centerTitle: true,
         backgroundColor: MyColors.myWhite,
-        elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () => context.pop(),

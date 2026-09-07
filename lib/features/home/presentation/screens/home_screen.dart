@@ -67,6 +67,7 @@ class _HomeScreenState extends State<HomeScreen> {
   PreferredSizeWidget _buildAppBar() {
     final User? user = FirebaseAuth.instance.currentUser;
     return AppBar(
+      elevation: 0,
       scrolledUnderElevation: 0,
       bottom: PreferredSize(
         preferredSize: Size.fromHeight(1.h),

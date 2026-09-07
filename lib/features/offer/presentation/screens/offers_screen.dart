@@ -25,6 +25,7 @@ class OffersScreen extends StatelessWidget {
         centerTitle: true,
         backgroundColor: MyColors.myWhite,
         elevation: 0,
+        scrolledUnderElevation: 0,
       ),
       body: Padding(
         padding: EdgeInsets.all(16.w),

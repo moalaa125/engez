@@ -35,6 +35,8 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
         return 'قيد الانتظار';
       case 'confirmed':
         return 'مؤكد';
+      case 'ready':
+        return 'جاهز للاستلام';
       case 'delivered':
         return 'تم الاستلام';
       case 'cancelled':
@@ -49,6 +51,8 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
       case 'pending':
         return MyColors.myWarning;
       case 'confirmed':
+        return MyColors.myInfo;
+      case 'ready':
         return MyColors.myInfo;
       case 'delivered':
         return MyColors.mySuccess;
@@ -198,9 +202,7 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: MyColors.myBackground,
-      appBar: AppBar(
-        scrolledUnderElevation: 0,
-
+      appBar: AppBar(scrolledUnderElevation: 0, elevation: 0, 
         title: const Text('سجل الطلبات', style: TextStyle(fontFamily: 'cairo')),
         backgroundColor: MyColors.myWhite,
         centerTitle: true,
